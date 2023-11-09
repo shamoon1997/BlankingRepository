@@ -1,10 +1,17 @@
-import React, { FC } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { CallbackPage } from "./pages";
 import { AuthenticationGuard } from "./hoc";
+import { CallbackPage, LoginPage } from "./pages";
 
 const ProtectedPage: React.FC<unknown> = () => {
-  return <div>Protected</div>;
+  const { logout } = useAuth0();
+  return (
+    <>
+      <div>Protected</div>
+      <button onClick={() => void logout()}>Click to log out</button>
+    </>
+  );
 };
 
 function App() {
@@ -13,13 +20,10 @@ function App() {
       <h1 className="text-3xl font-bold underline">Sherlock V2 Scaffolding</h1>
       <Routes>
         <Route path="/" element={<div>Home</div>} />
+        <Route path="/login" element={<LoginPage />} />
         <Route
-          path="/yo"
-          element={
-            <AuthenticationGuard
-              component={(<ProtectedPage />) as unknown as FC<unknown>}
-            />
-          }
+          path="/protected"
+          element={<AuthenticationGuard component={ProtectedPage} />}
         />
         <Route path="/callback" element={<CallbackPage />} />
       </Routes>
