@@ -19,7 +19,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+
+    // Import Aliases
+    "baseUrl": ".",
+    "paths": { "@/*": ["./src/*", "./dist/*", ""] }
   },
   "include": ["src"],
   "exclude": ["*.config.*"],
