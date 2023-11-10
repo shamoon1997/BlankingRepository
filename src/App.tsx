@@ -17,7 +17,6 @@ const ProtectedPage: React.FC<unknown> = () => {
 function App() {
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Sherlock V2 Scaffolding</h1>
       <Routes>
         <Route path="/" element={<div>Home</div>} />
         <Route path="/login" element={<LoginPage />} />
