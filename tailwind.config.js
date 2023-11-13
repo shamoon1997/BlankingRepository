@@ -3,6 +3,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      boxShadow: {
+        tooltip: "2px 2px 4px 0px rgba(0, 0, 0, 0.15)",
+      },
       colors: {
         // MAIN STYLEGUIDE
         sidebar: "#3B3C4F",
