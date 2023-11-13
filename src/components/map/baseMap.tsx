@@ -38,10 +38,11 @@ export const BaseMap = () => {
     >
       <FullscreenControl position="top-left" />
       <NavigationControl position="top-left" />
-      <ScaleControl position="top-left" />
 
       {/* show layers based on props in future */}
       <GridScopeLayer />
+
+      <ScaleControl position="bottom-left" />
     </Map>
   );
 };

@@ -7,9 +7,9 @@ import { MapZoomedBoxContainer } from "../map-zoomed-box";
 
 // shape of data to be used
 const CircleData = [
-  { id: "point1", latitude: 33.729651, longitude: 73.263073 },
-  { id: "point2", latitude: 33.730633, longitude: 73.266185 },
-  { id: "point3", latitude: 33.730526, longitude: 73.261614 },
+  { id: "point1", latitude: 33.716327, longitude: 73.040111 },
+  { id: "point2", latitude: 33.717152, longitude: 73.04163 },
+  { id: "point3", latitude: 33.71532, longitude: 73.04296 },
 ];
 
 const LineLayerStyles: mapboxgl.LinePaint = {
@@ -26,12 +26,12 @@ const GeoJson: Feature<Geometry, GeoJsonProperties> = {
     type: "MultiLineString",
     coordinates: [
       [
-        [73.263073, 33.729651],
-        [73.266185, 33.730633],
+        [73.040111, 33.716327],
+        [73.04163, 33.717152],
       ],
       [
-        [73.263073, 33.729651], // Duplicate point to connect lines
-        [73.261614, 33.730526],
+        [73.04163, 33.717152], // Duplicate point to connect lines
+        [73.04296, 33.71532],
       ],
     ],
   },
@@ -51,6 +51,9 @@ export const GridScopeLayer = () => {
           key={circle.id}
           latitude={circle.latitude}
           longitude={circle.longitude}
+          style={{
+            zIndex: circle.id === popupInfo ? 100 : 0,
+          }}
         >
           {/* the circle */}
           <div
@@ -60,7 +63,7 @@ export const GridScopeLayer = () => {
             }}
             className="relative"
           >
-            <div className="drop-shadow-map-dot bg-online h-6 w-6 rounded-full border-2 border-solid border-white" />
+            <div className="drop-shadow-map-dot bg-online z-0 h-6 w-6 rounded-full border-2 border-solid border-white" />
 
             {popupInfo === circle.id && (
               <MapToolTipContainer>Popup content</MapToolTipContainer>
