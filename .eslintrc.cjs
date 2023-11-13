@@ -23,5 +23,7 @@ module.exports = {
       "warn",
       { allowConstantExport: true },
     ],
+    // Disabling below because it forces us to use interfaces instead
+    "@typescript-eslint/consistent-type-definitions": "off",
   },
 };

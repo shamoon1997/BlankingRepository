@@ -1,6 +1,17 @@
+import { Route, Routes } from "react-router-dom";
+import { CallbackPage, LoginPage } from "./pages";
+import { ProtectedRouter } from "./router";
+
 function App() {
   return (
-    <h1 className="text-3xl font-bold underline">Sherlock V2 Scaffolding</h1>
+    <>
+      <Routes>
+        <Route path="/" element={<div>Home</div>} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/callback" element={<CallbackPage />} />
+      </Routes>
+      <ProtectedRouter />
+    </>
   );
 }
 
