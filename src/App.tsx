@@ -1,6 +1,9 @@
+import { BaseMap } from "./components";
+
 function App() {
   return (
-    <h1 className="text-3xl font-bold underline">Sherlock V2 Scaffolding</h1>
+    <BaseMap />
+    // <h1 className="text-3xl font-bold underline">Sherlock V2 Scaffolding</h1>
   );
 }
 

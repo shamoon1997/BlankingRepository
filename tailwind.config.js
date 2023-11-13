@@ -3,8 +3,12 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      dropShadow: {
+        "map-dot": "0.8px 0.8px 2px rgba(0, 0, 0, 0.25)",
+      },
       boxShadow: {
         tooltip: "2px 2px 4px 0px rgba(0, 0, 0, 0.15)",
+        "zoomed-box": "0.2px 0.2px 0.5px 0px rgba(0, 0, 0, 0.10)",
       },
       colors: {
         // MAIN STYLEGUIDE
@@ -15,12 +19,17 @@ export default {
         // POLE STATUS COLORS
         offline: "#DF4C2B",
         spotty: "#F4B849",
-        active: "#5BC760",
+        online: "#5BC760",
 
         // ALERT COLORS
         "alert-high": "#EE4722",
         "alert-meduim": "#FFBB00",
         "alert-low": "#003033",
+
+        // map zoomed tooltip bg
+      },
+      backgroundColor: {
+        "map-zoomed-box": "rgba(22, 22, 22, 0.70)",
       },
     },
   },
