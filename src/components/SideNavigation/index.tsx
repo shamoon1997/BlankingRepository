@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogOverlay,
-  DialogContent,
-} from "@radix-ui/react-dialog";
+import { Dialog, DialogTrigger, DialogContent } from "@radix-ui/react-dialog";
 import Header from "../Header";
 
 const SideNavigation = () => {
@@ -14,9 +9,7 @@ const SideNavigation = () => {
   const handleItemClick = (item: string) => {
     setSelectedItem(item);
     setIsOpen(true);
-  };
-  const onClose = () => {
-    setIsOpen(false);
+    setTimeout(() => (document.body.style.pointerEvents = ""), 0);
   };
 
   const renderContent = (heading: string) => {
@@ -24,11 +17,13 @@ const SideNavigation = () => {
   };
 
   return (
-    //@ts-ignore
     <>
-      <Dialog open={isOpen} onClose={onClose}>
+      <Dialog open={isOpen}>
         <DialogTrigger>
-          <div className="h-screen w-56 bg-side-nav p-4 text-white">
+          <div
+            className="h-screen w-56 bg-side-nav p-4 text-white"
+            style={{ zIndex: 9999 }}
+          >
             <h3 className="mb-4 text-left font-mont text-xl font-bold">
               ADMIN
             </h3>
@@ -208,14 +203,10 @@ const SideNavigation = () => {
             </ul>
           </div>
         </DialogTrigger>
-        <DialogOverlay
-          className="fixed bottom-0 right-0 top-0 bg-transparent"
-          onClick={onClose}
-        />
+
         <DialogContent
           className="fixed left-56 right-0 top-0 bg-gray-200 p-10 text-black"
           style={{ backgroundColor: "#F5F5F5" }}
-          onClick={(e) => e.stopPropagation()}
         >
           {renderContent(selectedItem)}
         </DialogContent>
