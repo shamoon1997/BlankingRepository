@@ -24,6 +24,7 @@
     "grpc-web": "^1.4.2",
     "mapbox-gl": "^2.15.0",
     "react": "^18.2.0",
+    "react-day-picker": "^8.9.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.18.0",
     "uplot": "^1.6.27",
