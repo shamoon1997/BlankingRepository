@@ -20,6 +20,7 @@ function App() {
 
   return (
     <>
+      <SideNavigation />
       <Routes>
         {/* public routes */}
         <Route path={AppRoutes.root} element={<HomePage />} />
