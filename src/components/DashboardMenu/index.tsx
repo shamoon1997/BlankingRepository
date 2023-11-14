@@ -5,7 +5,7 @@ import {
   DialogOverlay,
   DialogContent,
 } from "@radix-ui/react-dialog";
-import Deployments from "../Deployments";
+import Header from "../Header";
 
 const SideNavigation = () => {
   const [selectedItem, setSelectedItem] = useState("");
@@ -16,25 +16,19 @@ const SideNavigation = () => {
     setIsOpen(true);
   };
   const onClose = () => {
-    console.log("close");
     setIsOpen(false);
   };
 
-  const renderContent = () => {
-    switch (selectedItem) {
-      case "Deployments":
-        return <Deployments />;
-
-      default:
-        return null;
-    }
+  const renderContent = (heading: string) => {
+    return <Header heading={heading} />;
   };
 
   return (
+    //@ts-ignore
     <Dialog open={isOpen} onClose={onClose}>
       <DialogTrigger>
-        <div className="bg-side-nav h-screen w-56 p-4 text-white">
-          <h3 className="font-mont mb-4 text-left text-xl font-bold">ADMIN</h3>
+        <div className="h-screen w-56 bg-side-nav p-4 text-white">
+          <h3 className="mb-4 text-left font-mont text-xl font-bold">ADMIN</h3>
 
           <ul>
             <li
@@ -216,10 +210,11 @@ const SideNavigation = () => {
         onClick={onClose}
       />
       <DialogContent
-        className="w-200 fixed bottom-0 right-0 top-0 bg-gray-800 p-4 text-white"
+        className="fixed left-56 right-0 top-0 bg-gray-200 p-10 text-black"
+        style={{ backgroundColor: "#F5F5F5" }}
         onClick={(e) => e.stopPropagation()}
       >
-        {renderContent()}
+        {renderContent(selectedItem)}
       </DialogContent>
     </Dialog>
   );
