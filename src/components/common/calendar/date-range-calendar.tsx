@@ -11,12 +11,14 @@ import "react-day-picker/dist/style.css";
 const classNames: ClassNames = {
   head: "text-lg",
   tbody: "font-thin",
-  caption_label: "text-sm text-black/60 px-3",
+  caption_label: "px-3 text-sm text-black/60",
   day_range_start:
-    "outline outline-4 outline-btn-primary outline-offset-[-2px] text-black hover:bg-btn-primary/80 font-bold",
+    "font-bold text-black outline outline-4 outline-offset-[-2px] outline-btn-primary hover:bg-btn-primary/80",
   day_range_end:
-    "outline outline-2 outline-btn-primary bg-btn-primary hover:bg-btn-primary/80 font-bold",
-  day_range_middle: "bg-btn-primary rounded-none h-5 hover:bg-btn-primary/80",
+    "bg-btn-primary font-bold outline outline-2 outline-btn-primary hover:bg-btn-primary/80",
+  day_range_middle: "h-5 rounded-none bg-btn-primary hover:bg-btn-primary/80",
+  nav_button_previous: "[&_svg]:h-3 [&_svg]:w-3",
+  nav_button_next: "[&_svg]:h-3 [&_svg]:w-3",
 };
 
 const formatWeekdayName: DateFormatter = (week) => {
