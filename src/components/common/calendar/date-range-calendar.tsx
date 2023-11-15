@@ -37,7 +37,11 @@ const DateRangeCalendar: React.FC<Props> = ({ range, setRange }) => {
       <DayPicker
         mode="range"
         selected={range}
-        onSelect={setRange}
+        onSelect={(rangeFromClick, currentDay) => {
+          if (range?.to !== undefined)
+            return setRange({ from: currentDay, to: undefined });
+          setRange(rangeFromClick);
+        }}
         classNames={classNames}
         formatters={{ formatWeekdayName }}
         showOutsideDays
