@@ -1,10 +1,16 @@
 import { CalendarIcon, ChevronIcon } from "@/assets";
-import React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tabs from "@radix-ui/react-tabs";
+import React, { useState } from "react";
+import { DateRange } from "react-day-picker";
 import { DateRangeCalendar } from "..";
+import { format } from "date-fns";
 
 const CalendarInput: React.FC = () => {
+  const [range, setRange] = useState<DateRange | undefined>(undefined);
+
+  const date1 = range?.from && format(range.from, "dd/MM/yyyy");
+  const date2 = range?.to && format(range.to, "dd/MM/yyyy");
   return (
     <>
       <DropdownMenu.Root>
@@ -15,11 +21,11 @@ const CalendarInput: React.FC = () => {
             </div>
             <div className="px-4">
               <p className="text-left text-sm text-blue-400">From</p>
-              <p className="text-xs">DD/MM/YYYY</p>
+              <p className="text-xs">{date1 ?? "DD/MM/YYYY"}</p>
             </div>
             <div className="px-4">
               <p className="text-left text-sm text-blue-400">To</p>
-              <p className="text-xs">DD/MM/YYYY</p>
+              <p className="text-xs">{date2 ?? "DD/MM/YYYY"}</p>
             </div>
             <div className="px-2 [&_svg]:rotate-180">
               <ChevronIcon />
@@ -29,8 +35,6 @@ const CalendarInput: React.FC = () => {
 
         <DropdownMenu.Portal>
           <DropdownMenu.Content className="mt-2 w-full min-w-[360px] rounded-lg border border-slate-200 bg-white shadow-xl">
-            {/*  */}
-            {/*  */}
             <Tabs.Root defaultValue="1">
               <Tabs.List className="mb-2 flex justify-center gap-4 border-b-2 border-slate-200 pt-2">
                 <Tabs.Trigger
@@ -75,11 +79,9 @@ const CalendarInput: React.FC = () => {
                 className="grid place-content-center px-6 py-2"
                 value="2"
               >
-                <DateRangeCalendar />
+                <DateRangeCalendar range={range} setRange={setRange} />
               </Tabs.Content>
             </Tabs.Root>
-            {/*  */}
-            {/*  */}
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>

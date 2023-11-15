@@ -1,10 +1,10 @@
 import { format } from "date-fns";
-import React, { useState } from "react";
+import React from "react";
 import {
+  ClassNames,
   DateFormatter,
   DateRange,
   DayPicker,
-  ClassNames,
 } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 
@@ -26,9 +26,12 @@ const formatWeekdayName: DateFormatter = (week) => {
   return weekdayName;
 };
 
-const DateRangeCalendar: React.FC = () => {
-  const [range, setRange] = useState<DateRange | undefined>(undefined);
+type Props = {
+  range: DateRange | undefined;
+  setRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
+};
 
+const DateRangeCalendar: React.FC<Props> = ({ range, setRange }) => {
   return (
     <>
       <DayPicker
