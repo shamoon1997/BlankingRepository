@@ -4,13 +4,27 @@ import * as Tabs from "@radix-ui/react-tabs";
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { DateRangeCalendar } from "..";
-import { format } from "date-fns";
+import { format, sub } from "date-fns";
+
+const defaultDateOptions = [
+  { title: "Last 30 minutes", duration: { minutes: 30 } },
+  { title: "Last hour", duration: { hours: 1 } },
+  { title: "Last 3 hours", duration: { hours: 3 } },
+  { title: "Last 6 hours", duration: { hours: 6 } },
+  { title: "Last 12 hours", duration: { hours: 12 } },
+  { title: "Today", duration: { hours: 24 } },
+  { title: "Last 7 days", duration: { days: 7 } },
+];
+
+const result = (amount: Duration) => {
+  sub(new Date(), amount);
+};
 
 const CalendarInput: React.FC = () => {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
 
-  const date1 = range?.from && format(range.from, "dd/MM/yyyy");
-  const date2 = range?.to && format(range.to, "dd/MM/yyyy");
+  const fromDate = range?.from && format(range.from, "dd/MM/yyyy");
+  const toDate = range?.to && format(range.to, "dd/MM/yyyy");
   return (
     <>
       <DropdownMenu.Root>
@@ -21,11 +35,11 @@ const CalendarInput: React.FC = () => {
             </div>
             <div className="px-4">
               <p className="text-left text-sm text-blue-400">From</p>
-              <p className="text-xs">{date1 ?? "DD/MM/YYYY"}</p>
+              <p className="text-xs">{fromDate ?? "DD/MM/YYYY"}</p>
             </div>
             <div className="px-4">
               <p className="text-left text-sm text-blue-400">To</p>
-              <p className="text-xs">{date2 ?? "DD/MM/YYYY"}</p>
+              <p className="text-xs">{toDate ?? "DD/MM/YYYY"}</p>
             </div>
             <div className="px-2 [&_svg]:rotate-180">
               <ChevronIcon />
@@ -52,27 +66,30 @@ const CalendarInput: React.FC = () => {
               </Tabs.List>
               <Tabs.Content className="px-6 py-2" value="1">
                 <ul>
-                  <li className="py-1">
-                    <input type="radio" /> Last 30 minutes
-                  </li>
-                  <li className="py-1">
-                    <input type="radio" /> Last hour
-                  </li>
-                  <li className="py-1">
-                    <input type="radio" /> Last 3 hours
-                  </li>
-                  <li className="py-1">
-                    <input type="radio" /> Last 6 hours
-                  </li>
-                  <li className="py-1">
-                    <input type="radio" /> Last 12 hours
-                  </li>
-                  <li className="py-1">
-                    <input type="radio" /> Today
-                  </li>
-                  <li className="py-1">
-                    <input type="radio" /> Last 7 days
-                  </li>
+                  <form
+                    onChange={(e) => {
+                      const value: Duration = JSON.parse(
+                        (e.target as HTMLInputElement).value,
+                      ) as Duration;
+                      result(value);
+                    }}
+                  >
+                    {defaultDateOptions.map((option) => {
+                      return (
+                        <li
+                          className="flex items-center gap-2 py-1"
+                          key={option.title}
+                        >
+                          <input
+                            type="radio"
+                            value={JSON.stringify(option.duration)}
+                            name="custom-time"
+                          />
+                          <p>{option.title}</p>
+                        </li>
+                      );
+                    })}
+                  </form>
                 </ul>
               </Tabs.Content>
               <Tabs.Content
