@@ -7,6 +7,7 @@ import {
   DayPicker,
 } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { useSearchParams } from "react-router-dom";
 
 const classNames: ClassNames = {
   head: "text-lg",
@@ -32,6 +33,8 @@ type Props = {
 };
 
 const DateRangeCalendar: React.FC<Props> = ({ range, setRange }) => {
+  const [, setSearchParams] = useSearchParams();
+
   return (
     <>
       <DayPicker
@@ -47,12 +50,28 @@ const DateRangeCalendar: React.FC<Props> = ({ range, setRange }) => {
         showOutsideDays
         footer={
           <>
-            <button
-              className="rounded-md bg-green-100 px-4 py-2 text-sm"
-              onClick={() => setRange(undefined)}
-            >
-              Clear
-            </button>
+            <div className="flex justify-end gap-2">
+              <button
+                className="rounded-md bg-btn-secondary/70 px-4 py-2 text-xs font-bold"
+                onClick={() => setRange(undefined)}
+              >
+                Clear
+              </button>
+              <button
+                onClick={() => {
+                  if (!range) return;
+                  const { to, from } = range;
+                  if (to && from)
+                    setSearchParams({
+                      from: `${from.getTime()}`,
+                      to: `${to.getTime()}`,
+                    });
+                }}
+                className="rounded-md bg-btn-primary px-4 py-2 text-xs font-bold text-white hover:bg-btn-primary/70"
+              >
+                Apply
+              </button>
+            </div>
           </>
         }
       />
