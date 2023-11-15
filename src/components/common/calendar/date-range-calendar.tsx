@@ -13,9 +13,9 @@ const classNames: ClassNames = {
   tbody: "font-thin",
   caption_label: "px-3 text-sm text-black/60",
   day_range_start:
-    "font-bold text-black outline outline-4 outline-offset-[-2px] outline-btn-primary hover:bg-btn-primary/80",
+    "rounded-full font-bold text-black outline outline-4 outline-offset-[-2px] outline-btn-primary hover:bg-btn-primary/80",
   day_range_end:
-    "bg-btn-primary font-bold outline outline-2 outline-btn-primary hover:bg-btn-primary/80",
+    "rounded-full bg-btn-primary font-bold outline outline-2 outline-btn-primary hover:bg-btn-primary/80",
   day_range_middle: "h-5 rounded-none bg-btn-primary hover:bg-btn-primary/80",
   nav_button_previous: "[&_svg]:h-3 [&_svg]:w-3",
   nav_button_next: "[&_svg]:h-3 [&_svg]:w-3",
