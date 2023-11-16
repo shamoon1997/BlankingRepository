@@ -104,7 +104,7 @@ const SideNavigation = () => {
               {navigationTabs.map((tab) => {
                 return (
                   <li
-                    className={`mb-2 flex cursor-pointer items-center px-4 py-2 transition ${
+                    className={`mb-2 flex cursor-pointer items-center py-2 pl-2 pr-4 transition ${
                       selectedItem === tab.name.toLowerCase()
                         ? "rounded-md border-gray-700 bg-gray-700"
                         : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
@@ -115,9 +115,9 @@ const SideNavigation = () => {
                       className="flex items-center"
                       onClick={() => handleItemClick(tab.name.toLowerCase())}
                     >
-                      <span className="mr-2 h-5 w-5">
+                      <div className="mr-4 h-5 w-5 [&_svg]:h-[20px] [&_svg]:w-[20px]">
                         <tab.icon />
-                      </span>
+                      </div>
 
                       <span>{tab.name}</span>
                     </Link>
