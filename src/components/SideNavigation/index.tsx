@@ -1,14 +1,86 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogTrigger, DialogContent } from "@radix-ui/react-dialog";
+import { Link } from "react-router-dom";
 import Header from "../Header";
+import {
+  DeploymentsIcon,
+  AlertsIcon,
+  TicketsIcon,
+  DevicesIcon,
+  PolesIcon,
+  PhotosIcon,
+  SensorBlobsIcon,
+  CustomerReportsIcon,
+  OrganizationsIcon,
+  UsersIcon,
+} from "@/assets";
+
+const navigationTabs = [
+  {
+    name: "Deployments",
+    path: "/deployments",
+    icon: DeploymentsIcon,
+  },
+  {
+    name: "Alerts",
+    path: "/alerts",
+    icon: AlertsIcon,
+  },
+  {
+    name: "Tickets",
+    path: "/tickets",
+    icon: TicketsIcon,
+  },
+  {
+    name: "Devices",
+    path: "/devices",
+    icon: DevicesIcon,
+  },
+  {
+    name: "Poles",
+    path: "/poles",
+    icon: PolesIcon,
+  },
+  {
+    name: "Photos",
+    path: "/photos",
+    icon: PhotosIcon,
+  },
+  {
+    name: "Sensor Blobs",
+    path: "/sensor-blobs",
+    icon: SensorBlobsIcon,
+  },
+  {
+    name: "Customer Reports",
+    path: "/customer-reports",
+    icon: CustomerReportsIcon,
+  },
+  {
+    name: "Oragnizations",
+    path: "/organizations",
+    icon: OrganizationsIcon,
+  },
+  {
+    name: "Users",
+    path: "/users",
+    icon: UsersIcon,
+  },
+];
 
 const SideNavigation = () => {
-  const [selectedItem, setSelectedItem] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(
+    location.pathname.substring(1),
+  );
+  const [isOpen, setIsOpen] = useState(selectedItem.length > 0 ? true : false);
+
+  useEffect(() => {
+    setTimeout(() => (document.body.style.pointerEvents = ""), 0);
+  }, []);
 
   const handleItemClick = (item: string) => {
-    setSelectedItem(item);
     setIsOpen(true);
+    setSelectedItem(item);
     setTimeout(() => (document.body.style.pointerEvents = ""), 0);
   };
 
@@ -29,177 +101,29 @@ const SideNavigation = () => {
             </h3>
 
             <ul>
-              <li
-                className={`mb-2 flex cursor-pointer items-center px-4 py-2 transition ${
-                  selectedItem === "Deployments"
-                    ? "rounded-md border-gray-700 bg-gray-700"
-                    : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
-                }`}
-                onClick={() => handleItemClick("Deployments")}
-              >
-                <img
-                  src={"/icons/deployment.svg"}
-                  alt="Deployment Icon"
-                  className="mr-2 h-5 w-5"
-                />
-                <span>Deployments</span>
-              </li>
-              <li
-                className={`mb-2 flex cursor-pointer items-center px-4 py-2 transition ${
-                  selectedItem === "Alert"
-                    ? "rounded-md border-gray-700 bg-gray-700"
-                    : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
-                }`}
-                onClick={() => handleItemClick("Alert")}
-              >
-                <img
-                  src={"/icons/alerts.svg"}
-                  alt="Alert Icon"
-                  className="mr-2 h-5 w-5"
-                />
-                <span>Alerts</span>
-              </li>
-              <li
-                className={`mb-2 flex cursor-pointer items-center px-4 py-2 transition ${
-                  selectedItem === "Ticket"
-                    ? "rounded-md border-gray-700 bg-gray-700"
-                    : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
-                }`}
-                onClick={() => handleItemClick("Ticket")}
-              >
-                <img
-                  src={"/icons/tickets.svg"}
-                  alt="Tickets Icon"
-                  className="mr-2 h-5 w-5"
-                />
-                <span>Tickets</span>
-              </li>
-              <li
-                className={`mb-2 flex cursor-pointer items-center px-4 py-2 transition ${
-                  selectedItem === "Devices"
-                    ? "rounded-md border-gray-700 bg-gray-700"
-                    : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
-                }`}
-                onClick={() => handleItemClick("Devices")}
-              >
-                <img
-                  src={"/icons/devices.svg"}
-                  alt="Devices Icon"
-                  className="mr-2 h-5 w-5"
-                />
-                <span>Devices</span>
-              </li>
-              <li
-                className={`mb-2 flex cursor-pointer items-center px-4 py-2 transition ${
-                  selectedItem === "Poles"
-                    ? "rounded-md border-gray-700 bg-gray-700"
-                    : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
-                }`}
-                onClick={() => handleItemClick("Poles")}
-              >
-                <img
-                  src={"/icons/poles.svg"}
-                  alt="Poles Icon"
-                  className="mr-2 h-5 w-5"
-                />
-                <span>Poles</span>
-              </li>
+              {navigationTabs.map((tab) => {
+                return (
+                  <li
+                    className={`mb-2 flex cursor-pointer items-center px-4 py-2 transition ${
+                      selectedItem === tab.name.toLowerCase()
+                        ? "rounded-md border-gray-700 bg-gray-700"
+                        : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
+                    }`}
+                  >
+                    <Link
+                      to={tab.path}
+                      className="flex items-center"
+                      onClick={() => handleItemClick(tab.name.toLowerCase())}
+                    >
+                      <span className="mr-2 h-5 w-5">
+                        <tab.icon />
+                      </span>
 
-              <li
-                className={`mb-2 flex cursor-pointer items-center px-4 py-2 transition ${
-                  selectedItem === "Jobs"
-                    ? "rounded-md border-gray-700 bg-gray-700"
-                    : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
-                }`}
-                onClick={() => handleItemClick("Jobs")}
-              >
-                <img
-                  src={"/icons/jobs.svg"}
-                  alt="Jobs Icon"
-                  className="mr-2 h-5 w-5"
-                />
-                <span>Jobs</span>
-              </li>
-
-              <li
-                className={`mb-2 flex cursor-pointer items-center px-4 py-2 transition ${
-                  selectedItem === "Photos"
-                    ? "rounded-md border-gray-700 bg-gray-700"
-                    : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
-                }`}
-                onClick={() => handleItemClick("Photos")}
-              >
-                <img
-                  src={"/icons/photos.svg"}
-                  alt="Photos Icon"
-                  className="mr-2 h-5 w-5"
-                />
-                <span>Photos</span>
-              </li>
-
-              <li
-                className={`mb-2 flex cursor-pointer items-center px-4 py-2 transition ${
-                  selectedItem === "Sensor"
-                    ? "rounded-md border-gray-700 bg-gray-700"
-                    : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
-                }`}
-                onClick={() => handleItemClick("Sensor")}
-              >
-                <img
-                  src={"/icons/sensor.svg"}
-                  alt="Sensor Icon"
-                  className="mr-2 h-5 w-5"
-                />
-                <span>Sensor Blobs</span>
-              </li>
-
-              <li
-                className={`mb-2 flex cursor-pointer items-center px-4 py-2 transition ${
-                  selectedItem === "customerReports"
-                    ? "rounded-md border-gray-700 bg-gray-700"
-                    : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
-                }`}
-                onClick={() => handleItemClick("customerReports")}
-              >
-                <img
-                  src={"/icons/customerReports.svg"}
-                  alt="customer report Icon"
-                  className="mr-2 h-5 w-5"
-                />
-                <span>Customer Reports</span>
-              </li>
-
-              <li
-                className={`mb-2 flex cursor-pointer items-center px-4 py-2 transition ${
-                  selectedItem === "Organizations"
-                    ? "rounded-md border-gray-700 bg-gray-700"
-                    : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
-                }`}
-                onClick={() => handleItemClick("Organizations")}
-              >
-                <img
-                  src={"/icons/organizations.svg"}
-                  alt="organization Icon"
-                  className="mr-2 h-5 w-5"
-                />
-                <span>Organizations</span>
-              </li>
-
-              <li
-                className={`mb-2 flex cursor-pointer items-center px-4 py-2 transition ${
-                  selectedItem === "users"
-                    ? "rounded-md border-gray-700 bg-gray-700"
-                    : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
-                }`}
-                onClick={() => handleItemClick("users")}
-              >
-                <img
-                  src={"/icons/users.svg"}
-                  alt="users Icon"
-                  className="mr-2 h-5 w-5"
-                />
-                <span>Users</span>
-              </li>
+                      <span>{tab.name}</span>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </DialogTrigger>
