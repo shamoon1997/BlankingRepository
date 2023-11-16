@@ -39,6 +39,7 @@ const DateRangeCalendar: React.FC<Props> = ({ range, setRange }) => {
     <>
       <DayPicker
         mode="range"
+        defaultMonth={range?.from ?? new Date()}
         selected={range}
         onSelect={(rangeFromClick, currentDay) => {
           if (range?.to !== undefined)
@@ -65,6 +66,7 @@ const DateRangeCalendar: React.FC<Props> = ({ range, setRange }) => {
                     setSearchParams({
                       from: `${from.getTime()}`,
                       to: `${to.getTime()}`,
+                      custom: "true",
                     });
                 }}
                 className="rounded-md bg-btn-primary px-4 py-2 text-xs font-bold text-white hover:bg-btn-primary/70"

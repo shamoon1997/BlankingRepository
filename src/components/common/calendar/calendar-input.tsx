@@ -1,10 +1,17 @@
 import { CalendarIcon, ChevronIcon } from "@/assets";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tabs from "@radix-ui/react-tabs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { DateRangeCalendar } from "..";
 import { format, sub } from "date-fns";
+import { useSearchParams } from "react-router-dom";
+
+enum RangeParams {
+  from = "from",
+  to = "to",
+  custom = "custom",
+}
 
 const defaultDateOptions = [
   { title: "Last 30 minutes", duration: { minutes: 30 } },
@@ -16,12 +23,26 @@ const defaultDateOptions = [
   { title: "Last 7 days", duration: { days: 7 } },
 ];
 
-const result = (amount: Duration) => {
-  sub(new Date(), amount);
+const getTimeDifference = (amount: Duration) => {
+  const subtractedDate = sub(new Date(), amount);
+  return subtractedDate;
 };
 
 const CalendarInput: React.FC = () => {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
+  const [defaultSelected, setDefaultSelected] = useState<string>("");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const fromDate = Number(searchParams.get(RangeParams.from));
+    const toDate = Number(searchParams.get(RangeParams.to));
+    const isCustom = Boolean(searchParams.get(RangeParams.custom));
+
+    if (fromDate && toDate && isCustom)
+      return setRange({ from: new Date(+fromDate), to: new Date(+toDate) });
+
+    if (!isCustom) setRange(undefined);
+  }, [searchParams]);
 
   const fromDate = range?.from && format(range.from, "dd/MM/yyyy");
   const toDate = range?.to && format(range.to, "dd/MM/yyyy");
@@ -29,17 +50,24 @@ const CalendarInput: React.FC = () => {
     <>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <div className="inline-flex cursor-pointer items-center rounded-lg border border-slate-300 px-2 py-1">
-            <div className="px-2">
-              <CalendarIcon />
+          <div className="inline-flex cursor-pointer items-center rounded-lg border border-slate-300  py-1">
+            <div className="flex items-center px-0">
+              <div className="px-2 [&_svg]:h-[15px] [&_svg]:w-[15px]">
+                <CalendarIcon />
+              </div>
+
+              <div>
+                <p className="text-left text-[8px] font-semibold text-blue-400">
+                  From
+                </p>
+                <p className="text-[10px]">{fromDate ?? "DD/MM/YYYY"}</p>
+              </div>
             </div>
             <div className="px-4">
-              <p className="text-left text-sm text-blue-400">From</p>
-              <p className="text-xs">{fromDate ?? "DD/MM/YYYY"}</p>
-            </div>
-            <div className="px-4">
-              <p className="text-left text-sm text-blue-400">To</p>
-              <p className="text-xs">{toDate ?? "DD/MM/YYYY"}</p>
+              <p className="text-left text-[8px] font-semibold text-blue-400">
+                To
+              </p>
+              <p className="text-[10px]">{toDate ?? "DD/MM/YYYY"}</p>
             </div>
             <div className="px-2 [&_svg]:rotate-180">
               <ChevronIcon />
@@ -68,10 +96,21 @@ const CalendarInput: React.FC = () => {
                 <ul>
                   <form
                     onChange={(e) => {
+                      const target = e.target as HTMLInputElement;
+                      const label = target.ariaLabel;
+
                       const value: Duration = JSON.parse(
-                        (e.target as HTMLInputElement).value,
+                        target.value,
                       ) as Duration;
-                      result(value);
+
+                      getTimeDifference(value);
+
+                      setSearchParams({
+                        from: String(getTimeDifference(value).getTime()),
+                        to: String(new Date().getTime()),
+                      });
+
+                      setDefaultSelected(label ?? "");
                     }}
                   >
                     {defaultDateOptions.map((option) => {
@@ -84,6 +123,8 @@ const CalendarInput: React.FC = () => {
                             type="radio"
                             value={JSON.stringify(option.duration)}
                             name="custom-time"
+                            checked={defaultSelected === option.title}
+                            aria-label={option.title}
                           />
                           <p>{option.title}</p>
                         </li>
