@@ -14,13 +14,13 @@ enum RangeParams {
 }
 
 const defaultDateOptions = [
-  { title: "Last 30 minutes", duration: { minutes: 30 } },
-  { title: "Last hour", duration: { hours: 1 } },
-  { title: "Last 3 hours", duration: { hours: 3 } },
-  { title: "Last 6 hours", duration: { hours: 6 } },
-  { title: "Last 12 hours", duration: { hours: 12 } },
-  { title: "Today", duration: { hours: 24 } },
-  { title: "Last 7 days", duration: { days: 7 } },
+  { title: "Last 30 minutes", duration: { minutes: 30 }, type: "last_30_mins" },
+  { title: "Last hour", duration: { hours: 1 }, type: "last_hour" },
+  { title: "Last 3 hours", duration: { hours: 3 }, type: "last_3_hours" },
+  { title: "Last 6 hours", duration: { hours: 6 }, type: "last_6_hours" },
+  { title: "Last 12 hours", duration: { hours: 12 }, type: "last_12_hours" },
+  { title: "Today", duration: { hours: 24 }, type: "today" },
+  { title: "Last 7 days", duration: { days: 7 }, type: "last_7_days" },
 ];
 
 const getTimeDifference = (amount: Duration) => {
@@ -30,13 +30,12 @@ const getTimeDifference = (amount: Duration) => {
 
 const CalendarInput: React.FC = () => {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
-  const [defaultSelected, setDefaultSelected] = useState<string>("");
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const fromDate = Number(searchParams.get(RangeParams.from));
     const toDate = Number(searchParams.get(RangeParams.to));
-    const isCustom = Boolean(searchParams.get(RangeParams.custom));
+    const isCustom = searchParams.get(RangeParams.custom) === "true";
 
     if (fromDate && toDate && isCustom)
       return setRange({ from: new Date(+fromDate), to: new Date(+toDate) });
@@ -105,12 +104,20 @@ const CalendarInput: React.FC = () => {
 
                       getTimeDifference(value);
 
-                      setSearchParams({
-                        from: String(getTimeDifference(value).getTime()),
-                        to: String(new Date().getTime()),
-                      });
+                      searchParams.set(
+                        RangeParams.from,
+                        String(getTimeDifference(value).getTime()),
+                      );
 
-                      setDefaultSelected(label ?? "");
+                      searchParams.set(
+                        RangeParams.to,
+                        String(new Date().getTime()),
+                      );
+
+                      searchParams.set("type", `${label}`);
+
+                      searchParams.delete(RangeParams.custom);
+                      setSearchParams(searchParams);
                     }}
                   >
                     {defaultDateOptions.map((option) => {
@@ -123,8 +130,8 @@ const CalendarInput: React.FC = () => {
                             type="radio"
                             value={JSON.stringify(option.duration)}
                             name="custom-time"
-                            checked={defaultSelected === option.title}
-                            aria-label={option.title}
+                            checked={searchParams.get("type") === option.type}
+                            aria-label={option.type}
                           />
                           <p>{option.title}</p>
                         </li>
