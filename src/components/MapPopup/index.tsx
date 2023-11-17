@@ -1,4 +1,5 @@
 import * as Tabs from "@radix-ui/react-tabs";
+import { MapsIcon, LocationIcon, SettingIcon } from "@/assets/pole-view";
 
 function MapPopup() {
   const tabs = ["overview", "Per-Blob", "High-res", "Audio", "Frequency"];
@@ -23,11 +24,7 @@ function MapPopup() {
             </div>
           </div>
           <div className="mt-[-5px] flex items-center justify-center">
-            <img
-              src="/icons/maps.svg"
-              alt="maps"
-              className="max-w-full object-contain"
-            />
+            <MapsIcon />
           </div>
         </div>
         <div className="inline-flex items-center gap-[5px] py-1">
@@ -113,11 +110,7 @@ function MapPopup() {
               <div className="flex flex-col gap-2.5">
                 <div className="flex items-center gap-[5px]">
                   <div className="flex h-3 w-3 items-center justify-center">
-                    <img
-                      src="/icons/location.svg"
-                      alt=""
-                      className="max-w-full"
-                    />
+                    <LocationIcon />
                   </div>
                   <div className="font-mont text-[10px] font-bold capitalize leading-normal text-[#5B5B5B] underline">
                     Open in Google Map
@@ -126,11 +119,7 @@ function MapPopup() {
 
                 <div className="flex items-center gap-[5px]">
                   <div className="flex h-3 w-3 items-center justify-center">
-                    <img
-                      src="/icons/settings.svg"
-                      alt=""
-                      className="max-w-full"
-                    />
+                    <SettingIcon />
                   </div>
                   <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
                     Insulators, Transformers, Conductors
@@ -230,11 +219,7 @@ function MapPopup() {
               <div className="flex flex-col gap-2.5">
                 <div className="flex items-center gap-[5px]">
                   <div className="flex h-3 w-3 items-center justify-center">
-                    <img
-                      src="/icons/location.svg"
-                      alt=""
-                      className="max-w-full"
-                    />
+                    <LocationIcon />
                   </div>
                   <div className="font-mont text-[10px] font-bold capitalize leading-normal text-[#5B5B5B] underline">
                     Open in Google Map
@@ -243,11 +228,7 @@ function MapPopup() {
 
                 <div className="flex items-center gap-[5px]">
                   <div className="flex h-3 w-3 items-center justify-center">
-                    <img
-                      src="/icons/settings.svg"
-                      alt=""
-                      className="max-w-full"
-                    />
+                    <SettingIcon />
                   </div>
                   <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
                     Conductors, Insulators, Transformers,
@@ -347,11 +328,7 @@ function MapPopup() {
               <div className="flex flex-col gap-2.5">
                 <div className="flex items-center gap-[5px]">
                   <div className="flex h-3 w-3 items-center justify-center">
-                    <img
-                      src="/icons/location.svg"
-                      alt=""
-                      className="max-w-full"
-                    />
+                    <LocationIcon />
                   </div>
                   <div className="font-mont text-[10px] font-bold capitalize leading-normal text-[#5B5B5B] underline">
                     Open in Google Map
@@ -360,11 +337,7 @@ function MapPopup() {
 
                 <div className="flex items-center gap-[5px]">
                   <div className="flex h-3 w-3 items-center justify-center">
-                    <img
-                      src="/icons/settings.svg"
-                      alt=""
-                      className="max-w-full"
-                    />
+                    <SettingIcon />
                   </div>
                   <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
                     Insulators, Transformers, Conductors
@@ -464,11 +437,7 @@ function MapPopup() {
               <div className="flex flex-col gap-2.5">
                 <div className="flex items-center gap-[5px]">
                   <div className="flex h-3 w-3 items-center justify-center">
-                    <img
-                      src="/icons/location.svg"
-                      alt=""
-                      className="max-w-full"
-                    />
+                    <LocationIcon />
                   </div>
                   <div className="font-mont text-[10px] font-bold capitalize leading-normal text-[#5B5B5B] underline">
                     Open in Google Map
@@ -477,11 +446,7 @@ function MapPopup() {
 
                 <div className="flex items-center gap-[5px]">
                   <div className="flex h-3 w-3 items-center justify-center">
-                    <img
-                      src="/icons/settings.svg"
-                      alt=""
-                      className="max-w-full"
-                    />
+                    <SettingIcon />
                   </div>
                   <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
                     Conductors, Insulators, Transformers,
@@ -581,11 +546,7 @@ function MapPopup() {
               <div className="flex flex-col gap-2.5">
                 <div className="flex items-center gap-[5px]">
                   <div className="flex h-3 w-3 items-center justify-center">
-                    <img
-                      src="/icons/location.svg"
-                      alt=""
-                      className="max-w-full"
-                    />
+                    <LocationIcon />
                   </div>
                   <div className="font-mont text-[10px] font-bold capitalize leading-normal text-[#5B5B5B] underline">
                     Open in Google Map
@@ -594,11 +555,7 @@ function MapPopup() {
 
                 <div className="flex items-center gap-[5px]">
                   <div className="flex h-3 w-3 items-center justify-center">
-                    <img
-                      src="/icons/settings.svg"
-                      alt=""
-                      className="max-w-full"
-                    />
+                    <SettingIcon />
                   </div>
                   <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
                     Insulators, Transformers, Conductors
