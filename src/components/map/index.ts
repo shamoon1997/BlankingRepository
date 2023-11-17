@@ -1,1 +1,1 @@
-export * from "./baseMap";
+export * from "./base-map";

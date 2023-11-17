@@ -32,7 +32,7 @@ function App() {
         />
 
         {/* 404 */}
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path={AppRoutes.notFound} element={<NotFoundPage />} />
       </Routes>
     </>
   );
