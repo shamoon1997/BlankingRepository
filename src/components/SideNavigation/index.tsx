@@ -1,78 +1,13 @@
 import { useEffect, useState } from "react";
-import { Dialog, DialogTrigger, DialogContent } from "@radix-ui/react-dialog";
 import { Link } from "react-router-dom";
 import Header from "../Header";
-import {
-  DeploymentsIcon,
-  AlertsIcon,
-  TicketsIcon,
-  DevicesIcon,
-  PolesIcon,
-  PhotosIcon,
-  SensorBlobsIcon,
-  CustomerReportsIcon,
-  OrganizationsIcon,
-  UsersIcon,
-} from "@/assets";
-
-const navigationTabs = [
-  {
-    name: "Deployments",
-    path: "/deployments",
-    icon: DeploymentsIcon,
-  },
-  {
-    name: "Alerts",
-    path: "/alerts",
-    icon: AlertsIcon,
-  },
-  {
-    name: "Tickets",
-    path: "/tickets",
-    icon: TicketsIcon,
-  },
-  {
-    name: "Devices",
-    path: "/devices",
-    icon: DevicesIcon,
-  },
-  {
-    name: "Poles",
-    path: "/poles",
-    icon: PolesIcon,
-  },
-  {
-    name: "Photos",
-    path: "/photos",
-    icon: PhotosIcon,
-  },
-  {
-    name: "Sensor Blobs",
-    path: "/sensor-blobs",
-    icon: SensorBlobsIcon,
-  },
-  {
-    name: "Customer Reports",
-    path: "/customer-reports",
-    icon: CustomerReportsIcon,
-  },
-  {
-    name: "Oragnizations",
-    path: "/organizations",
-    icon: OrganizationsIcon,
-  },
-  {
-    name: "Users",
-    path: "/users",
-    icon: UsersIcon,
-  },
-];
+import { navigationTabs } from "../../constants/sidebar.constants";
 
 const SideNavigation = () => {
   const [selectedItem, setSelectedItem] = useState(
     location.pathname.substring(1),
   );
-  const [isOpen, setIsOpen] = useState(selectedItem.length > 0 ? true : false);
+  const [isOpen, setIsOpen] = useState(selectedItem?.length > 0 ? true : false);
 
   useEffect(() => {
     setTimeout(() => (document.body.style.pointerEvents = ""), 0);
@@ -89,53 +24,46 @@ const SideNavigation = () => {
   };
 
   return (
-    <>
-      <Dialog open={isOpen}>
-        <DialogTrigger>
-          <div
-            className="h-screen w-56 bg-side-nav p-4 text-white"
-            style={{ zIndex: 9999 }}
-          >
-            <h3 className="mb-4 text-left font-mont text-xl font-bold">
-              ADMIN
-            </h3>
+    <div>
+      <div className="bg-customSideColor h-screen w-56 p-4 text-white">
+        <h3 className="font-mont mb-4 text-left text-xl font-bold">ADMIN</h3>
 
-            <ul>
-              {navigationTabs.map((tab) => {
-                return (
-                  <li
-                    className={`mb-2 flex cursor-pointer items-center py-2 pl-2 pr-4 transition ${
-                      selectedItem === tab.name.toLowerCase()
-                        ? "rounded-md border-gray-700 bg-gray-700"
-                        : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
-                    }`}
-                  >
-                    <Link
-                      to={tab.path}
-                      className="flex items-center"
-                      onClick={() => handleItemClick(tab.name.toLowerCase())}
-                    >
-                      <div className="mr-4 h-5 w-5 [&_svg]:h-[20px] [&_svg]:w-[20px]">
-                        <tab.icon />
-                      </div>
+        <ul>
+          {navigationTabs.map((tab) => {
+            return (
+              <li
+                className={`mb-2 flex cursor-pointer items-center py-2 pl-2 pr-4 transition ${
+                  selectedItem === tab.name.toLowerCase()
+                    ? "rounded-md border-gray-700 bg-gray-700"
+                    : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
+                }`}
+              >
+                <Link
+                  to={tab.path}
+                  className="flex items-center"
+                  onClick={() => handleItemClick(tab.name.toLowerCase())}
+                >
+                  <div className="mr-4 h-5 w-5 [&_svg]:h-[20px] [&_svg]:w-[20px]">
+                    <tab.icon />
+                  </div>
 
-                      <span>{tab.name}</span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </DialogTrigger>
+                  <span>{tab.name}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
 
-        <DialogContent
+      {isOpen && (
+        <div
           className="fixed left-56 right-0 top-0 bg-gray-200 p-10 text-black"
           style={{ backgroundColor: "#F5F5F5" }}
         >
           {renderContent(selectedItem)}
-        </DialogContent>
-      </Dialog>
-    </>
+        </div>
+      )}
+    </div>
   );
 };
 
