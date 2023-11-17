@@ -1,0 +1,127 @@
+/* Mont Regular */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Mont Regular Italic */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-RegularItalic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+/* Mont Bold */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Mont Bold Italic */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-BoldItalic.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* Mont Black */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+/* Mont Black Italic */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-BlackItalic.ttf") format("truetype");
+  font-weight: 900;
+  font-style: italic;
+}
+
+/* Mont ExtraLight */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+/* Mont ExtraLight Italic */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-ExtraLightItalic.ttf") format("truetype");
+  font-weight: 200;
+  font-style: italic;
+}
+
+/* Mont Hairline */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-Hairline.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+/* Mont Hairline Italic */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-HairlineItalic.ttf") format("truetype");
+  font-weight: 100;
+  font-style: italic;
+}
+
+/* Mont SemiBold */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* Mont SemiBold Italic */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-SemiBoldItalic.ttf") format("truetype");
+  font-weight: 600;
+  font-style: italic;
+}
+
+/* Mont Book */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-Book.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Mont Book Italic */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-BookItalic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* Mont Light */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+/* Mont Light Italic */
+@font-face {
+  font-family: "Mont";
+  src: url("/fonts/Mont-LightItalic.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
+}

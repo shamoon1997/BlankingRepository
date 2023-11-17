@@ -3,6 +3,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        mont: ["Mont", "serif"],
+      },
       dropShadow: {
         "map-dot": "0.8px 0.8px 2px rgba(0, 0, 0, 0.25)",
       },
