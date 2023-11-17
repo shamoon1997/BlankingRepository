@@ -1,8 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
+import "./fonts.css";
 import "./index.css";
+import { BrowserRouter } from "react-router-dom";
 import { Auth0ProviderWithNavigate } from "./state/providers";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -12,5 +13,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <App />
       </Auth0ProviderWithNavigate>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
