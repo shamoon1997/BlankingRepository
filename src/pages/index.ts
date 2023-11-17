@@ -1,5 +1,6 @@
 import { CallbackPage } from "./callback-page";
-import LoginPage from "./login-page";
-import ProtectedPage from "./protected-page";
+import { HomePage } from "./home-page";
+import { DashboardPage } from "./dashboard-page";
+import { NotFoundPage } from "./not-found-page";
 
-export { CallbackPage, LoginPage, ProtectedPage };
+export { CallbackPage, HomePage, DashboardPage, NotFoundPage };
