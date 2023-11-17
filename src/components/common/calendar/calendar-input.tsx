@@ -1,36 +1,25 @@
 import { CalendarIcon, ChevronIcon } from "@/assets";
+import { dateFormats, defaultDateDropdownOptions } from "@/constants";
+import { formateDate, subtractFromCurrentDate } from "@/utils/helpers";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tabs from "@radix-ui/react-tabs";
 import React, { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
-import { DateRangeCalendar } from "..";
-import { format, sub } from "date-fns";
 import { useSearchParams } from "react-router-dom";
+import { DateRangeCalendar } from "..";
 
 enum RangeParams {
   from = "from",
   to = "to",
   custom = "custom",
+  type = "type",
 }
-
-const defaultDateOptions = [
-  { title: "Last 30 minutes", duration: { minutes: 30 }, type: "last_30_mins" },
-  { title: "Last hour", duration: { hours: 1 }, type: "last_hour" },
-  { title: "Last 3 hours", duration: { hours: 3 }, type: "last_3_hours" },
-  { title: "Last 6 hours", duration: { hours: 6 }, type: "last_6_hours" },
-  { title: "Last 12 hours", duration: { hours: 12 }, type: "last_12_hours" },
-  { title: "Today", duration: { hours: 24 }, type: "today" },
-  { title: "Last 7 days", duration: { days: 7 }, type: "last_7_days" },
-];
-
-const getTimeDifference = (amount: Duration) => {
-  const subtractedDate = sub(new Date(), amount);
-  return subtractedDate;
-};
 
 const CalendarInput: React.FC = () => {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const defaultFilter = searchParams.get(RangeParams.type);
 
   useEffect(() => {
     const fromDate = Number(searchParams.get(RangeParams.from));
@@ -43,31 +32,51 @@ const CalendarInput: React.FC = () => {
     if (!isCustom) setRange(undefined);
   }, [searchParams]);
 
-  const fromDate = range?.from && format(range.from, "dd/MM/yyyy");
-  const toDate = range?.to && format(range.to, "dd/MM/yyyy");
+  const fromDate = range?.from && formateDate(range.from, dateFormats.ddmmyyyy);
+  const toDate = range?.to && formateDate(range.to, dateFormats.ddmmyyyy);
   return (
     <>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <div className="inline-flex cursor-pointer items-center rounded-lg border border-slate-300  py-1">
-            <div className="flex items-center px-0">
+          <div className="inline-flex min-h-[37px] min-w-[200px] cursor-pointer items-center rounded-lg border border-slate-300 py-1">
+            <div className="flex w-full items-center px-0">
               <div className="px-2 [&_svg]:h-[15px] [&_svg]:w-[15px]">
                 <CalendarIcon />
               </div>
 
-              <div>
+              {defaultFilter?.length && (
+                <div>
+                  <p className="text-left text-[8px] font-semibold text-blue-400">
+                    {
+                      defaultDateDropdownOptions?.find(
+                        (item) => item?.type === defaultFilter,
+                      )?.title
+                    }
+                  </p>
+                  <p className="text-left text-[10px]">
+                    {formateDate(new Date(), dateFormats.ddmmyyyy)}
+                  </p>
+                </div>
+              )}
+
+              {!defaultFilter?.length && (
+                <div>
+                  <p className="text-left text-[8px] font-semibold text-blue-400">
+                    From
+                  </p>
+                  <p className="text-[10px]">{fromDate ?? "DD/MM/YYYY"}</p>
+                </div>
+              )}
+            </div>
+
+            {!defaultFilter?.length && (
+              <div className="px-4">
                 <p className="text-left text-[8px] font-semibold text-blue-400">
-                  From
+                  To
                 </p>
-                <p className="text-[10px]">{fromDate ?? "DD/MM/YYYY"}</p>
+                <p className="text-[10px]">{toDate ?? "DD/MM/YYYY"}</p>
               </div>
-            </div>
-            <div className="px-4">
-              <p className="text-left text-[8px] font-semibold text-blue-400">
-                To
-              </p>
-              <p className="text-[10px]">{toDate ?? "DD/MM/YYYY"}</p>
-            </div>
+            )}
             <div className="px-2 [&_svg]:rotate-180">
               <ChevronIcon />
             </div>
@@ -102,25 +111,17 @@ const CalendarInput: React.FC = () => {
                         target.value,
                       ) as Duration;
 
-                      getTimeDifference(value);
+                      subtractFromCurrentDate(value);
 
-                      searchParams.set(
-                        RangeParams.from,
-                        String(getTimeDifference(value).getTime()),
-                      );
-
-                      searchParams.set(
-                        RangeParams.to,
-                        String(new Date().getTime()),
-                      );
-
-                      searchParams.set("type", `${label}`);
-
+                      searchParams.delete(RangeParams.from);
+                      searchParams.delete(RangeParams.to);
                       searchParams.delete(RangeParams.custom);
+
+                      searchParams.set(RangeParams.type, `${label}`);
                       setSearchParams(searchParams);
                     }}
                   >
-                    {defaultDateOptions.map((option) => {
+                    {defaultDateDropdownOptions.map((option) => {
                       return (
                         <li
                           className="flex items-center gap-2 py-1"
@@ -130,7 +131,9 @@ const CalendarInput: React.FC = () => {
                             type="radio"
                             value={JSON.stringify(option.duration)}
                             name="custom-time"
-                            checked={searchParams.get("type") === option.type}
+                            defaultChecked={
+                              searchParams.get("type") === option.type
+                            }
                             aria-label={option.type}
                           />
                           <p>{option.title}</p>
