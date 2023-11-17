@@ -1,4 +1,5 @@
-import { format } from "date-fns";
+import { dateFormats } from "@/constants";
+import { formateDate } from "@/utils/helpers";
 import React from "react";
 import {
   ClassNames,
@@ -22,11 +23,6 @@ const classNames: ClassNames = {
   nav_button_next: "[&_svg]:h-3 [&_svg]:w-3",
 };
 
-const formatWeekdayName: DateFormatter = (week) => {
-  const weekdayName = format(week, "EEEEE");
-  return weekdayName;
-};
-
 type Props = {
   range: DateRange | undefined;
   setRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
@@ -34,6 +30,11 @@ type Props = {
 
 const DateRangeCalendar: React.FC<Props> = ({ range, setRange }) => {
   const [, setSearchParams] = useSearchParams();
+
+  const formatWeekdayName: DateFormatter = (week) => {
+    const weekdayName = formateDate(week, dateFormats.weekMini);
+    return weekdayName;
+  };
 
   return (
     <>

@@ -1,0 +1,3 @@
+export const dateFormats = {
+  weekMini: "EEEEE", // S, M, T, W .....
+};
