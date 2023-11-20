@@ -9,14 +9,9 @@ const SideNavigation = () => {
   );
   const [isOpen, setIsOpen] = useState(selectedItem?.length > 0 ? true : false);
 
-  useEffect(() => {
-    setTimeout(() => (document.body.style.pointerEvents = ""), 0);
-  }, []);
-
   const handleItemClick = (item: string) => {
     setIsOpen(true);
     setSelectedItem(item);
-    setTimeout(() => (document.body.style.pointerEvents = ""), 0);
   };
 
   const renderContent = (heading: string) => {
@@ -26,7 +21,7 @@ const SideNavigation = () => {
   return (
     <div>
       <div className="bg-customSideColor h-screen w-56 p-4 text-white">
-        <h3 className="font-mont mb-4 text-left text-xl font-bold">ADMIN</h3>
+        <h3 className="mb-4 text-left font-mont text-xl font-bold">ADMIN</h3>
 
         <ul>
           {navigationTabs.map((tab) => {

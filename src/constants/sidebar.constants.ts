@@ -53,7 +53,7 @@ export const navigationTabs = [
     icon: CustomerReportsIcon,
   },
   {
-    name: "Oragnizations",
+    name: "Organizations",
     path: "/organizations",
     icon: OrganizationsIcon,
   },
