@@ -1,6 +1,6 @@
 export const AppRoutes = {
   notFound: "*",
   root: "/",
-  dashboard: "/deployments",
+  dashboard: "/dashboard",
   callback: "/callback",
 };

@@ -29,7 +29,9 @@ function App() {
         <Route
           path={AppRoutes.dashboard}
           element={<AuthenticationGuard component={DashboardPage} />}
-        />
+        >
+          <Route path="deployments" element={<h1>Yo bro</h1>} />
+        </Route>
 
         {/* 404 */}
         <Route path={AppRoutes.notFound} element={<NotFoundPage />} />
