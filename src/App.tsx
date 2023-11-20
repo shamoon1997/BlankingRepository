@@ -3,38 +3,43 @@ import { CallbackPage, DashboardPage, HomePage, NotFoundPage } from "./pages";
 import { AuthenticationGuard } from "./hoc";
 
 import { useAuth0 } from "@auth0/auth0-react";
-import { HomeLoader, PageLoader } from "./components";
+import { BaseMap, HomeLoader, PageLoader } from "./components";
 import { AppRoutes } from "./utils/routes";
+import { FilterArea } from "./components/filters";
 
 function App() {
-  const { isLoading } = useAuth0();
-  const location = useLocation();
+  // const { isLoading } = useAuth0();
+  // const location = useLocation();
 
-  if (isLoading) {
-    if (location.pathname === AppRoutes.root) {
-      return <HomeLoader />;
-    } else {
-      return <PageLoader />;
-    }
-  }
+  // if (isLoading) {
+  //   if (location.pathname === AppRoutes.root) {
+  //     return <HomeLoader />;
+  //   } else {
+  //     return <PageLoader />;
+  //   }
+  // }
 
   return (
-    <>
-      <Routes>
-        {/* public routes */}
-        <Route path={AppRoutes.root} element={<HomePage />} />
-        <Route path={AppRoutes.callback} element={<CallbackPage />} />
+    <div className="flex">
+      <FilterArea />
+      <BaseMap />
+    </div>
+    // <>
+    //   <Routes>
+    //     {/* public routes */}
+    //     <Route path={AppRoutes.root} element={<HomePage />} />
+    //     <Route path={AppRoutes.callback} element={<CallbackPage />} />
 
-        {/* protected */}
-        <Route
-          path={AppRoutes.dashboard}
-          element={<AuthenticationGuard component={DashboardPage} />}
-        />
+    //     {/* protected */}
+    //     <Route
+    //       path={AppRoutes.dashboard}
+    //       element={<AuthenticationGuard component={DashboardPage} />}
+    //     />
 
-        {/* 404 */}
-        <Route path={AppRoutes.notFound} element={<NotFoundPage />} />
-      </Routes>
-    </>
+    //     {/* 404 */}
+    //     <Route path={AppRoutes.notFound} element={<NotFoundPage />} />
+    //   </Routes>
+    // </>
   );
 }
 
