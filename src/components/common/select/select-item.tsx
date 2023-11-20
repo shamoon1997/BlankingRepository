@@ -7,10 +7,12 @@ const SelectItem = React.forwardRef(
       children,
       className,
       value,
+      icon,
       ...props
     }: {
       value: string;
       children: ReactNode;
+      icon?: ReactNode;
       className?: string | undefined;
       disabled?: boolean;
     },
@@ -26,6 +28,7 @@ const SelectItem = React.forwardRef(
         value={value}
         ref={forwardedRef}
       >
+        {icon && <span className="inline-flex">{icon}</span>}
         <Select.ItemText>{children}</Select.ItemText>
         <Select.ItemIndicator className="absolute left-0 inline-flex w-[25px] items-center justify-center">
           {/* CHECK ICON HERE */}

@@ -1,4 +1,4 @@
-import { ChevronIcon } from "@/assets";
+import { ChevronIcon, FilterIcon } from "@/assets";
 import * as Select from "@radix-ui/react-select";
 import React from "react";
 import SelectItem from "./select-item";
@@ -12,10 +12,15 @@ const SelectDropdown: React.FC<Props> = ({
 }) => (
   <Select.Root>
     <Select.Trigger
-      className="inline-flex h-[35px] w-full items-center justify-between rounded-lg border border-slate-600 bg-white px-[15px] font-mont text-[13px] leading-none text-slate-600 outline-none hover:bg-slate-200 data-[placeholder]:text-black/40"
+      className="inline-flex h-[35px] w-full items-center justify-between rounded-lg border border-slate-600 bg-white px-2 font-mont text-[13px] leading-none text-slate-600 outline-none hover:bg-slate-200 data-[placeholder]:text-black/40"
       aria-label="Food"
     >
-      <Select.Value placeholder={placeholder} />
+      <div className="flex items-center gap-1">
+        <span className="[&_svg]:h-[25px] [&_svg]:w-[25px]">
+          <FilterIcon />
+        </span>
+        <Select.Value placeholder={placeholder} />
+      </div>
       <Select.Icon className="text-slate-600">
         <div className="rotate-180">
           <ChevronIcon />
@@ -36,29 +41,37 @@ const SelectDropdown: React.FC<Props> = ({
             <SelectItem
               className="cursor-pointer rounded-lg border-none p-2 text-sm outline-none hover:bg-slate-200"
               value="all"
+              icon={
+                <div className="mr-2 inline-flex h-[8px] w-[8px] rounded-full border border-slate-400" />
+              }
             >
-              <div className="mr-2 inline-flex h-[8px] w-[8px] rounded-full border border-slate-400" />
               All
             </SelectItem>
             <SelectItem
               className="cursor-pointer rounded-lg border-none p-2 text-sm outline-none hover:bg-slate-200"
               value="online"
+              icon={
+                <div className="mr-2 inline-flex h-[8px] w-[8px] rounded-full bg-online" />
+              }
             >
-              <div className="mr-2 inline-flex h-[8px] w-[8px] rounded-full bg-online" />
               Online
             </SelectItem>
             <SelectItem
               className="cursor-pointer rounded-lg border-none p-2 text-sm outline-none hover:bg-slate-200"
               value="offline"
+              icon={
+                <div className="mr-2 inline-flex h-[8px] w-[8px] rounded-full bg-offline" />
+              }
             >
-              <div className="mr-2 inline-flex h-[8px] w-[8px] rounded-full bg-offline" />
               Offline
             </SelectItem>
             <SelectItem
               className="cursor-pointer rounded-lg border-none p-2 text-sm outline-none hover:bg-slate-200"
               value="spotty"
+              icon={
+                <div className="mr-2 inline-flex h-[8px] w-[8px] rounded-full bg-spotty" />
+              }
             >
-              <div className="mr-2 inline-flex h-[8px] w-[8px] rounded-full bg-spotty" />
               Spotty
             </SelectItem>
           </Select.Group>
