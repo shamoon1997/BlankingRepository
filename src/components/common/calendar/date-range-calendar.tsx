@@ -1,5 +1,5 @@
 import { dateFormats } from "@/constants";
-import { formateDate } from "@/utils/helpers";
+import { formateDate } from "@/utils/date";
 import React from "react";
 import {
   ClassNames,
