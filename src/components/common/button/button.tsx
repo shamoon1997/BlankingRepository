@@ -8,13 +8,14 @@ type Props = React.ComponentPropsWithoutRef<"button"> & {
 const Button: React.FC<Props> = ({
   text,
   backgroundColor,
+  color,
   onClick,
   type,
 }: Props) => {
   return (
     <button
-      className="w-full h-full cursor-pointer border border-slate-400 rounded-md"
-      style={{ backgroundColor }}
+      className="h-full w-full cursor-pointer rounded-md border border-slate-400"
+      style={{ backgroundColor, color }}
       onClick={onClick}
       type={type}
     >
