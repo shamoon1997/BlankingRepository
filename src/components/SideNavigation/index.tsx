@@ -1,22 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Header from "../Header";
 import { navigationTabs } from "../../constants/sidebar.constants";
 
 const SideNavigation: React.FC = () => {
-  const [selectedItem, setSelectedItem] = useState(
-    location.pathname.substring(1),
-  );
-  const [isOpen, setIsOpen] = useState(selectedItem?.length > 0 ? true : false);
-
-  const handleItemClick = (item: string) => {
-    setIsOpen(true);
-    setSelectedItem(item);
-  };
-
-  const renderContent = (heading: string) => {
-    return <Header heading={heading} />;
-  };
+  const [selectedItem] = useState(location.pathname.substring(1));
 
   return (
     <div>
@@ -34,11 +21,7 @@ const SideNavigation: React.FC = () => {
                 }`}
                 key={tab?.name}
               >
-                <Link
-                  to={tab.path}
-                  className="flex items-center"
-                  onClick={() => handleItemClick(tab.name.toLowerCase())}
-                >
+                <Link to={tab.path} className="flex items-center">
                   <div className="mr-4 h-5 w-5 [&_svg]:h-[20px] [&_svg]:w-[20px]">
                     <tab.icon />
                   </div>
@@ -50,15 +33,6 @@ const SideNavigation: React.FC = () => {
           })}
         </ul>
       </div>
-
-      {isOpen && (
-        <div
-          className="fixed left-56 right-0 top-0 bg-gray-200 p-10 text-black"
-          style={{ backgroundColor: "#F5F5F5" }}
-        >
-          {renderContent(selectedItem)}
-        </div>
-      )}
     </div>
   );
 };

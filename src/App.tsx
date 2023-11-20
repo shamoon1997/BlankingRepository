@@ -3,7 +3,7 @@ import { CallbackPage, DashboardPage, HomePage, NotFoundPage } from "./pages";
 import { AuthenticationGuard } from "./hoc";
 
 import { useAuth0 } from "@auth0/auth0-react";
-import { HomeLoader, PageLoader, SideNavigation } from "./components";
+import { HomeLoader, PageLoader } from "./components";
 import { AppRoutes } from "./utils/routes";
 
 function App() {
@@ -20,7 +20,6 @@ function App() {
 
   return (
     <>
-      <SideNavigation />
       <Routes>
         {/* public routes */}
         <Route path={AppRoutes.root} element={<HomePage />} />
@@ -30,7 +29,9 @@ function App() {
         <Route
           path={AppRoutes.dashboard}
           element={<AuthenticationGuard component={DashboardPage} />}
-        />
+        >
+          <Route path="deployments" element={<h1>Yo bro</h1>} />
+        </Route>
 
         {/* 404 */}
         <Route path={AppRoutes.notFound} element={<NotFoundPage />} />
