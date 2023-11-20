@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "../Header";
 import { navigationTabs } from "../../constants/sidebar.constants";

@@ -30,6 +30,9 @@ export default {
         "alert-low": "#003033",
 
         // map zoomed tooltip bg
+
+        // SIDEBAR COLORS
+        customSideColor: "#3B3C4F",
       },
       backgroundColor: {
         "map-zoomed-box": "rgba(22, 22, 22, 0.70)",
