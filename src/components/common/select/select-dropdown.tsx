@@ -1,6 +1,7 @@
 import { ChevronIcon } from "@/assets";
 import * as Select from "@radix-ui/react-select";
-import React, { ReactNode } from "react";
+import React from "react";
+import SelectItem from "./select-item";
 
 type Props = {
   placeholder?: string;
@@ -11,7 +12,7 @@ const SelectDropdown: React.FC<Props> = ({
 }) => (
   <Select.Root>
     <Select.Trigger
-      className="inline-flex h-[35px] w-full items-center justify-between gap-[5px] rounded bg-white px-[15px] text-[13px] leading-none text-slate-600 shadow-[0_2px_10px] shadow-black/10 outline-none hover:bg-blue-400 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-black/40"
+      className="inline-flex h-[35px] w-full items-center justify-between rounded-lg border border-slate-600 bg-white px-[15px] font-mont text-[13px] leading-none text-slate-600 outline-none hover:bg-slate-200 data-[placeholder]:text-black/40"
       aria-label="Food"
     >
       <Select.Value placeholder={placeholder} />
@@ -22,48 +23,47 @@ const SelectDropdown: React.FC<Props> = ({
       </Select.Icon>
     </Select.Trigger>
     <Select.Portal>
-      <Select.Content className="overflow-hidden rounded-md bg-white shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
-        <Select.ScrollUpButton className="flex h-[25px] cursor-default items-center justify-center bg-white text-slate-600">
-          <ChevronIcon />
-        </Select.ScrollUpButton>
-        <Select.Viewport className="p-[5px]">
+      <Select.Content
+        className="min-w-[140px] rounded-lg bg-white font-mont shadow-lg"
+        side="bottom"
+        position="popper"
+      >
+        <Select.Viewport className="p-2">
           <Select.Group>
-            <Select.Label className="text-mauve11 px-[25px] text-xs leading-[25px]">
+            {/* <Select.Label className="p-1 text-xs leading-[25px]">
               Fruits
-            </Select.Label>
-            <SelectItem value="apple">Apple</SelectItem>
-            <SelectItem value="banana">Banana</SelectItem>
-            <SelectItem value="blueberry">Blueberry</SelectItem>
-            <SelectItem value="grapes">Grapes</SelectItem>
-            <SelectItem value="pineapple">Pineapple</SelectItem>
-          </Select.Group>
-
-          <Select.Separator className="bg-violet6 m-[5px] h-[1px]" />
-
-          <Select.Group>
-            <Select.Label className="text-mauve11 px-[25px] text-xs leading-[25px]">
-              Vegetables
-            </Select.Label>
-            <SelectItem value="aubergine">Aubergine</SelectItem>
-            <SelectItem value="broccoli">Broccoli</SelectItem>
-            <SelectItem value="carrot" disabled>
-              Carrot
+            </Select.Label> */}
+            <SelectItem
+              className="cursor-pointer rounded-lg border-none p-2 text-sm outline-none hover:bg-slate-200"
+              value="all"
+            >
+              <div className="mr-2 inline-flex h-[8px] w-[8px] rounded-full border border-slate-400" />
+              All
             </SelectItem>
-            <SelectItem value="courgette">Courgette</SelectItem>
-            <SelectItem value="leek">Leek</SelectItem>
+            <SelectItem
+              className="cursor-pointer rounded-lg border-none p-2 text-sm outline-none hover:bg-slate-200"
+              value="online"
+            >
+              <div className="mr-2 inline-flex h-[8px] w-[8px] rounded-full bg-online" />
+              Online
+            </SelectItem>
+            <SelectItem
+              className="cursor-pointer rounded-lg border-none p-2 text-sm outline-none hover:bg-slate-200"
+              value="offline"
+            >
+              <div className="mr-2 inline-flex h-[8px] w-[8px] rounded-full bg-offline" />
+              Offline
+            </SelectItem>
+            <SelectItem
+              className="cursor-pointer rounded-lg border-none p-2 text-sm outline-none hover:bg-slate-200"
+              value="spotty"
+            >
+              <div className="mr-2 inline-flex h-[8px] w-[8px] rounded-full bg-spotty" />
+              Spotty
+            </SelectItem>
           </Select.Group>
 
           <Select.Separator className="bg-violet6 m-[5px] h-[1px]" />
-
-          <Select.Group>
-            <Select.Label className="text-mauve11 px-[25px] text-xs leading-[25px]">
-              Meat
-            </Select.Label>
-            <SelectItem value="beef">Beef</SelectItem>
-            <SelectItem value="chicken">Chicken</SelectItem>
-            <SelectItem value="lamb">Lamb</SelectItem>
-            <SelectItem value="pork">Pork</SelectItem>
-          </Select.Group>
         </Select.Viewport>
         <Select.ScrollDownButton className="flex h-[25px] cursor-default items-center justify-center bg-white text-slate-600">
           <div className="rotate-180">
@@ -74,42 +74,5 @@ const SelectDropdown: React.FC<Props> = ({
     </Select.Portal>
   </Select.Root>
 );
-
-const SelectItem = React.forwardRef(
-  (
-    {
-      children,
-      className,
-      value,
-      ...props
-    }: {
-      value: string;
-      children: ReactNode;
-      className?: string | undefined;
-      disabled?: boolean;
-    },
-    forwardedRef?: React.ForwardedRef<HTMLDivElement>,
-  ) => {
-    return (
-      <Select.Item
-        className={
-          className ??
-          "data-[disabled]:text-mauve8 relative flex h-[25px] select-none items-center rounded-[3px] pl-[25px] pr-[35px] text-[13px] leading-none text-slate-600 data-[disabled]:pointer-events-none data-[highlighted]:bg-violet-900 data-[highlighted]:text-white data-[highlighted]:outline-none"
-        }
-        {...props}
-        value={value}
-        ref={forwardedRef}
-      >
-        <Select.ItemText>{children}</Select.ItemText>
-        <Select.ItemIndicator className="absolute left-0 inline-flex w-[25px] items-center justify-center">
-          {/* CHECK ICON HERE */}
-          {/* <CheckIcon /> */}
-        </Select.ItemIndicator>
-      </Select.Item>
-    );
-  },
-);
-
-SelectItem.displayName = "SelectItem";
 
 export default SelectDropdown;
