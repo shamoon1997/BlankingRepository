@@ -1,3 +1,4 @@
+import { SideNavigation } from "@/components";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export const DashboardPage = () => {
@@ -5,7 +6,9 @@ export const DashboardPage = () => {
 
   return (
     <div>
+      <SideNavigation />
       <p>Dashboard page</p>
+
       <button onClick={() => void logout()}>logout</button>
     </div>
   );
