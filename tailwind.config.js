@@ -11,6 +11,7 @@ export default {
       },
       boxShadow: {
         tooltip: "2px 2px 4px 0px rgba(0, 0, 0, 0.15)",
+        "pole-view": "2px 2px 4px 0px rgba(0, 0, 0, 0.1)",
         "zoomed-box": "0.2px 0.2px 0.5px 0px rgba(0, 0, 0, 0.10)",
       },
       colors: {
