@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Header from "../Header";
 import { navigationTabs } from "../../constants/sidebar.constants";
 
-const SideNavigation = () => {
+const SideNavigation: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState(
     location.pathname.substring(1),
   );
@@ -20,7 +20,7 @@ const SideNavigation = () => {
 
   return (
     <div>
-      <div className="bg-customSideColor h-screen w-56 p-4 text-white">
+      <div className="h-screen w-56 bg-customSideColor p-4 text-white">
         <h3 className="mb-4 text-left font-mont text-xl font-bold">ADMIN</h3>
 
         <ul>
@@ -32,6 +32,7 @@ const SideNavigation = () => {
                     ? "rounded-md border-gray-700 bg-gray-700"
                     : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"
                 }`}
+                key={tab?.name}
               >
                 <Link
                   to={tab.path}
