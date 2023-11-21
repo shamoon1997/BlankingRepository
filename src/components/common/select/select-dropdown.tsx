@@ -35,7 +35,7 @@ const SelectDropdown: React.FC<Props> = ({
     </Select.Trigger>
     <Select.Portal>
       <Select.Content
-        className="min-w-[140px] rounded-lg bg-white font-mont shadow-lg"
+        className="w-[var(--radix-select-trigger-width)] rounded-lg bg-white font-mont shadow-lg"
         side="bottom"
         position="popper"
       >

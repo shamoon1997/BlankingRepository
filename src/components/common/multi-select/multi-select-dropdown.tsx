@@ -17,6 +17,7 @@ const MultiSelectDropdown: React.FC = () => {
         options={options}
         className="h-[35px] font-mont text-[13px] outline-none 
         [&_.dropdown-container]:flex [&_.dropdown-container]:!h-[35px] [&_.dropdown-container]:items-center [&_.dropdown-container]:!rounded-lg [&_.dropdown-container]:!border-slate-600 focus-within:[&_.dropdown-container]:!border-slate-600  focus-within:[&_.dropdown-container]:!shadow-none
+        [&_.item-renderer]:flex [&_.item-renderer]:items-center [&_.item-renderer]:rounded-lg
         [&_.panel-content]:p-2
         [&_.select-item.selected]:bg-slate-300
         [&_.select-item]:rounded-lg
