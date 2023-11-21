@@ -5,7 +5,7 @@ import SelectItem from "./select-item";
 
 type Props = {
   placeholder?: string;
-  dropdownIcon?: ReactNode;
+  dropdownIcon?: ReactNode; //Adds fixed icon on dropdown
   options: {
     value: string;
     text: string | JSX.Element;
@@ -21,7 +21,7 @@ const SelectDropdown: React.FC<Props> = ({
   <Select.Root>
     <Select.Trigger
       className="inline-flex h-[35px] w-full items-center justify-between rounded-lg border border-slate-600 bg-white px-2 font-mont text-[13px] leading-none text-slate-600 outline-none hover:bg-slate-200 data-[placeholder]:text-black/40"
-      aria-label="Food"
+      aria-label="dropdown"
     >
       <div className="flex items-center">
         {dropdownIcon}

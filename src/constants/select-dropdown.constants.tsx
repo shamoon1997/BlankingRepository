@@ -12,7 +12,7 @@ type SelectDropdownType = {
   icon?: JSX.Element;
 };
 
-export const poleStatusOptions: SelectDropdownType[] = [
+export const poleConnectionStatusOptions: SelectDropdownType[] = [
   {
     value: "all",
     text: "All",
@@ -43,7 +43,7 @@ export const poleStatusOptions: SelectDropdownType[] = [
   },
 ];
 
-export const poleStatusOptions2: SelectDropdownType[] = [
+export const polePropertyOptions: SelectDropdownType[] = [
   {
     value: "all",
     text: (
@@ -91,7 +91,7 @@ export const poleStatusOptions2: SelectDropdownType[] = [
   },
 ];
 
-export const poleStatusOptions3: SelectDropdownType[] = [
+export const gridscopeOptions: SelectDropdownType[] = [
   { value: "gridscope", text: "Gridscope" },
   { value: "alert", text: "Alert" },
   { value: "incident", text: "Incident" },
