@@ -1,2 +1,3 @@
-import { AppRoutes } from "./routes";
-export { AppRoutes };
+import { AppRoutes, navigationTabs } from "./routes";
+
+export { AppRoutes, navigationTabs };

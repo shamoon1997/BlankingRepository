@@ -11,6 +11,7 @@ export default {
       },
       boxShadow: {
         tooltip: "2px 2px 4px 0px rgba(0, 0, 0, 0.15)",
+        "pole-view": "2px 2px 4px 0px rgba(0, 0, 0, 0.1)",
         "zoomed-box": "0.2px 0.2px 0.5px 0px rgba(0, 0, 0, 0.10)",
         "filter-area": "0px 4px 8px 0px rgba(0, 0, 0, 0.1)",
       },
@@ -35,6 +36,10 @@ export default {
         "alert-low": "#003033",
 
         "radio-button": "#5B5B5B",
+        // map zoomed tooltip bg
+
+        // SIDEBAR COLORS
+        customSideColor: "#3B3C4F",
       },
       backgroundColor: {
         "map-zoomed-box": "rgba(22, 22, 22, 0.70)",
