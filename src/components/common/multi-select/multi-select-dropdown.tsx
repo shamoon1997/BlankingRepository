@@ -1,18 +1,31 @@
 import { ChevronIcon } from "@/assets";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
+// import { useSearchParams } from "react-router-dom";
+
+type OptionType = {
+  value: string;
+  label: string;
+  key?: string;
+  disabled?: boolean;
+};
 
 type Props = {
-  options: {
-    value: unknown;
-    label: string;
-    key?: string;
-    disabled?: boolean;
-  }[];
+  options: OptionType[];
 };
 
 const MultiSelectDropdown: React.FC<Props> = ({ options }) => {
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState<OptionType[]>([]);
+  // const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    // const stringData = [...selected].map((item) => `${item?.value}`).join(",");
+    // SearchParam logic
+  }, [selected]);
+
+  useEffect(() => {
+    console.log(selected);
+  }, [selected]);
 
   return (
     <>
@@ -28,7 +41,7 @@ const MultiSelectDropdown: React.FC<Props> = ({ options }) => {
         value={selected}
         onChange={setSelected}
         labelledBy="Select"
-        hasSelectAll={true}
+        hasSelectAll={false}
         disableSearch={true}
         ClearIcon={false}
         ClearSelectedIcon={null}
