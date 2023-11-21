@@ -4,6 +4,7 @@ import { MapToolTipContainer } from "./map/map-tooltip";
 import { PageLoader } from "./page-loaders/page-loader";
 import { HomeLoader } from "./page-loaders/home-loader";
 import SideNavigation from "./SideNavigation";
+import Legend from "./Legend/legend";
 
 export {
   GridScopeLayer,
@@ -12,4 +13,5 @@ export {
   PageLoader,
   HomeLoader,
   SideNavigation,
+  Legend,
 };
