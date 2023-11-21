@@ -2,13 +2,11 @@ import { DownTriangleIcon, UpTriangleIcon } from "@/assets";
 import { useClickAway } from "@uidotdev/usehooks";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import { useState } from "react";
-import { PoleSorterItem } from "./pole-sorter-item";
+import { PoleSorterItem } from "./pole-sorter-radio-item";
 
 export const ListSorter = () => {
   const [showSortBy, setShowSortBy] = useState(false);
   const [sortBy, setSortBy] = useState<string>("sr-no");
-
-  console.log(sortBy);
 
   const ref = useClickAway<HTMLDivElement>((e) => {
     const target = e.target as HTMLDivElement;
@@ -19,7 +17,7 @@ export const ListSorter = () => {
   });
 
   return (
-    <div className="text-primary relative flex cursor-pointer items-center  gap-2 p-4 pt-3 text-xs">
+    <div className="relative flex cursor-pointer items-center gap-2  p-4 pt-3 text-xs text-primary">
       <div
         id="sort-container"
         onClick={() => {
