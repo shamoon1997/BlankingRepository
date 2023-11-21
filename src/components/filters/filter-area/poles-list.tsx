@@ -7,7 +7,7 @@ export const PolesList = () => {
       <ScrollArea.Viewport className="h-full w-full pb-3">
         {Array(100)
           .fill(0)
-          .map((i, index) => (
+          .map((_, index) => (
             <PoleItem key={index} />
           ))}
       </ScrollArea.Viewport>
