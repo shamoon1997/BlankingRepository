@@ -1,6 +1,6 @@
 import { GridScopeIcon } from "@/assets";
 import { SideNavigation } from "@/components";
-import { SelectDropdown } from "@/components/common";
+import { MultiSelectDropdown, SelectDropdown } from "@/components/common";
 import { poleStatusOptions3 } from "@/constants";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Outlet } from "react-router-dom";
@@ -28,6 +28,9 @@ export const DashboardPage = () => {
             }
             options={poleStatusOptions3}
           />
+        </div>
+        <div className="mx-12 min-w-[150px] max-w-[150px]">
+          <MultiSelectDropdown />
         </div>
 
         <button onClick={() => void logout()}>logout</button>
