@@ -3,8 +3,7 @@ import { CallbackPage, DashboardPage, HomePage, NotFoundPage } from "./pages";
 import { AuthenticationGuard } from "./hoc";
 
 import { useAuth0 } from "@auth0/auth0-react";
-import { HomeLoader, PageLoader, SideNavigation } from "./components";
-import MapHoverMenu from "./components/map/map-hover-menu/map-hover-menu";
+import { HomeLoader, PageLoader } from "./components";
 import { AppRoutes } from "./utils/routes";
 
 function App() {
@@ -21,8 +20,6 @@ function App() {
 
   return (
     <>
-      <MapHoverMenu />
-      {/* <SideNavigation /> */}
       <Routes>
         {/* public routes */}
         <Route path={AppRoutes.root} element={<HomePage />} />
