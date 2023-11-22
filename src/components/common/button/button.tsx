@@ -3,21 +3,12 @@ import React from "react";
 type Props = React.ComponentPropsWithoutRef<"button"> & {
   text: string;
   backgroundColor?: string;
+  className?: string;
 };
 
-const Button: React.FC<Props> = ({
-  text,
-  backgroundColor,
-  onClick,
-  type,
-}: Props) => {
+const Button: React.FC<Props> = ({ text, type, className }: Props) => {
   return (
-    <button
-      className="w-full h-full cursor-pointer border border-slate-400 rounded-md"
-      style={{ backgroundColor }}
-      onClick={onClick}
-      type={type}
-    >
+    <button className={className} type={type}>
       <p>{text}</p>
     </button>
   );
