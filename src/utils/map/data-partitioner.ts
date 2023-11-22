@@ -16,7 +16,7 @@ type PartitionResult = Feature<
   }
 >[];
 
-const partitionAndClusterizePoints = <T extends MapLikeDataPoint>(
+const partitionAndClusterPoints = <T extends MapLikeDataPoint>(
   data: T[],
   partitionFunctions: ((data: T) => boolean)[],
   clusterMaxDistance = 0.1,
@@ -61,4 +61,4 @@ const partitionAndClusterizePoints = <T extends MapLikeDataPoint>(
   return res;
 };
 
-export { partitionAndClusterizePoints };
+export { partitionAndClusterPoints };

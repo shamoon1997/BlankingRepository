@@ -14,7 +14,8 @@ const SideNavigation: React.FC = () => {
           {navigationTabs.map((tab) => {
             return (
               <li
-                className={`mb-2 flex cursor-pointer items-center py-2 pl-2 pr-4 transition ${
+                className={`mb-2 flex cursor-pointer 
+                items-center py-2 pl-2 pr-4 text-sm transition ${
                   selectedItem === tab.name.toLowerCase()
                     ? "rounded-md border-gray-700 bg-gray-700"
                     : "hover:rounded-md hover:border-gray-700 hover:bg-gray-700"

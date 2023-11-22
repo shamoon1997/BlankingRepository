@@ -11,7 +11,7 @@ export const NotFoundPage = () => {
       </p>
 
       <Link
-        to={AppRoutes.dashboard}
+        to={AppRoutes.deployments}
         className="rounded border border-solid border-gray-400 p-1 pl-2 pr-2 text-base disabled:cursor-not-allowed"
       >
         Go back to dashboard
