@@ -28,7 +28,7 @@ type Props = {
 };
 
 const DateRangeCalendar: React.FC<Props> = ({ range, setRange }) => {
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const formatWeekdayName: DateFormatter = (week) => {
     const weekdayName = formateDate(week, dateFormats.weekMini);
@@ -62,12 +62,13 @@ const DateRangeCalendar: React.FC<Props> = ({ range, setRange }) => {
                 onClick={() => {
                   if (!range) return;
                   const { to, from } = range;
-                  if (to && from)
-                    setSearchParams({
-                      from: `${from.getTime()}`,
-                      to: `${to.getTime()}`,
-                      custom: "true",
-                    });
+                  if (to && from) {
+                    searchParams.delete("type");
+                    searchParams.set("from", `${from.getTime()}`);
+                    searchParams.set("to", `${to.getTime()}`);
+                    searchParams.set("custom", "true");
+                    setSearchParams(searchParams);
+                  }
                 }}
                 className="rounded-md bg-btn-primary px-4 py-2 text-xs font-bold text-white hover:bg-btn-primary/70"
               >

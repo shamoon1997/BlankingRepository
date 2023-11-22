@@ -6,7 +6,7 @@ import { Feature } from "geojson";
 import { MapZoomedBoxContainer } from "../map-zoomed-box";
 import { partitionAndClusterPoints } from "@/utils/map";
 import mapboxgl from "mapbox-gl";
-import { DateRangeCalendar, SelectDropdown } from "@/components/common";
+import { SelectDropdown } from "@/components/common";
 import {
   gridscopeOptions,
   poleConnectionStatusOptions,
