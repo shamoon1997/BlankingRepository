@@ -8,7 +8,6 @@ import { GridScopeLayer } from "./map-layers/gridscope-layer";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 const MapBoxGL = import("mapbox-gl");
-const style = { width: "100vw", height: "100vh" };
 
 export const BaseMap = () => {
   const { setSearchParams, validatedMapUrlState } = useMapUrlState();
@@ -40,13 +39,14 @@ export const BaseMap = () => {
       }}
       mapLib={MapBoxGL}
       mapboxAccessToken={import.meta.env.VITE_REACT_APP_MAPBOX_KEY}
-      style={style}
+      style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
       mapStyle="mapbox://styles/mapbox/light-v11"
     >
       <FullscreenControl position="top-left" />
       <NavigationControl position="top-left" />
 
       {/* show layers based on props in future */}
+
       <GridScopeLayer />
 
       <ScaleControl position="bottom-left" />

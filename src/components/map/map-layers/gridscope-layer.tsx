@@ -6,6 +6,11 @@ import { Feature } from "geojson";
 import { MapZoomedBoxContainer } from "../map-zoomed-box";
 import { partitionAndClusterPoints } from "@/utils/map";
 import mapboxgl from "mapbox-gl";
+import { SelectDropdown } from "@/components/common";
+import {
+  poleConnectionStatusOptions,
+  polePropertyOptions,
+} from "@/utils/select-dropdown";
 
 // shape of data to be used
 
@@ -165,6 +170,15 @@ export const GridScopeLayer = () => {
           </Marker>
         );
       })}
+
+      <div className="absolute flex w-full justify-between gap-2 p-2">
+        <div className="w-[140px]">
+          <SelectDropdown options={poleConnectionStatusOptions} />
+        </div>
+        <div className="w-[140px]">
+          <SelectDropdown options={polePropertyOptions} />
+        </div>
+      </div>
 
       <Source id="line-source" type="geojson" data={GeoJson}>
         <Layer id="line-layer" type="line" paint={LineLayerStyles} />
