@@ -38,7 +38,7 @@ const CalendarInput: React.FC = () => {
     <>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <div className="inline-flex min-h-[37px] min-w-[200px] cursor-pointer items-center rounded-lg border border-slate-300 py-1">
+          <div className="inline-flex max-h-[35px] min-h-[35px] min-w-[200px] cursor-pointer items-center rounded-lg border border-slate-300 bg-white py-1">
             <div className="flex w-full items-center px-0">
               <div className="px-2 [&_svg]:h-[15px] [&_svg]:w-[15px]">
                 <CalendarIcon />
@@ -84,7 +84,7 @@ const CalendarInput: React.FC = () => {
         </DropdownMenu.Trigger>
 
         <DropdownMenu.Portal>
-          <DropdownMenu.Content className="mt-2 w-full min-w-[360px] rounded-lg border border-slate-200 bg-white shadow-xl">
+          <DropdownMenu.Content className="z-[2] mt-2 w-full min-w-[360px] rounded-lg border border-slate-200 bg-white shadow-xl">
             <Tabs.Root defaultValue="1">
               <Tabs.List className="mb-2 flex justify-center gap-4 border-b-2 border-slate-200 pt-2">
                 <Tabs.Trigger

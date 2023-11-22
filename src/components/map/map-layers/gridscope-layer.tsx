@@ -6,11 +6,14 @@ import { Feature } from "geojson";
 import { MapZoomedBoxContainer } from "../map-zoomed-box";
 import { partitionAndClusterPoints } from "@/utils/map";
 import mapboxgl from "mapbox-gl";
-import { SelectDropdown } from "@/components/common";
+import { DateRangeCalendar, SelectDropdown } from "@/components/common";
 import {
+  gridscopeOptions,
   poleConnectionStatusOptions,
   polePropertyOptions,
 } from "@/utils/select-dropdown";
+import CalendarInput from "@/components/common/calendar/calendar-input";
+import { FilterIcon, GridScopeIcon } from "@/assets";
 
 // shape of data to be used
 
@@ -171,12 +174,44 @@ export const GridScopeLayer = () => {
         );
       })}
 
-      <div className="absolute flex w-full justify-between gap-2 p-2">
-        <div className="w-[140px]">
-          <SelectDropdown options={poleConnectionStatusOptions} />
+      <div className="absolute z-[2] flex w-full justify-between gap-2 p-2">
+        {/* LEFT GROUP */}
+        <div className="flex gap-2">
+          <div className="w-[240px]">
+            <CalendarInput />
+          </div>
         </div>
-        <div className="w-[140px]">
-          <SelectDropdown options={polePropertyOptions} />
+
+        {/* RIGHT GROUP */}
+        <div className="flex gap-2">
+          <div className="w-[140px]">
+            <SelectDropdown
+              placeholder="Property"
+              options={polePropertyOptions}
+            />
+          </div>
+          <div className="w-[130px]">
+            <SelectDropdown
+              dropdownIcon={
+                <span className="h-[22px] w-[22px] pr-2">
+                  <FilterIcon />
+                </span>
+              }
+              placeholder="Status"
+              options={poleConnectionStatusOptions}
+            />
+          </div>
+          <div className="w-[130px]">
+            <SelectDropdown
+              dropdownIcon={
+                <span className="grid h-[25px] w-[25px] place-content-center pr-2">
+                  <GridScopeIcon />
+                </span>
+              }
+              placeholder="Options"
+              options={gridscopeOptions}
+            />
+          </div>
         </div>
       </div>
 
