@@ -1,10 +1,11 @@
 import { useMapUrlState } from "@/hooks";
 import { useState } from "react";
 import { Layer, Marker, Source } from "react-map-gl";
-import { MapToolTipContainer } from "../map-tooltip";
-import { Feature, Geometry, GeoJsonProperties } from "geojson";
+import { MapToolTipContainer } from "@/components";
+import { Feature } from "geojson";
 import { MapZoomedBoxContainer } from "../map-zoomed-box";
-import { partitionAndClusterizePoints } from "@/utils/map";
+import { partitionAndClusterPoints } from "@/utils/map";
+import mapboxgl from "mapbox-gl";
 
 // shape of data to be used
 
@@ -36,7 +37,7 @@ const CircleData = [
   },
 ];
 
-const combined = partitionAndClusterizePoints(
+const combined = partitionAndClusterPoints(
   CircleData,
   [
     (data) => {
@@ -62,7 +63,7 @@ const LineLayerStyles: mapboxgl.LinePaint = {
   "line-dasharray": [0.22, 0.24],
 };
 
-const GeoJson: Feature<Geometry, GeoJsonProperties> = {
+const GeoJson: Feature = {
   type: "Feature",
   //   generate geometry from data
   geometry: {

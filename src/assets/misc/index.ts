@@ -1,5 +1,13 @@
 import ChevronIcon from "./chevron.svg";
 import ArrowDownIcon from "./arrow-down.svg";
 import SettingsIcon from "./settings.svg";
+import UpTriangleIcon from "./up-triangle.svg";
+import DownTriangleIcon from "./down-triangle.svg";
 
-export { ChevronIcon, ArrowDownIcon, SettingsIcon };
+export {
+  ChevronIcon,
+  ArrowDownIcon,
+  SettingsIcon,
+  UpTriangleIcon,
+  DownTriangleIcon,
+};

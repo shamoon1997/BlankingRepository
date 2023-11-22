@@ -1,9 +1,7 @@
 import { Route, Routes, useLocation } from "react-router-dom";
-import { CallbackPage, DashboardPage, HomePage, NotFoundPage } from "./pages";
-import { AuthenticationGuard } from "./hoc";
-
+import { CallbackPage, DeploymentPage, HomePage, NotFoundPage } from "./pages";
 import { useAuth0 } from "@auth0/auth0-react";
-import { HomeLoader, PageLoader } from "./components";
+import { HomeLoader, PageLoader, SideNavigation } from "./components";
 import { AppRoutes } from "./utils/routes";
 
 function App() {
@@ -18,25 +16,23 @@ function App() {
     }
   }
 
+  const isDashboardPath = location.pathname.startsWith("/dashboard");
+
   return (
-    <>
+    <div className={`${isDashboardPath ? "flex" : ""}`}>
+      {isDashboardPath && <SideNavigation />}
       <Routes>
         {/* public routes */}
         <Route path={AppRoutes.root} element={<HomePage />} />
         <Route path={AppRoutes.callback} element={<CallbackPage />} />
 
-        {/* protected */}
-        <Route
-          path={AppRoutes.dashboard}
-          element={<AuthenticationGuard component={DashboardPage} />}
-        >
-          <Route path="deployments" element={<h1>Yo bro</h1>} />
-        </Route>
+        {/* protected routes i.e always wrapped with withAuthenticationRequired  */}
+        <Route path={AppRoutes.deployments} element={<DeploymentPage />} />
 
         {/* 404 */}
         <Route path={AppRoutes.notFound} element={<NotFoundPage />} />
       </Routes>
-    </>
+    </div>
   );
 }
 

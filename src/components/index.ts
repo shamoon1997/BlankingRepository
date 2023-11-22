@@ -3,7 +3,9 @@ import { BaseMap } from "./map";
 import { MapToolTipContainer } from "./map/map-tooltip";
 import { PageLoader } from "./page-loaders/page-loader";
 import { HomeLoader } from "./page-loaders/home-loader";
-import SideNavigation from "./SideNavigation";
+import Legend from "./Legend/legend";
+import MapHoverMenu from "./map/map-hover-menu/map-hover-menu";
+import SideNavigation from "./side-navigation";
 
 export {
   GridScopeLayer,
@@ -12,4 +14,6 @@ export {
   PageLoader,
   HomeLoader,
   SideNavigation,
+  Legend,
+  MapHoverMenu,
 };

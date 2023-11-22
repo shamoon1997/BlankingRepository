@@ -7,12 +7,12 @@ export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const onLoginClick = (): void => {
     if (user) {
-      navigate(AppRoutes.dashboard);
+      navigate(AppRoutes.deployments);
       return;
     }
     void loginWithRedirect({
       appState: {
-        returnTo: AppRoutes.dashboard,
+        returnTo: AppRoutes.deployments,
       },
     });
   };
