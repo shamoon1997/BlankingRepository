@@ -188,6 +188,7 @@ export const GridScopeLayer = () => {
             <SelectDropdown
               placeholder="Property"
               options={polePropertyOptions}
+              searchParamKey="pole-property"
             />
           </div>
           <div className="w-[130px]">
@@ -199,6 +200,7 @@ export const GridScopeLayer = () => {
               }
               placeholder="Status"
               options={poleConnectionStatusOptions}
+              searchParamKey="connection-status"
             />
           </div>
           <div className="w-[130px]">
@@ -210,6 +212,7 @@ export const GridScopeLayer = () => {
               }
               placeholder="Options"
               options={gridscopeOptions}
+              searchParamKey="gridscope-options"
             />
           </div>
         </div>
