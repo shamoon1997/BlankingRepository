@@ -1,7 +1,7 @@
 import { ChevronIcon } from "@/assets";
 import React, { useEffect, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
-// import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 type OptionType = {
   value: string;
@@ -16,15 +16,12 @@ type Props = {
 
 const MultiSelectDropdown: React.FC<Props> = ({ options }) => {
   const [selected, setSelected] = useState<OptionType[]>([]);
-  // const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    // const stringData = [...selected].map((item) => `${item?.value}`).join(",");
-    // SearchParam logic
-  }, [selected]);
-
-  useEffect(() => {
-    console.log(selected);
+    const stringData = [...selected].map((item) => `${item?.value}`).join(",");
+    searchParams.set("equipment", stringData);
+    setSearchParams(searchParams);
   }, [selected]);
 
   return (
