@@ -1,6 +1,6 @@
-import { useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import queryString from "query-string";
+import { useSearchParams } from "react-router-dom";
 
 const mapUrlStateSchema = z.object({
   // derived from mapbox docs

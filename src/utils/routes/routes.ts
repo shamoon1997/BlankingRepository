@@ -1,7 +1,16 @@
 export const AppRoutes = {
   notFound: "*",
   root: "/",
-  dashboard: "/dashboard",
+  deployments: "/dashboard/deployments",
+  alerts: "/dashboard/alerts",
+  tickets: "/dashboard/tickets",
+  devices: "/dashboard/devices",
+  poles: "/dashboard/poles",
+  photos: "/dashboard/photos",
+  sensorBlobs: "/dashboard/sensor-blobs",
+  customerReports: "/dashboard/customer-reports",
+  organizations: "/dashboard/organizations",
+  users: "/dashboard/users",
   callback: "/callback",
 };
 
@@ -21,52 +30,52 @@ import {
 export const navigationTabs = [
   {
     name: "Deployments",
-    path: "deployments",
+    path: AppRoutes.deployments,
     icon: DeploymentsIcon,
   },
   {
     name: "Alerts",
-    path: "alerts",
+    path: AppRoutes.alerts,
     icon: AlertsIcon,
   },
   {
     name: "Tickets",
-    path: "tickets",
+    path: AppRoutes.tickets,
     icon: TicketsIcon,
   },
   {
     name: "Devices",
-    path: "devices",
+    path: AppRoutes.devices,
     icon: DevicesIcon,
   },
   {
     name: "Poles",
-    path: "poles",
+    path: AppRoutes.poles,
     icon: PolesIcon,
   },
   {
     name: "Photos",
-    path: "photos",
+    path: AppRoutes.photos,
     icon: PhotosIcon,
   },
   {
     name: "Sensor Blobs",
-    path: "sensor-blobs",
+    path: AppRoutes.sensorBlobs,
     icon: SensorBlobsIcon,
   },
   {
     name: "Customer Reports",
-    path: "customer-reports",
+    path: AppRoutes.customerReports,
     icon: CustomerReportsIcon,
   },
   {
     name: "Organizations",
-    path: "organizations",
+    path: AppRoutes.organizations,
     icon: OrganizationsIcon,
   },
   {
     name: "Users",
-    path: "users",
+    path: AppRoutes.users,
     icon: UsersIcon,
   },
 ];

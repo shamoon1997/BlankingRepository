@@ -11,19 +11,26 @@ const MapBoxGL = import("mapbox-gl");
 const style = { width: "100vw", height: "100vh" };
 
 export const BaseMap = () => {
-  const { validatedMapUrlState, setSearchParams } = useMapUrlState();
+  const { setSearchParams, validatedMapUrlState } = useMapUrlState();
 
   return (
     <Map
+      reuseMaps
       maxPitch={0}
       minPitch={0}
       onMoveEnd={(e) => {
-        setSearchParams({
-          lat: String(e.viewState.latitude),
-          lng: String(e.viewState.longitude),
-          bearing: String(e.viewState.bearing),
-          zoom: String(e.viewState.zoom),
-        });
+        setSearchParams(
+          {
+            lat: String(e.viewState.latitude),
+            lng: String(e.viewState.longitude),
+            bearing: String(e.viewState.bearing),
+            zoom: String(e.viewState.zoom),
+          },
+          {
+            replace: true,
+            preventScrollReset: true,
+          },
+        );
       }}
       initialViewState={{
         latitude: validatedMapUrlState.lat,

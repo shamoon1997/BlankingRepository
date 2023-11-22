@@ -1,1 +1,1 @@
-export * from "./useMapUrlState";
+export * from "./use-map-url-state";
