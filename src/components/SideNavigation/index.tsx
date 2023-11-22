@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { navigationTabs } from "../../constants/sidebar.constants";
+import { navigationTabs } from "@/utils/routes";
 
 const SideNavigation: React.FC = () => {
   const [selectedItem] = useState(location.pathname.substring(1));
 
   return (
     <div>
-      <div className="h-screen w-56 bg-customSideColor p-4 text-white">
+      <div className="bg-customSideColor h-screen w-56 p-4 text-white">
         <h3 className="mb-4 text-left font-mont text-xl font-bold">ADMIN</h3>
 
         <ul>
