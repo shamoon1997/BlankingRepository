@@ -8,6 +8,7 @@ export default {
       },
       dropShadow: {
         "map-dot": "0.8px 0.8px 2px rgba(0, 0, 0, 0.25)",
+        "map-minimize": "2px 2px 4px rgba(0, 0, 0, 0.15)",
       },
       boxShadow: {
         tooltip: "2px 2px 4px 0px rgba(0, 0, 0, 0.15)",
