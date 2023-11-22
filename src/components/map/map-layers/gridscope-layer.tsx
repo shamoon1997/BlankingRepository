@@ -1,19 +1,12 @@
+import { MapToolTipContainer } from "@/components";
 import { useMapUrlState } from "@/hooks";
+import { partitionAndClusterPoints } from "@/utils/map";
+import { Feature } from "geojson";
+import mapboxgl from "mapbox-gl";
 import { useState } from "react";
 import { Layer, Marker, Source } from "react-map-gl";
-import { MapToolTipContainer } from "@/components";
-import { Feature } from "geojson";
 import { MapZoomedBoxContainer } from "../map-zoomed-box";
-import { partitionAndClusterPoints } from "@/utils/map";
-import mapboxgl from "mapbox-gl";
-import { SelectDropdown } from "@/components/common";
-import {
-  gridscopeOptions,
-  poleConnectionStatusOptions,
-  polePropertyOptions,
-} from "@/utils/select-dropdown";
-import CalendarInput from "@/components/common/calendar/calendar-input";
-import { FilterIcon, GridScopeIcon } from "@/assets";
+import GridscopeDropdownLayer from "./gridscope-dropdown-layer";
 
 // shape of data to be used
 
@@ -174,49 +167,7 @@ export const GridScopeLayer = () => {
         );
       })}
 
-      <div className="absolute z-[2] flex w-full justify-between gap-2 p-2">
-        {/* LEFT GROUP */}
-        <div className="flex gap-2">
-          <div className="w-[240px]">
-            <CalendarInput />
-          </div>
-        </div>
-
-        {/* RIGHT GROUP */}
-        <div className="flex gap-2">
-          <div className="w-[140px]">
-            <SelectDropdown
-              placeholder="Property"
-              options={polePropertyOptions}
-              searchParamKey="pole-property"
-            />
-          </div>
-          <div className="w-[130px]">
-            <SelectDropdown
-              dropdownIcon={
-                <span className="h-[22px] w-[22px] pr-2">
-                  <FilterIcon />
-                </span>
-              }
-              placeholder="Status"
-              options={poleConnectionStatusOptions}
-              searchParamKey="connection-status"
-            />
-          </div>
-          <div className="w-[130px]">
-            <SelectDropdown
-              dropdownIcon={
-                <span className="grid h-[25px] w-[25px] place-content-center pr-2">
-                  <GridScopeIcon />
-                </span>
-              }
-              placeholder="Options"
-              options={gridscopeOptions}
-              searchParamKey="gridscope-options"
-            />
-          </div>
-        </div>
-      </div>
+      <GridscopeDropdownLayer />
 
       <Source id="line-source" type="geojson" data={GeoJson}>
         <Layer id="line-layer" type="line" paint={LineLayerStyles} />
