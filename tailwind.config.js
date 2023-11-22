@@ -34,6 +34,8 @@ export default {
 
         // SIDEBAR COLORS
         customSideColor: "#3B3C4F",
+
+        popUpHoverColor: "#D9D9D9",
       },
       backgroundColor: {
         "map-zoomed-box": "rgba(22, 22, 22, 0.70)",
