@@ -1,12 +1,19 @@
 import { NotificationIcon, ProfileIcon } from "@/assets";
 import React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { useAuth0 } from "@auth0/auth0-react";
 
 interface HeaderProps {
   heading: string;
 }
 
 const Header: React.FC<HeaderProps> = ({ heading }) => {
+  const { logout } = useAuth0();
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
   return (
     <div className="flex min-h-[40px] w-full justify-between bg-slate-100 px-2 py-4">
       <div className="grid place-content-center">
@@ -29,7 +36,10 @@ const Header: React.FC<HeaderProps> = ({ heading }) => {
               className="z-[3] rounded-md bg-white p-1 font-mont shadow-lg"
               sideOffset={5}
             >
-              <DropdownMenu.Item className="relative flex cursor-pointer items-center rounded-[3px] px-4 py-1 text-[10px] font-semibold outline-none hover:bg-slate-200">
+              <DropdownMenu.Item
+                className="relative flex cursor-pointer items-center rounded-[3px] px-4 py-1 text-[10px] font-semibold outline-none hover:bg-slate-200"
+                onClick={() => void handleLogout()}
+              >
                 Sign out
               </DropdownMenu.Item>
 
