@@ -18,7 +18,7 @@ const Header: React.FC<HeaderProps> = ({ heading }) => {
         </div>
 
         <DropdownMenu.Root>
-          <DropdownMenu.Trigger>
+          <DropdownMenu.Trigger className="focus-visible:outline-none">
             <div className="grid h-[28px] w-[28px] place-content-center rounded-full bg-slate-200 [&_svg]:h-[12px] [&_svg]:w-[12px]">
               <ProfileIcon />
             </div>
@@ -26,14 +26,14 @@ const Header: React.FC<HeaderProps> = ({ heading }) => {
 
           <DropdownMenu.Portal>
             <DropdownMenu.Content
-              className="z-[3] rounded-md border border-blue-400 bg-white p-[5px]"
+              className="z-[3] rounded-md bg-white p-1 font-mont shadow-lg"
               sideOffset={5}
             >
-              <DropdownMenu.Item className="relative flex h-[25px] cursor-pointer items-center rounded-[3px] px-4 text-[13px] outline-none hover:bg-slate-200">
+              <DropdownMenu.Item className="relative flex cursor-pointer items-center rounded-[3px] px-4 py-1 text-[10px] font-semibold outline-none hover:bg-slate-200">
                 Sign out
               </DropdownMenu.Item>
 
-              <DropdownMenu.Arrow className="fill-white" />
+              <DropdownMenu.Arrow className="fill-white shadow-lg" />
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
