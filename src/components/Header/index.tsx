@@ -15,18 +15,19 @@ const Header: React.FC<HeaderProps> = ({ heading }) => {
   };
 
   return (
-    <div className="flex min-h-[40px] w-full justify-between bg-slate-100 px-2 py-4">
+    <div className="flex min-h-[124px] w-full justify-between bg-slate-100 px-[20px] py-[45px]">
       <div className="grid place-content-center">
-        <h1 className="text-2xl">{heading}</h1>
+        <h1 className="text-[24px] font-bold">{heading}</h1>
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-[8px]">
         <div className="grid h-[28px] w-[28px] place-content-center rounded-full bg-slate-200 [&_svg]:h-[12px] [&_svg]:w-[12px]">
           <NotificationIcon />
         </div>
 
         <DropdownMenu.Root>
-          <DropdownMenu.Trigger className="focus-visible:outline-none">
-            <div className="grid h-[28px] w-[28px] place-content-center rounded-full bg-slate-200 [&_svg]:h-[12px] [&_svg]:w-[12px]">
+          <DropdownMenu.Trigger className="h-[28px] w-[28px] focus-visible:outline-none">
+            <div className="relative grid h-[28px] w-[28px] place-content-center rounded-full bg-slate-200 [&_svg]:h-[12px] [&_svg]:w-[12px]">
+              <div className="absolute bottom-0 right-0 h-[8px] w-[8px] rounded-full bg-online" />
               <ProfileIcon />
             </div>
           </DropdownMenu.Trigger>

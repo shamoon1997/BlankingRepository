@@ -6,14 +6,12 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 export const DeploymentPage = withAuthenticationRequired(
   () => {
     return (
-      <div className="flex w-full flex-1 flex-col">
+      <div className="flex h-screen w-full flex-1 flex-col">
         {/* NAVBAR */}
         <Header heading="Deployment" />
 
-        <div className="flex flex-1">
-          <div>
-            <FilterArea />
-          </div>
+        <div className="flex flex-1 overflow-auto">
+          <FilterArea />
           <div className="relative w-full">
             <BaseMap />
           </div>
