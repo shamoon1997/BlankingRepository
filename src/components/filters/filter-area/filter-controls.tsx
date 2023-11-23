@@ -35,7 +35,6 @@ export const FilterControls = () => {
           toggleFilterActive={toggleFilterActive}
           filterActive={filterActive}
         />
-        {/* <input className="ml-1 mr-1 flex-1 text-xs font-semibold text-primary-hard outline-none" /> */}
       </div>
 
       {filterActive && (
