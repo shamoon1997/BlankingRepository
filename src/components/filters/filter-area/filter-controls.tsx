@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FilterInputControl } from "./filter-input-control";
 import { FilterSelectControl } from "./filter-select-control";
 import { FilterSelectItemProps } from "./filter-select-item";
+import { SearchBar } from "./filter-search-bar";
 
 const FilterOptions: FilterSelectItemProps[] = [
   { label: "Serial No.", value: "sr-no" },
@@ -30,16 +31,11 @@ export const FilterControls = () => {
       }`}
     >
       <div className="flex items-center">
-        <SearchIcon className="h-[18px] w-[18px]" />
-        <input className="ml-1 mr-1 flex-1 text-xs font-semibold text-primary-hard outline-none" />
-        <button
-          onClick={toggleFilterActive}
-          className={`flex h-7 w-7 items-center justify-center rounded-full ${
-            filterActive ? "bg-[#DEDEDE]" : "bg-transparent"
-          }`}
-        >
-          <FilterIcon className="h-7 w-7" />
-        </button>
+        <SearchBar
+          toggleFilterActive={toggleFilterActive}
+          filterActive={filterActive}
+        />
+        {/* <input className="ml-1 mr-1 flex-1 text-xs font-semibold text-primary-hard outline-none" /> */}
       </div>
 
       {filterActive && (
