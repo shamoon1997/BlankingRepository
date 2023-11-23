@@ -1,6 +1,6 @@
 import { ChevronIcon } from "@/assets";
 import * as Select from "@radix-ui/react-select";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import SelectItem from "./select-item";
 import { useSearchParams } from "react-router-dom";
 
@@ -22,6 +22,21 @@ const SelectDropdown: React.FC<Props> = ({
   searchParamKey,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [valueFromQuery, setvalueFromQuery] = useState<string | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    if (searchParamKey?.length && searchParamKey) {
+      const keyInUrl = searchParams.get(searchParamKey);
+      if (!keyInUrl) return;
+      const preSelectedOption = options.find((item) => item.value === keyInUrl);
+      setvalueFromQuery(preSelectedOption?.value);
+    }
+
+    return () => setvalueFromQuery(undefined);
+  }, []);
+
   return (
     <Select.Root
       onValueChange={(value: string) => {
@@ -29,6 +44,7 @@ const SelectDropdown: React.FC<Props> = ({
         searchParams.set(searchParamKey, value);
         setSearchParams(searchParams);
       }}
+      value={valueFromQuery ?? undefined}
     >
       <Select.Trigger
         className="inline-flex h-[35px] w-full items-center justify-between rounded-lg border border-slate-600 bg-white px-2 font-mont text-[13px] leading-none text-slate-700 outline-none hover:bg-slate-200 data-[placeholder]:text-black/40"

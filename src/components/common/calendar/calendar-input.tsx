@@ -46,7 +46,7 @@ const CalendarInput: React.FC = () => {
 
               {defaultFilter?.length && (
                 <div>
-                  <p className="text-left text-[8px] font-semibold text-blue-400">
+                  <p className="h-[12px] text-left text-[8px] font-semibold text-blue-400">
                     {
                       defaultDateDropdownOptions?.find(
                         (item) => item?.type === defaultFilter,
@@ -61,7 +61,7 @@ const CalendarInput: React.FC = () => {
 
               {!defaultFilter?.length && (
                 <div>
-                  <p className="text-left text-[8px] font-semibold text-blue-400">
+                  <p className="h-[12px] text-left text-[8px] font-semibold text-blue-400">
                     From
                   </p>
                   <p className="text-[10px]">{fromDate ?? "DD/MM/YYYY"}</p>
@@ -71,7 +71,7 @@ const CalendarInput: React.FC = () => {
 
             {!defaultFilter?.length && (
               <div className="px-4">
-                <p className="text-left text-[8px] font-semibold text-blue-400">
+                <p className="h-[12px] text-left text-[8px] font-semibold text-blue-400">
                   To
                 </p>
                 <p className="text-[10px]">{toDate ?? "DD/MM/YYYY"}</p>
