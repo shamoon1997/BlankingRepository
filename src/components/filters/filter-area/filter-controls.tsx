@@ -1,4 +1,3 @@
-import { FilterIcon, SearchIcon } from "@/assets";
 import { useState } from "react";
 import { FilterInputControl } from "./filter-input-control";
 import { FilterSelectControl } from "./filter-select-control";

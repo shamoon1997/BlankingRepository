@@ -37,7 +37,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         {chips.map((chip, index) => (
           <div
             key={index}
-            className="flex items-center gap-2 rounded-md bg-[#DEDEDE] p-2"
+            className="flex items-center gap-2 rounded-md bg-[#F2F2F2] p-2"
           >
             <div>
               <span className="font-mont text-xs font-semibold leading-normal text-[#161616]">
