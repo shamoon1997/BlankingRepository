@@ -31,44 +31,45 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div className="flex items-center space-x-2">
-      <SearchIcon className="h-5 w-5" />
-      <div className="flex flex-wrap items-center space-x-1">
+    <div className="flex flex-grow">
+      <SearchIcon className="mt-1 h-3 w-3 shrink-0" />
+      <div className="ml-2.5 flex flex-wrap items-center gap-1">
         {chips.map((chip, index) => (
           <div
             key={index}
-            className="flex items-center gap-2 rounded-md bg-[#F2F2F2] p-2"
+            className="flex min-h-[20px] items-center gap-2 rounded bg-[#DEDEDE] px-1.5 py-[5px]"
           >
-            <div>
-              <span className="font-mont text-xs font-semibold leading-normal text-[#161616]">
+            <div className="flex pt-[1px]">
+              <span className="font-mont font-semibold leading-[normal] text-[#161616]">
                 {chip}
               </span>
             </div>
-            <div>
+            <div className="flex">
               <button type="button" onClick={() => removeChip(index)}>
-                <div className="[&_svg]:h-[10px] [&_svg]:w-[10px]">
+                <div className="[&_svg]:h-1.5 [&_svg]:w-1.5">
                   <CrossIcon />
                 </div>
               </button>
             </div>
           </div>
         ))}
+
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleInputChange}
+          onKeyPress={handleKeyPress}
+          className="ml-1 font-mont font-semibold text-[#161616] outline-none"
+        />
       </div>
 
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={handleInputChange}
-        onKeyPress={handleKeyPress}
-        className="ml-1 mr-1 flex-1 text-xs font-semibold text-primary-hard outline-none"
-      />
       <button
         onClick={toggleFilterActive}
-        className={`flex h-7 w-7 items-center justify-center rounded-full ${
+        className={`ml-auto flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
           filterActive ? "bg-[#DEDEDE]" : "bg-transparent"
         }`}
       >
-        <FilterIcon className="h-7 w-7" />
+        <FilterIcon />
       </button>
     </div>
   );

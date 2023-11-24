@@ -25,7 +25,7 @@ export const FilterControls = () => {
   const toggleFilterActive = () => setFilterActive(!filterActive);
   return (
     <div
-      className={`mb-5 ml-2 mr-2 mt-3 flex flex-col justify-start rounded-md border-[0.5px] border-solid border-[#D9D9D9] pl-2.5 pr-2.5 pt-2 ${
+      className={`mb-5 ml-2 mr-2 mt-3 flex flex-col justify-start rounded-md border-[0.5px] border-solid border-[#D9D9D9] px-2.5 pt-2 ${
         !filterActive ? "pb-2" : ""
       }`}
     >
