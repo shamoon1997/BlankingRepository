@@ -10,14 +10,18 @@ import "react-day-picker/dist/style.css";
 import { useSearchParams } from "react-router-dom";
 
 const classNames: ClassNames = {
+  root: "m-0",
   head: "text-lg",
-  tbody: "font-thin",
+  head_cell: "font-bold text-[8px]",
+  day: "w-[26px] h-[26px] border border-2 border-transparent rounded-full",
+  tbody: "font-thin text-[8px]",
   caption_label: "px-3 text-sm text-black/60",
   day_range_start:
-    "rounded-full font-bold text-black outline outline-4 outline-offset-[-2px] outline-btn-primary hover:bg-btn-primary/80",
+    "rounded-full font-bold text-black border border-2 border-btn-primary hover:bg-btn-primary/80",
   day_range_end:
-    "rounded-full bg-btn-primary font-bold outline outline-2 outline-btn-primary hover:bg-btn-primary/80",
-  day_range_middle: "h-5 rounded-none bg-btn-primary hover:bg-btn-primary/80",
+    "rounded-full bg-btn-primary font-bold border border-2 border-btn-primary hover:bg-btn-primary/80",
+  day_range_middle:
+    "h-[18px] bg-btn-primary hover:bg-btn-primary/80 rounded-none",
   nav_button_previous: "[&_svg]:h-3 [&_svg]:w-3",
   nav_button_next: "[&_svg]:h-3 [&_svg]:w-3",
 };
