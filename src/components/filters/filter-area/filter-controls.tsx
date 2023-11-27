@@ -38,7 +38,7 @@ export const FilterControls = () => {
             filterActive ? "bg-[#DEDEDE]" : "bg-transparent"
           }`}
         >
-          <FilterIcon className="h-7 w-7" />
+          <FilterIcon className="h-[12px] w-[12px]" />
         </button>
       </div>
 

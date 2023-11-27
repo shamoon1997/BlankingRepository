@@ -31,7 +31,7 @@ const GridscopeDropdownLayer: React.FC = () => {
           <div className="w-[130px]">
             <SelectDropdown
               dropdownIcon={
-                <span className="h-[22px] w-[22px] pr-2">
+                <span className="mr-[9px] h-[12px] w-[12px]">
                   <FilterIcon />
                 </span>
               }
@@ -43,7 +43,7 @@ const GridscopeDropdownLayer: React.FC = () => {
           <div className="w-[130px]">
             <SelectDropdown
               dropdownIcon={
-                <span className="grid h-[25px] w-[25px] place-content-center pr-2">
+                <span className="mr-[10px] grid h-[12px] w-[12px] place-content-center">
                   <GridScopeIcon />
                 </span>
               }

@@ -35,7 +35,7 @@ const SelectDropdown: React.FC<Props> = ({
     }
 
     return () => setvalueFromQuery(undefined);
-  }, []);
+  }, [searchParams]);
 
   return (
     <Select.Root
@@ -47,10 +47,10 @@ const SelectDropdown: React.FC<Props> = ({
       value={valueFromQuery ?? undefined}
     >
       <Select.Trigger
-        className="inline-flex h-[35px] w-full items-center justify-between rounded-lg border border-slate-600 bg-white px-2 font-mont text-[13px] leading-none text-slate-700 outline-none hover:bg-slate-200 data-[placeholder]:text-black/40"
+        className="inline-flex h-[35px] w-full items-center justify-between rounded-lg border border-[#5B5B5B80]/50 bg-white px-[9px] py-[8px] font-mont text-[13px] leading-none text-slate-700 outline-none hover:bg-slate-200 data-[placeholder]:text-black/40"
         aria-label="dropdown"
       >
-        <div className="flex items-center font-semibold">
+        <div className="flex items-center text-[10px] font-semibold">
           {dropdownIcon}
           <Select.Value placeholder={placeholder} />
         </div>
@@ -62,9 +62,10 @@ const SelectDropdown: React.FC<Props> = ({
       </Select.Trigger>
       <Select.Portal>
         <Select.Content
-          className="w-[var(--radix-select-trigger-width)] rounded-lg bg-white font-mont shadow-lg"
+          className="w-[var(--radix-select-trigger-width)] rounded-lg border border-[#5B5B5B80]/50 bg-white font-mont shadow-lg"
           side="bottom"
           position="popper"
+          sideOffset={5}
         >
           <Select.Viewport className="p-2">
             <Select.Group>
@@ -73,7 +74,7 @@ const SelectDropdown: React.FC<Props> = ({
 
                 return (
                   <SelectItem
-                    className="cursor-pointer rounded-lg border-none p-2 text-sm outline-none hover:bg-slate-200"
+                    className="cursor-pointer rounded-lg border-none p-2 text-[8px] outline-none hover:bg-slate-200"
                     key={key}
                     value={item.value}
                     icon={item.icon}
