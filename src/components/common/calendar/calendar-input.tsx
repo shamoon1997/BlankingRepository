@@ -38,7 +38,7 @@ const CalendarInput: React.FC = () => {
     <>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <div className="inline-flex max-h-[35px] min-h-[35px] min-w-[200px] cursor-pointer items-center rounded-lg border border-slate-300 bg-white py-1">
+          <div className="inline-flex max-h-[35px] min-h-[35px] w-full min-w-[200px] cursor-pointer items-center rounded-lg border border-slate-300 bg-white py-1">
             <div className="flex w-full items-center px-0">
               <div className="px-2 [&_svg]:h-[15px] [&_svg]:w-[15px]">
                 <CalendarIcon />
@@ -64,7 +64,9 @@ const CalendarInput: React.FC = () => {
                   <p className="h-[12px] text-left text-[8px] font-semibold text-blue-400">
                     From
                   </p>
-                  <p className="text-[10px]">{fromDate ?? "DD/MM/YYYY"}</p>
+                  <p className="min-w-[64px] text-[10px]">
+                    {fromDate ?? "DD/MM/YYYY"}
+                  </p>
                 </div>
               )}
             </div>
@@ -74,7 +76,9 @@ const CalendarInput: React.FC = () => {
                 <p className="h-[12px] text-left text-[8px] font-semibold text-blue-400">
                   To
                 </p>
-                <p className="text-[10px]">{toDate ?? "DD/MM/YYYY"}</p>
+                <p className="min-w-[64px] text-[10px]">
+                  {toDate ?? "DD/MM/YYYY"}
+                </p>
               </div>
             )}
             <div className="px-2 [&_svg]:rotate-180">

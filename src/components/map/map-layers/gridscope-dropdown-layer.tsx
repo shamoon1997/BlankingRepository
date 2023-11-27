@@ -14,7 +14,7 @@ const GridscopeDropdownLayer: React.FC = () => {
       <div className="absolute z-[2] flex w-full justify-between gap-2 p-2">
         {/* LEFT GROUP */}
         <div className="flex gap-2">
-          <div className="w-[240px]">
+          <div className="w-[250px]">
             <CalendarInput />
           </div>
         </div>
