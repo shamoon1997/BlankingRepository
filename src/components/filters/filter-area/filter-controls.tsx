@@ -29,12 +29,10 @@ export const FilterControls = () => {
         !filterActive ? "pb-2" : ""
       }`}
     >
-      <div className="flex items-center">
-        <SearchBar
-          toggleFilterActive={toggleFilterActive}
-          filterActive={filterActive}
-        />
-      </div>
+      <SearchBar
+        toggleFilterActive={toggleFilterActive}
+        filterActive={filterActive}
+      />
 
       {filterActive && (
         <div className="mb-4 ml-1 mr-1 mt-5 flex flex-col gap-4">

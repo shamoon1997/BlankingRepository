@@ -31,26 +31,24 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div className="flex flex-grow">
-      <SearchIcon className="mt-1 h-3 w-3 shrink-0" />
-      <div className="ml-2.5 flex flex-wrap items-center gap-1">
+    <div className="flex items-center">
+      <SearchIcon className="mt-[5.4px] h-[18px] w-[18px] shrink-0 self-start" />
+      <div className="ml-1 mr-1 flex min-w-0  flex-1 flex-wrap gap-1 ">
         {chips.map((chip, index) => (
           <div
             key={index}
-            className="flex min-h-[20px] items-center gap-2 rounded bg-[#DEDEDE] px-1.5 py-[5px]"
+            className="flex min-w-0 items-center gap-2 rounded bg-[#DEDEDE] px-1.5 py-[5px]"
           >
-            <div className="flex pt-[1px]">
-              <span className="font-mont font-semibold leading-[normal] text-[#161616]">
-                {chip}
-              </span>
-            </div>
-            <div className="flex">
-              <button type="button" onClick={() => removeChip(index)}>
-                <div className="[&_svg]:h-1.5 [&_svg]:w-1.5">
-                  <CrossIcon />
-                </div>
-              </button>
-            </div>
+            <span className="overflow-hidden text-ellipsis whitespace-nowrap text-xs font-semibold text-primary-hard">
+              {chip}
+            </span>
+
+            <button
+              className="[&_svg]:h-2 [&_svg]:w-2"
+              onClick={() => removeChip(index)}
+            >
+              <CrossIcon />
+            </button>
           </div>
         ))}
 
@@ -58,18 +56,18 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           type="text"
           value={searchTerm}
           onChange={handleInputChange}
-          onKeyPress={handleKeyPress}
-          className="ml-1 font-mont font-semibold text-[#161616] outline-none"
+          onKeyDown={handleKeyPress}
+          className="ml-1 flex-1 text-xs font-semibold text-primary-hard outline-none"
         />
       </div>
 
       <button
         onClick={toggleFilterActive}
-        className={`ml-auto flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
+        className={`flex h-7 w-7 shrink-0 items-center justify-center self-start rounded-full ${
           filterActive ? "bg-[#DEDEDE]" : "bg-transparent"
         }`}
       >
-        <FilterIcon />
+        <FilterIcon className="h-7 w-7" />
       </button>
     </div>
   );
