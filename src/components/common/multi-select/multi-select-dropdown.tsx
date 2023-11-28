@@ -28,12 +28,12 @@ const MultiSelectDropdown: React.FC<Props> = ({ options }) => {
     <>
       <MultiSelect
         options={options}
-        className="h-[35px] font-mont text-[13px] outline-none 
-        [&_.dropdown-container]:flex [&_.dropdown-container]:!h-[35px] [&_.dropdown-container]:items-center [&_.dropdown-container]:!rounded-lg [&_.dropdown-container]:!border-slate-600 focus-within:[&_.dropdown-container]:!border-slate-600  focus-within:[&_.dropdown-container]:!shadow-none
-        [&_.item-renderer]:flex [&_.item-renderer]:items-center [&_.item-renderer]:rounded-lg
-        [&_.panel-content]:p-2
+        className="h-[35px] font-mont text-[10px] outline-none 
+        [&_.dropdown-container]:flex [&_.dropdown-container]:h-[35px]  [&_.dropdown-container]:items-center [&_.dropdown-container]:!rounded-lg [&_.dropdown-container]:!border-[#5B5B5B80]/50  focus-within:[&_.dropdown-container]:!border-[#5B5B5B80]/50  focus-within:[&_.dropdown-container]:!shadow-none
+        [&_.item-renderer]:flex [&_.item-renderer]:!items-center [&_.item-renderer]:gap-[8px] [&_.item-renderer]:rounded-lg [&_.item-renderer_input]:!m-0
+        [&_.panel-content]:px-[5px] [&_.panel-content]:py-[5px] [&_.panel-content]:text-[8px]
         [&_.select-item.selected]:bg-none
-        [&_.select-item]:my-1 [&_.select-item]:rounded-lg
+         [&_.select-item]:rounded-lg
         "
         value={selected}
         onChange={setSelected}
