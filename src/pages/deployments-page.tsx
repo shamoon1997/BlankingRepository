@@ -1,5 +1,5 @@
 import { BaseMap, PageLoader } from "@/components";
-import Header from "@/components/Header";
+import Header from "@/components/header/header";
 import { FilterArea } from "@/components/filters";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 
