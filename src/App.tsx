@@ -26,7 +26,7 @@ function App() {
         <Route path={AppRoutes.root} element={<HomePage />} />
         <Route path={AppRoutes.callback} element={<CallbackPage />} />
 
-        {/* protected routes i.e always wrapped with withAuthenticationRequired  */}
+        {/* protected routes i.e. always wrapped with withAuthenticationRequired  */}
         <Route path={AppRoutes.deployments} element={<DeploymentPage />} />
 
         {/* 404 */}

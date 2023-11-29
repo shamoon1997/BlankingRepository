@@ -40,6 +40,7 @@ function MapPopup() {
             {tabs.map((tab) => {
               return (
                 <Tabs.Trigger
+                  key={tab}
                   value={tab}
                   className="whitespace-nowrap border-b border-solid border-transparent py-[7px] font-mont text-[8px] font-normal leading-[100%] text-[#5B5B5B] data-[state=active]:border-[#628fee] data-[state=active]:text-[#628fee]"
                 >

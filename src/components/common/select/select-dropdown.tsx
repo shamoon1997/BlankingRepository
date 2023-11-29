@@ -1,41 +1,45 @@
 import { ChevronIcon } from "@/assets";
 import * as Select from "@radix-ui/react-select";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode } from "react";
 import SelectItem from "./select-item";
 import { useSearchParams } from "react-router-dom";
+import { TextLimiter } from "..";
 
 type Props = {
   placeholder?: string;
-  dropdownIcon?: ReactNode; //Adds fixed icon on dropdown
+  triggerIcon?: ReactNode; //Adds fixed icon on dropdown
   options: {
     value: string;
-    text: string | JSX.Element;
-    icon?: JSX.Element;
+    child: string | React.JSX.Element;
+    icon?: React.JSX.Element;
   }[];
   searchParamKey?: string;
 };
 
 const SelectDropdown: React.FC<Props> = ({
   placeholder = "placeholder...",
-  dropdownIcon,
+  triggerIcon,
   options,
   searchParamKey,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [valueFromQuery, setvalueFromQuery] = useState<string | undefined>(
-    undefined,
-  );
 
-  useEffect(() => {
-    if (searchParamKey?.length && searchParamKey) {
-      const keyInUrl = searchParams.get(searchParamKey);
-      if (!keyInUrl) return;
+  if (options.length === 0) {
+    console.error(
+      "Select Dropdown: options length is 0, it must contain at least 1 item.",
+    );
+    return;
+  }
+
+  // TODO: add zod validation and make this into a separate hook look at /src/hooks/map/use-map-url-state.tsx - for Waleed
+  let valueFromQuery = undefined;
+  if (searchParamKey) {
+    const keyInUrl = searchParams.get(searchParamKey);
+    if (keyInUrl) {
       const preSelectedOption = options.find((item) => item.value === keyInUrl);
-      setvalueFromQuery(preSelectedOption?.value);
+      valueFromQuery = preSelectedOption?.value ?? undefined;
     }
-
-    return () => setvalueFromQuery(undefined);
-  }, [searchParams]);
+  }
 
   return (
     <Select.Root
@@ -44,42 +48,42 @@ const SelectDropdown: React.FC<Props> = ({
         searchParams.set(searchParamKey, value);
         setSearchParams(searchParams);
       }}
-      value={valueFromQuery ?? undefined}
+      value={valueFromQuery}
+      defaultValue={options[0].value}
+      open
     >
       <Select.Trigger
-        className="inline-flex h-[35px] w-full items-center justify-between rounded-lg border border-[#5B5B5B80]/50 bg-white px-[9px] py-[8px] font-mont text-[13px] leading-none text-slate-700 outline-none hover:bg-slate-200 data-[placeholder]:text-black/40"
+        className="inline-flex h-[38px] w-full cursor-pointer items-center justify-between rounded-md border-[0.5px] border-default bg-white px-2 pl-3 font-mont text-sm leading-none text-primary-hard shadow-dropdown outline-none data-[placeholder]:text-primary-hard"
         aria-label="dropdown"
       >
-        <div className="flex items-center text-[10px] font-semibold">
-          {dropdownIcon}
-          <Select.Value placeholder={placeholder} />
+        <div className="flex min-w-0 items-center font-semibold">
+          {triggerIcon}
+          <TextLimiter>
+            <Select.Value className="flex-1" placeholder={placeholder} />
+          </TextLimiter>
         </div>
-        <Select.Icon className="text-slate-800">
-          <div className="ml-2 rotate-180">
-            <ChevronIcon />
-          </div>
+        <Select.Icon className="shrink-0 rotate-180 [&_svg]:h-4 [&_svg]:w-4">
+          <ChevronIcon />
         </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
         <Select.Content
-          className="w-[var(--radix-select-trigger-width)] rounded-lg border border-[#5B5B5B80]/50 bg-white font-mont shadow-lg"
-          side="bottom"
+          className="w-[var(--radix-select-trigger-width)] min-w-0 rounded-md border-[0.5px] border-default bg-white font-mont shadow-dropdown"
           position="popper"
+          align="center"
+          side="bottom"
           sideOffset={5}
         >
           <Select.Viewport className="p-2">
-            <Select.Group>
-              {options?.map((item, i) => {
-                const key = `${item.value}-${i}`;
-
+            <Select.Group className="flex flex-col gap-1">
+              {options?.map((item) => {
                 return (
                   <SelectItem
-                    className="cursor-pointer rounded-lg border-none p-2 text-[8px] outline-none hover:bg-slate-200"
-                    key={key}
+                    className="flex cursor-pointer rounded-[5px] border-none p-2 text-xs outline-none hover:bg-[#F2F2F2] data-[state=checked]:bg-[#F7F7F7]"
+                    key={item.value}
                     value={item.value}
-                    icon={item.icon}
                   >
-                    {item.text}
+                    {item.child}
                   </SelectItem>
                 );
               })}
