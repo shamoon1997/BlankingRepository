@@ -3,7 +3,7 @@ import { BaseMap } from "./map";
 import { MapToolTipContainer } from "./map/map-tooltip";
 import { PageLoader } from "./page-loaders/page-loader";
 import { HomeLoader } from "./page-loaders/home-loader";
-import Legend from "./Legend/legend";
+import Legend from "./legend/legend";
 import MapHoverMenu from "./map/map-hover-menu/map-hover-menu";
 import SideNavigation from "./side-navigation";
 import PoleViewTabGroup from "./pole-view/pole-view-tab-group";

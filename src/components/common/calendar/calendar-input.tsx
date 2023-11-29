@@ -38,7 +38,7 @@ const CalendarInput: React.FC = () => {
     <>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <div className="inline-flex min-h-[37px] min-w-[200px] cursor-pointer items-center rounded-lg border border-slate-300 py-1">
+          <div className="inline-flex max-h-[35px] min-h-[35px] w-full min-w-[200px] cursor-pointer items-center rounded-lg border border-slate-300 bg-white py-1">
             <div className="flex w-full items-center px-0">
               <div className="px-2 [&_svg]:h-[15px] [&_svg]:w-[15px]">
                 <CalendarIcon />
@@ -46,7 +46,7 @@ const CalendarInput: React.FC = () => {
 
               {defaultFilter?.length && (
                 <div>
-                  <p className="text-left text-[8px] font-semibold text-blue-400">
+                  <p className="h-[12px] text-left text-[8px] font-semibold text-blue-400">
                     {
                       defaultDateDropdownOptions?.find(
                         (item) => item?.type === defaultFilter,
@@ -61,20 +61,24 @@ const CalendarInput: React.FC = () => {
 
               {!defaultFilter?.length && (
                 <div>
-                  <p className="text-left text-[8px] font-semibold text-blue-400">
+                  <p className="h-[12px] text-left text-[8px] font-semibold text-blue-400">
                     From
                   </p>
-                  <p className="text-[10px]">{fromDate ?? "DD/MM/YYYY"}</p>
+                  <p className="min-w-[64px] text-[10px]">
+                    {fromDate ?? "DD/MM/YYYY"}
+                  </p>
                 </div>
               )}
             </div>
 
             {!defaultFilter?.length && (
               <div className="px-4">
-                <p className="text-left text-[8px] font-semibold text-blue-400">
+                <p className="h-[12px] text-left text-[8px] font-semibold text-blue-400">
                   To
                 </p>
-                <p className="text-[10px]">{toDate ?? "DD/MM/YYYY"}</p>
+                <p className="min-w-[64px] text-[10px]">
+                  {toDate ?? "DD/MM/YYYY"}
+                </p>
               </div>
             )}
             <div className="px-2 [&_svg]:rotate-180">
@@ -84,23 +88,23 @@ const CalendarInput: React.FC = () => {
         </DropdownMenu.Trigger>
 
         <DropdownMenu.Portal>
-          <DropdownMenu.Content className="mt-2 w-full min-w-[360px] rounded-lg border border-slate-200 bg-white shadow-xl">
+          <DropdownMenu.Content className="z-[2] w-full min-w-[--radix-dropdown-menu-trigger-width] border border-slate-200 border-t-transparent bg-white shadow-xl">
             <Tabs.Root defaultValue="1">
-              <Tabs.List className="mb-2 flex justify-center gap-4 border-b-2 border-slate-200 pt-2">
+              <Tabs.List className="flex justify-center gap-4 border-b-2 border-slate-200 pt-2">
                 <Tabs.Trigger
-                  className="data-[state=active]:border-b-2 data-[state=active]:border-blue-400 data-[state=active]:text-blue-400"
+                  className="text-[8px] data-[state=active]:border-b-2 data-[state=active]:border-blue-400 data-[state=active]:text-blue-400"
                   value="1"
                 >
                   Default
                 </Tabs.Trigger>
                 <Tabs.Trigger
-                  className="data-[state=active]:border-b-2 data-[state=active]:border-blue-400 data-[state=active]:text-blue-400"
+                  className="text-[8px] data-[state=active]:border-b-2 data-[state=active]:border-blue-400 data-[state=active]:text-blue-400"
                   value="2"
                 >
                   Custom
                 </Tabs.Trigger>
               </Tabs.List>
-              <Tabs.Content className="px-6 py-2" value="1">
+              <Tabs.Content className="mb-0 px-[8px] py-[7px] pb-0" value="1">
                 <ul>
                   <form
                     onChange={(e) => {
@@ -124,7 +128,7 @@ const CalendarInput: React.FC = () => {
                     {defaultDateDropdownOptions.map((option) => {
                       return (
                         <li
-                          className="flex items-center gap-2 py-1"
+                          className="flex items-center gap-2 py-[5px] text-[10px]"
                           key={option.title}
                         >
                           <input
@@ -144,7 +148,7 @@ const CalendarInput: React.FC = () => {
                 </ul>
               </Tabs.Content>
               <Tabs.Content
-                className="grid place-content-center px-6 py-2"
+                className="grid place-content-center px-[8px] py-[7px]"
                 value="2"
               >
                 <DateRangeCalendar range={range} setRange={setRange} />
