@@ -67,7 +67,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           filterActive ? "bg-[#DEDEDE]" : "bg-transparent"
         }`}
       >
-        <FilterIcon className="h-7 w-7" />
+        <FilterIcon className="h-4 w-4" />
       </button>
     </div>
   );
