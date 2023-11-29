@@ -1,7 +1,12 @@
 import { Route, Routes, useLocation } from "react-router-dom";
 import { CallbackPage, DeploymentPage, HomePage, NotFoundPage } from "./pages";
 import { useAuth0 } from "@auth0/auth0-react";
-import { HomeLoader, PageLoader, SideNavigation } from "./components";
+import {
+  HomeLoader,
+  PageLoader,
+  PoleViewTabGroup,
+  SideNavigation,
+} from "./components";
 import { AppRoutes } from "./utils/routes";
 import { useShowSideBar } from "./hooks";
 
@@ -21,6 +26,10 @@ const RouteMappings = [
   {
     path: AppRoutes.notFound,
     element: <NotFoundPage />,
+  },
+  {
+    path: "/test",
+    element: <PoleViewTabGroup />,
   },
 ];
 

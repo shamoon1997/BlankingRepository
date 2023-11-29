@@ -6,6 +6,7 @@ import { HomeLoader } from "./page-loaders/home-loader";
 import Legend from "./Legend/legend";
 import MapHoverMenu from "./map/map-hover-menu/map-hover-menu";
 import SideNavigation from "./side-navigation";
+import PoleViewTabGroup from "./pole-view/pole-view-tab-group";
 
 export {
   GridScopeLayer,
@@ -16,4 +17,5 @@ export {
   SideNavigation,
   Legend,
   MapHoverMenu,
+  PoleViewTabGroup,
 };
