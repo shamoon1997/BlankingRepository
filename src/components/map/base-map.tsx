@@ -1,9 +1,5 @@
 import { useMapUrlState } from "@/hooks";
-import Map, {
-  FullscreenControl,
-  NavigationControl,
-  ScaleControl,
-} from "react-map-gl";
+import Map, { FullscreenControl, NavigationControl } from "react-map-gl";
 import { GridScopeLayer } from "./map-layers/gridscope-layer";
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -15,6 +11,7 @@ export const BaseMap = () => {
   return (
     <Map
       reuseMaps
+      attributionControl={false}
       maxPitch={0}
       minPitch={0}
       onMoveEnd={(e) => {
@@ -42,14 +39,12 @@ export const BaseMap = () => {
       style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
       mapStyle="mapbox://styles/mapbox/light-v11"
     >
-      <FullscreenControl position="top-left" />
-      <NavigationControl position="top-left" />
+      <FullscreenControl position="bottom-left" />
+      <NavigationControl position="bottom-left" />
 
       {/* show layers based on props in future */}
 
       <GridScopeLayer />
-
-      <ScaleControl position="bottom-left" />
     </Map>
   );
 };
