@@ -1,110 +1,102 @@
+import { ChevronIcon } from "@/assets";
 import * as Select from "@radix-ui/react-select";
 import React, { ReactNode } from "react";
+import SelectItem from "./select-item";
+import { useSearchParams } from "react-router-dom";
+import { TextLimiter } from "..";
 
-const SelectDropdown: React.FC = () => (
-  <Select.Root>
-    <Select.Trigger
-      className="inline-flex items-center justify-center rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] bg-white text-slate-600 shadow-[0_2px_10px] shadow-black/10 hover:bg-blue-400 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-violet-bg-violet-900 outline-none w-full"
-      aria-label="Food"
-    >
-      <Select.Value placeholder="Select a fruit…" />
-      <Select.Icon className="text-slate-600">
-        {/* CHEVRON DOWN ICON HERE */}
-        {/* <ChevronDownIcon /> */}
-        <p className="rotate-180">^</p>
-      </Select.Icon>
-    </Select.Trigger>
-    <Select.Portal>
-      <Select.Content className="overflow-hidden bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
-        <Select.ScrollUpButton className="flex items-center justify-center h-[25px] bg-white text-slate-600 cursor-default">
-          {/* CHEVRON UP ICON HERE */}
-          {/* <ChevronUpIcon /> */}
-          <p>^</p>
-        </Select.ScrollUpButton>
-        <Select.Viewport className="p-[5px]">
-          <Select.Group>
-            <Select.Label className="px-[25px] text-xs leading-[25px] text-mauve11">
-              Fruits
-            </Select.Label>
-            <SelectItem value="apple">Apple</SelectItem>
-            <SelectItem value="banana">Banana</SelectItem>
-            <SelectItem value="blueberry">Blueberry</SelectItem>
-            <SelectItem value="grapes">Grapes</SelectItem>
-            <SelectItem value="pineapple">Pineapple</SelectItem>
-          </Select.Group>
+type Props = {
+  placeholder?: string;
+  triggerIcon?: ReactNode; //Adds fixed icon on dropdown
+  options: {
+    value: string;
+    child: string | React.JSX.Element;
+    icon?: React.JSX.Element;
+  }[];
+  searchParamKey?: string;
+};
 
-          <Select.Separator className="h-[1px] bg-violet6 m-[5px]" />
+const SelectDropdown: React.FC<Props> = ({
+  placeholder = "placeholder...",
+  triggerIcon,
+  options,
+  searchParamKey,
+}) => {
+  const [searchParams, setSearchParams] = useSearchParams();
 
-          <Select.Group>
-            <Select.Label className="px-[25px] text-xs leading-[25px] text-mauve11">
-              Vegetables
-            </Select.Label>
-            <SelectItem value="aubergine">Aubergine</SelectItem>
-            <SelectItem value="broccoli">Broccoli</SelectItem>
-            <SelectItem value="carrot" disabled>
-              Carrot
-            </SelectItem>
-            <SelectItem value="courgette">Courgette</SelectItem>
-            <SelectItem value="leek">Leek</SelectItem>
-          </Select.Group>
-
-          <Select.Separator className="h-[1px] bg-violet6 m-[5px]" />
-
-          <Select.Group>
-            <Select.Label className="px-[25px] text-xs leading-[25px] text-mauve11">
-              Meat
-            </Select.Label>
-            <SelectItem value="beef">Beef</SelectItem>
-            <SelectItem value="chicken">Chicken</SelectItem>
-            <SelectItem value="lamb">Lamb</SelectItem>
-            <SelectItem value="pork">Pork</SelectItem>
-          </Select.Group>
-        </Select.Viewport>
-        <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-slate-600 cursor-default">
-          {/* CHEVRON DOWN ICON HERE */}
-          {/* <ChevronDownIcon /> */}
-          <p className="rotate-180">^</p>
-        </Select.ScrollDownButton>
-      </Select.Content>
-    </Select.Portal>
-  </Select.Root>
-);
-
-const SelectItem = React.forwardRef(
-  (
-    {
-      children,
-      className,
-      value,
-      ...props
-    }: {
-      value: string;
-      children: ReactNode;
-      className?: string | undefined;
-      disabled?: boolean;
-    },
-    forwardedRef?: React.ForwardedRef<HTMLDivElement>
-  ) => {
-    return (
-      <Select.Item
-        className={
-          className ??
-          "text-[13px] leading-none text-slate-600 rounded-[3px] flex items-center h-[25px] pr-[35px] pl-[25px] relative select-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-violet-900 data-[highlighted]:text-white"
-        }
-        {...props}
-        value={value}
-        ref={forwardedRef}
-      >
-        <Select.ItemText>{children}</Select.ItemText>
-        <Select.ItemIndicator className="absolute left-0 w-[25px] inline-flex items-center justify-center">
-          {/* CHECK ICON HERE */}
-          {/* <CheckIcon /> */}
-        </Select.ItemIndicator>
-      </Select.Item>
+  if (options.length === 0) {
+    console.error(
+      "Select Dropdown: options length is 0, it must contain at least 1 item.",
     );
+    return;
   }
-);
 
-SelectItem.displayName = "SelectItem";
+  // TODO: add zod validation and make this into a separate hook look at /src/hooks/map/use-map-url-state.tsx - for Waleed
+  let valueFromQuery: string | undefined = undefined;
+  if (searchParamKey) {
+    const keyInUrl = searchParams.get(searchParamKey);
+    if (keyInUrl) {
+      const preSelectedOption = options.find((item) => item.value === keyInUrl);
+      valueFromQuery = preSelectedOption?.value ?? undefined;
+    }
+  }
+
+  return (
+    <Select.Root
+      onValueChange={(value: string) => {
+        if (!searchParamKey?.length) return;
+        searchParams.set(searchParamKey, value);
+        setSearchParams(searchParams);
+      }}
+      value={valueFromQuery}
+      defaultValue={options[0].value}
+    >
+      <Select.Trigger
+        className="inline-flex h-[38px] w-full cursor-pointer items-center justify-between rounded-md border-[0.5px] border-default bg-white px-2 pl-3 font-mont text-sm leading-none text-primary-hard shadow-dropdown outline-none data-[placeholder]:text-primary-hard"
+        aria-label="dropdown"
+      >
+        <div className="flex min-w-0 items-center font-semibold">
+          {triggerIcon}
+          <TextLimiter>
+            <Select.Value className="flex-1" placeholder={placeholder} />
+          </TextLimiter>
+        </div>
+        <Select.Icon className="shrink-0 rotate-180 [&_svg]:h-4 [&_svg]:w-4">
+          <ChevronIcon />
+        </Select.Icon>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Content
+          className="w-[var(--radix-select-trigger-width)] min-w-0 rounded-md border-[0.5px] border-default bg-white font-mont shadow-dropdown"
+          position="popper"
+          align="center"
+          side="bottom"
+          sideOffset={5}
+        >
+          <Select.Viewport className="p-2">
+            <Select.Group className="flex flex-col gap-1">
+              {options?.map((item) => {
+                return (
+                  <SelectItem
+                    className="flex cursor-pointer rounded-[5px] border-none p-2 text-xs outline-none hover:bg-[#F2F2F2] data-[state=checked]:bg-[#F7F7F7]"
+                    key={item.value}
+                    value={item.value}
+                  >
+                    {item.child}
+                  </SelectItem>
+                );
+              })}
+            </Select.Group>
+          </Select.Viewport>
+          <Select.ScrollDownButton className="flex h-[25px] cursor-default items-center justify-center bg-white text-slate-600">
+            <div className="rotate-180">
+              <ChevronIcon />
+            </div>
+          </Select.ScrollDownButton>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
+  );
+};
 
 export default SelectDropdown;

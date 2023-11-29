@@ -1,11 +1,12 @@
+import { MapToolTipContainer } from "@/components";
 import { useMapUrlState } from "@/hooks";
+import { partitionAndClusterPoints } from "@/utils/map";
+import { Feature } from "geojson";
+import mapboxgl from "mapbox-gl";
 import { useState } from "react";
 import { Layer, Marker, Source } from "react-map-gl";
-import { MapToolTipContainer } from "@/components";
-import { Feature } from "geojson";
 import { MapZoomedBoxContainer } from "../map-zoomed-box";
-import { partitionAndClusterPoints } from "@/utils/map";
-import mapboxgl from "mapbox-gl";
+import GridscopeDropdownLayer from "./gridscope-dropdown-layer";
 
 // shape of data to be used
 
@@ -165,6 +166,8 @@ export const GridScopeLayer = () => {
           </Marker>
         );
       })}
+
+      <GridscopeDropdownLayer />
 
       <Source id="line-source" type="geojson" data={GeoJson}>
         <Layer id="line-layer" type="line" paint={LineLayerStyles} />
