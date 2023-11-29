@@ -41,22 +41,19 @@ const PoleViewTabGroup: React.FC = () => {
           </Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content
-          className="min-h-[613px] w-[958px] grow rounded-md bg-white px-[26px] py-[22px] shadow-md
-"
+          className="min-h-[613px] w-[958px] grow gap-x-[31px] rounded-md bg-white px-[26px] py-[22px] shadow-md"
           value="tab1"
         >
           <PoleViewTabGroupContent />
         </Tabs.Content>
         <Tabs.Content
-          className="min-h-[613px] w-[958px] grow rounded-md bg-white px-[26px] py-[22px] shadow-md
-"
+          className="min-h-[613px] w-[958px] grow gap-x-[31px] rounded-md bg-white px-[26px] py-[22px] shadow-md"
           value="tab2"
         >
           <PoleViewTabGroupContent />
         </Tabs.Content>
         <Tabs.Content
-          className="min-h-[613px] w-[958px] grow rounded-md bg-white px-[26px] py-[22px] shadow-md
-"
+          className="min-h-[613px] w-[958px] grow gap-x-[31px] rounded-md bg-white px-[26px] py-[22px] shadow-md"
           value="tab3"
         >
           <PoleViewTabGroupContent />
