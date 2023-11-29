@@ -32,7 +32,7 @@ const SelectDropdown: React.FC<Props> = ({
   }
 
   // TODO: add zod validation and make this into a separate hook look at /src/hooks/map/use-map-url-state.tsx - for Waleed
-  let valueFromQuery = undefined;
+  let valueFromQuery: string | undefined = undefined;
   if (searchParamKey) {
     const keyInUrl = searchParams.get(searchParamKey);
     if (keyInUrl) {
