@@ -50,7 +50,6 @@ const SelectDropdown: React.FC<Props> = ({
       }}
       value={valueFromQuery}
       defaultValue={options[0].value}
-      open
     >
       <Select.Trigger
         className="inline-flex h-[38px] w-full cursor-pointer items-center justify-between rounded-md border-[0.5px] border-default bg-white px-2 pl-3 font-mont text-sm leading-none text-primary-hard shadow-dropdown outline-none data-[placeholder]:text-primary-hard"
