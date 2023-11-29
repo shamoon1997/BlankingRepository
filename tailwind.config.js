@@ -52,6 +52,7 @@ export default {
         poleViewRed: "#C93B54",
         poleViewGreed: "#2CB369",
         poleViewBlue: "#3569E7",
+        poleViewTextLight: "#16161680",
       },
       backgroundColor: {
         "map-zoomed-box": "rgba(22, 22, 22, 0.70)",
