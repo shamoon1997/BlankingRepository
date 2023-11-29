@@ -3,10 +3,31 @@ import { CallbackPage, DeploymentPage, HomePage, NotFoundPage } from "./pages";
 import { useAuth0 } from "@auth0/auth0-react";
 import { HomeLoader, PageLoader, SideNavigation } from "./components";
 import { AppRoutes } from "./utils/routes";
+import { useShowSideBar } from "./hooks";
+
+const RouteMappings = [
+  {
+    path: AppRoutes.root,
+    element: <HomePage />,
+  },
+  {
+    path: AppRoutes.callback,
+    element: <CallbackPage />,
+  },
+  {
+    path: AppRoutes.deployments,
+    element: <DeploymentPage />,
+  },
+  {
+    path: AppRoutes.notFound,
+    element: <NotFoundPage />,
+  },
+];
 
 function App() {
   const { isLoading } = useAuth0();
   const location = useLocation();
+  const showSideBar = useShowSideBar(RouteMappings);
 
   if (isLoading) {
     if (location.pathname === AppRoutes.root) {
@@ -16,21 +37,19 @@ function App() {
     }
   }
 
-  const isDashboardPath = location.pathname.startsWith("/dashboard");
-
   return (
-    <div className={`${isDashboardPath ? "flex" : ""}`}>
-      {isDashboardPath && <SideNavigation />}
+    <div className={`${showSideBar ? "flex" : ""}`}>
+      {showSideBar && <SideNavigation />}
       <Routes>
-        {/* public routes */}
-        <Route path={AppRoutes.root} element={<HomePage />} />
-        <Route path={AppRoutes.callback} element={<CallbackPage />} />
-
-        {/* protected routes i.e. always wrapped with withAuthenticationRequired  */}
-        <Route path={AppRoutes.deployments} element={<DeploymentPage />} />
-
-        {/* 404 */}
-        <Route path={AppRoutes.notFound} element={<NotFoundPage />} />
+        {RouteMappings.map((mapping) => {
+          return (
+            <Route
+              key={mapping.path}
+              path={mapping.path}
+              element={mapping.element}
+            />
+          );
+        })}
       </Routes>
     </div>
   );

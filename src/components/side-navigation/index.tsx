@@ -7,8 +7,10 @@ const SideNavigation: React.FC = () => {
 
   return (
     <div>
-      <div className="bg-customSideColor h-screen w-56 p-4 text-white">
-        <h3 className="mb-4 text-left font-mont text-xl font-bold">ADMIN</h3>
+      <div className="h-screen w-56 bg-customSideColor p-4 text-white">
+        <h3 className="mb-4 text-left font-mont text-xl font-extrabold">
+          ADMIN
+        </h3>
 
         <ul>
           {navigationTabs.map((tab) => {
@@ -27,7 +29,7 @@ const SideNavigation: React.FC = () => {
                     <tab.icon />
                   </div>
 
-                  <span>{tab.name}</span>
+                  <span className="text-8 font-600 font-mont">{tab.name}</span>
                 </Link>
               </li>
             );
