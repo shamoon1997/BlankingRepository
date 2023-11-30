@@ -1,0 +1,16 @@
+export const poleEquipmentOptions = [
+  //   { label: "All", value: "all" },
+  { label: "No Equipment", value: "no-equipment" },
+  { label: "Transformer", value: "transformer" },
+  { label: "Fuse Cutouts", value: "fuse-cutouts" },
+  { label: "Lighting Arrestors", value: "lighting-arrestors" },
+  { label: "Capacitor Bank", value: "capacitor-bank" },
+  { label: "Switch", value: "switch" },
+  { label: "Risers", value: "risers" },
+  { label: "Trip Saver", value: "trip-saver" },
+  { label: "Ground Line", value: "ground-line" },
+  { label: "Secondary Line", value: "secondary-line" },
+  { label: "Streetlight", value: "streetlight" },
+  { label: "Communication", value: "communication" },
+  { label: "Other", value: "other" },
+];
