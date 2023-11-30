@@ -1,6 +1,6 @@
 import * as Tabs from "@radix-ui/react-tabs";
 
-const DeviceData: React.FC = () => {
+const DeviceTabs: React.FC = () => {
   const tabs = [
     "Alerts",
     "Metric Data",
@@ -69,4 +69,4 @@ const DeviceData: React.FC = () => {
   );
 };
 
-export default DeviceData;
+export default DeviceTabs;

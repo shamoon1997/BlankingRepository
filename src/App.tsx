@@ -2,8 +2,6 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { CallbackPage, DeploymentPage, HomePage, NotFoundPage } from "./pages";
 import { useAuth0 } from "@auth0/auth0-react";
 import { HomeLoader, PageLoader, SideNavigation } from "./components";
-import DeviceData from "./components/device-data/device-data";
-import NotesData from "./components/notes-data/notes-data";
 import { AppRoutes } from "./utils/routes";
 import { useShowSideBar } from "./hooks";
 
@@ -27,37 +25,33 @@ const RouteMappings = [
 ];
 
 function App() {
-  // const { isLoading } = useAuth0();
-  // const location = useLocation();
-  // const showSideBar = useShowSideBar(RouteMappings);
+  const { isLoading } = useAuth0();
+  const location = useLocation();
+  const showSideBar = useShowSideBar(RouteMappings);
 
-  // if (isLoading) {
-  //   if (location.pathname === AppRoutes.root) {
-  //     return <HomeLoader />;
-  //   } else {
-  //     return <PageLoader />;
-  //   }
-  // }
+  if (isLoading) {
+    if (location.pathname === AppRoutes.root) {
+      return <HomeLoader />;
+    } else {
+      return <PageLoader />;
+    }
+  }
 
   return (
-    <div>
-      {/* <DeviceData /> */}
-      <NotesData />
+    <div className={`${showSideBar ? "flex" : ""}`}>
+      {showSideBar && <SideNavigation />}
+      <Routes>
+        {RouteMappings.map((mapping) => {
+          return (
+            <Route
+              key={mapping.path}
+              path={mapping.path}
+              element={mapping.element}
+            />
+          );
+        })}
+      </Routes>
     </div>
-    // <div className={`${showSideBar ? "flex" : ""}`}>
-    //   {showSideBar && <SideNavigation />}
-    //   <Routes>
-    //     {RouteMappings.map((mapping) => {
-    //       return (
-    //         <Route
-    //           key={mapping.path}
-    //           path={mapping.path}
-    //           element={mapping.element}
-    //         />
-    //       );
-    //     })}
-    //   </Routes>
-    // </div>
   );
 }
 
