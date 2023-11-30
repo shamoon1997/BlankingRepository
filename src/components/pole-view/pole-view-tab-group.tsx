@@ -14,7 +14,7 @@ const PoleViewTabGroup: React.FC = () => {
           aria-label="Manage your account"
         >
           <Tabs.Trigger
-            className="text-poleViewBlue group relative flex h-[31px] flex-1 select-none flex-col justify-center rounded-t-md bg-white px-[15px] text-[12px] leading-none outline-none"
+            className="group relative flex h-[31px] flex-1 select-none flex-col justify-center rounded-t-md bg-white px-[15px] text-[12px] leading-none text-poleViewBlue outline-none"
             value="tab1"
           >
             <p className="mb-[1px] font-semibold">GS1245</p>
@@ -24,7 +24,7 @@ const PoleViewTabGroup: React.FC = () => {
             {/* <div className="absolute bottom-0 right-0 h-[4px] w-[4px] bg-red-500 group-data-[state=inactive]:hidden" /> */}
           </Tabs.Trigger>
           <Tabs.Trigger
-            className="bg-poleViewRed group relative flex h-[31px] flex-1 select-none flex-col justify-center rounded-t-md px-[15px] text-[12px] leading-none text-white outline-none"
+            className="group relative flex h-[31px] flex-1 select-none flex-col justify-center rounded-t-md bg-poleViewRed px-[15px] text-[12px] leading-none text-white outline-none"
             value="tab2"
           >
             <p className="mb-[1px] font-semibold">GS1245</p>
@@ -32,7 +32,7 @@ const PoleViewTabGroup: React.FC = () => {
             <div className="absolute left-0 h-[17px] w-[2px] rounded-r-lg bg-white group-data-[state=inactive]:hidden" />
           </Tabs.Trigger>
           <Tabs.Trigger
-            className="bg-poleViewGreed group relative flex h-[31px] flex-1 select-none flex-col justify-center rounded-t-md px-[15px] text-[12px] leading-none text-white outline-none"
+            className="group relative flex h-[31px] flex-1 select-none flex-col justify-center rounded-t-md bg-poleViewGreed px-[15px] text-[12px] leading-none text-white outline-none"
             value="tab3"
           >
             <p className="mb-[1px] font-semibold">GS1245</p>
@@ -41,19 +41,19 @@ const PoleViewTabGroup: React.FC = () => {
           </Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content
-          className="min-h-[613px] w-[958px] grow gap-x-[31px] rounded-md bg-white px-[26px] py-[22px] shadow-md"
+          className="min-h-[613px] w-[958px] grow gap-x-[31px] rounded-md rounded-tl-none bg-white px-[26px] py-[22px] shadow-md"
           value="tab1"
         >
           <PoleViewTabGroupContent />
         </Tabs.Content>
         <Tabs.Content
-          className="min-h-[613px] w-[958px] grow gap-x-[31px] rounded-md bg-white px-[26px] py-[22px] shadow-md"
+          className="min-h-[613px] w-[958px] grow gap-x-[31px] rounded-md rounded-tl-none bg-white px-[26px] py-[22px] shadow-md"
           value="tab2"
         >
           <PoleViewTabGroupContent />
         </Tabs.Content>
         <Tabs.Content
-          className="min-h-[613px] w-[958px] grow gap-x-[31px] rounded-md bg-white px-[26px] py-[22px] shadow-md"
+          className="min-h-[613px] w-[958px] grow gap-x-[31px] rounded-md rounded-tl-none bg-white px-[26px] py-[22px] shadow-md"
           value="tab3"
         >
           <PoleViewTabGroupContent />
