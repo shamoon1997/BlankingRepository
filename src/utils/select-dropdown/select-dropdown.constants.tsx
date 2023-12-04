@@ -13,7 +13,7 @@ type SelectDropdownType = {
   child: string | JSX.Element;
 };
 /*
-  Add whate ever you want to show in the trigger inside 
+  Add whatever you want to show in the trigger inside
   <Select.ItemText>your text</Select.ItemText>
   use TextLimiter to truncate text whenever it exceeds the width of its parent
   min-w-0 is needed to truncate text do not remove it

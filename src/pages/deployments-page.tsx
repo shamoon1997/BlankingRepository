@@ -10,6 +10,7 @@ export const DeploymentPage = withAuthenticationRequired(
         {/* NAVBAR */}
         <Header heading="Deployment" />
 
+        {/*  add boundary here */}
         <div className="flex flex-1 overflow-auto">
           <FilterArea />
           <div className="relative w-full">

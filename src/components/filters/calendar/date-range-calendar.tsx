@@ -1,4 +1,4 @@
-import { formateDate, dateFormats } from "@/utils/date";
+import { formatDate, dateFormats } from "@/utils/date";
 import React from "react";
 import {
   ClassNames,
@@ -31,7 +31,7 @@ const DateRangeCalendar: React.FC<Props> = ({ range, setRange }) => {
   const [, setSearchParams] = useSearchParams();
 
   const formatWeekdayName: DateFormatter = (week) => {
-    const weekdayName = formateDate(week, dateFormats.weekMini);
+    const weekdayName = formatDate(week, dateFormats.weekMini);
     return weekdayName;
   };
 

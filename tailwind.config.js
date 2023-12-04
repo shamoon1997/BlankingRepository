@@ -3,6 +3,12 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontWeight: {
+        normal: "600",
+        semibold: "700",
+        bold: "800",
+        black: "950",
+      },
       fontFamily: {
         mont: ["Mont", "serif"],
       },
@@ -30,6 +36,8 @@ export default {
         "btn-primary": "#FF176B",
         "btn-secondary": "#89E3B4",
 
+        "primary-blue": "#628FEE",
+
         // POLE STATUS COLORS
         offline: "#DF4C2B",
         spotty: "#F4B849",
@@ -44,9 +52,9 @@ export default {
         // map zoomed tooltip bg
 
         // SIDEBAR COLORS
-        customSideColor: "#3B3C4F",
+        "custom-side-color": "#3B3C4F",
 
-        popUpHoverColor: "#D9D9D9",
+        "pop-up-hover-color": "#D9D9D9",
       },
       backgroundColor: {
         "map-zoomed-box": "rgba(22, 22, 22, 0.70)",

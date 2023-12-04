@@ -1,6 +1,6 @@
 import dbScan, { Dbscan } from "@turf/clusters-dbscan";
 import { Units } from "@turf/turf";
-import { Feature, Point, FeatureCollection, GeoJsonProperties } from "geojson";
+import { Feature, Point, FeatureCollection } from "geojson";
 
 type MapLikeDataPoint = {
   latitude: number;
@@ -31,20 +31,18 @@ const partitionAndClusterPoints = <T extends MapLikeDataPoint>(
   const res: PartitionResult = [];
   for (const callable of partitionFunctions) {
     const filtered = data.filter(callable);
-    const mapped: Feature<Point, GeoJsonProperties>[] = filtered.map(
-      (point) => ({
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [point.longitude, point.latitude],
-        },
-        properties: {
-          ...point,
-        },
-      }),
-    );
+    const mapped: Feature<Point>[] = filtered.map((point) => ({
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [point.longitude, point.latitude],
+      },
+      properties: {
+        ...point,
+      },
+    }));
 
-    const featureCollection: FeatureCollection<Point, GeoJsonProperties> = {
+    const featureCollection: FeatureCollection<Point> = {
       type: "FeatureCollection",
       features: mapped,
     };

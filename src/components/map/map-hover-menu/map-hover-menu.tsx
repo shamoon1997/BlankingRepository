@@ -1,4 +1,4 @@
-import { MapToolTipContainer } from "../map-tooltip";
+import { MapToolTipContainer } from "@/components";
 import MapPowerEquipmentInfo from "../map-power-equipment-info/map-power-equipment-info";
 import { StatusIcon, ElectrometerIcon, MapsIcon } from "@/assets/pole-hover";
 import { Button } from "@/components/common";

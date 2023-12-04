@@ -6,7 +6,7 @@ import {
   poleConnectionStatusOptions,
   polePropertyOptions,
 } from "@/utils/select-dropdown";
-import React from "react";
+import React, { useState } from "react";
 
 const GridscopeDropdownLayer: React.FC = () => {
   return (
@@ -14,20 +14,18 @@ const GridscopeDropdownLayer: React.FC = () => {
       <div className="absolute z-[2] flex w-full justify-between gap-2 p-2 pr-4 pt-4">
         {/* LEFT GROUP */}
         <div className="flex gap-2">
-          <div className="w-[240px]">
-            <CalendarInput />
-          </div>
+          <CalendarInput />
         </div>
 
         {/* RIGHT GROUP */}
         <div className="flex gap-2">
-          <div className="w-[170px]">
-            <SelectDropdown
-              placeholder="Property"
-              options={polePropertyOptions}
-              searchParamKey="pole-property"
-            />
-          </div>
+          {/*<div className="w-[170px]">*/}
+          {/*  <SelectDropdown*/}
+          {/*    placeholder="Property"*/}
+          {/*    options={polePropertyOptions}*/}
+          {/*    searchParamKey="pole-property"*/}
+          {/*  />*/}
+          {/*</div>*/}
           <div className="w-[170px]">
             <SelectDropdown
               triggerIcon={

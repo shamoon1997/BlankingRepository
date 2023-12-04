@@ -1,9 +1,6 @@
 import { format, sub } from "date-fns";
 
-export const formateDate = (
-  date: number | Date,
-  dateFormat: string,
-): string => {
+export const formatDate = (date: number | Date, dateFormat: string): string => {
   return format(date, dateFormat);
 };
 
