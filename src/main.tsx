@@ -4,7 +4,6 @@ import App from "./App.tsx";
 import "./fonts.css";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
-
 import { Auth0ProviderWithNavigate } from "./state/providers";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
