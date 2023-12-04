@@ -14,6 +14,7 @@ type Props = {
     icon?: React.JSX.Element;
   }[];
   searchParamKey?: string;
+  showChevron?: boolean;
 };
 
 const SelectDropdown: React.FC<Props> = ({
@@ -21,6 +22,7 @@ const SelectDropdown: React.FC<Props> = ({
   triggerIcon,
   options,
   searchParamKey,
+  showChevron = false,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -61,9 +63,11 @@ const SelectDropdown: React.FC<Props> = ({
             <Select.Value className="flex-1" placeholder={placeholder} />
           </TextLimiter>
         </div>
-        <Select.Icon className="shrink-0 rotate-180 [&_svg]:h-4 [&_svg]:w-4">
-          <ChevronIcon />
-        </Select.Icon>
+        {showChevron && (
+          <Select.Icon className="shrink-0 rotate-180 [&_svg]:h-4 [&_svg]:w-4">
+            <ChevronIcon />
+          </Select.Icon>
+        )}
       </Select.Trigger>
       <Select.Portal>
         <Select.Content

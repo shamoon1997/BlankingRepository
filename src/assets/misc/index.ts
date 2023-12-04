@@ -4,6 +4,9 @@ import SettingsIcon from "./settings.svg";
 import UpTriangleIcon from "./up-triangle.svg";
 import DownTriangleIcon from "./down-triangle.svg";
 import CrossIcon from "./cross.svg";
+import CalendarOpenIcon from "./calendar-opener.svg";
+import PoleStatusIcon from "./pole-status.svg";
+import LayerStatusIcon from "./layer-status.svg";
 
 export {
   ChevronIcon,
@@ -12,4 +15,7 @@ export {
   UpTriangleIcon,
   DownTriangleIcon,
   CrossIcon,
+  CalendarOpenIcon,
+  PoleStatusIcon,
+  LayerStatusIcon,
 };
