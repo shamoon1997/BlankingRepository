@@ -40,7 +40,6 @@ function App() {
   return (
     <div className={`${showSideBar ? "flex" : ""}`}>
       {showSideBar && <SideNavigation />}
-
       <Routes>
         {RouteMappings.map((mapping) => {
           return (
