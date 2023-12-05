@@ -2,7 +2,6 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { CallbackPage, DeploymentPage, HomePage, NotFoundPage } from "./pages";
 import { useAuth0 } from "@auth0/auth0-react";
 import { HomeLoader, PageLoader, SideNavigation } from "./components";
-import { PoleMiniFilter } from "./components/filters/filter-area/pole-mini-filter";
 import { AppRoutes } from "./utils/routes";
 import { useShowSideBar } from "./hooks";
 
@@ -40,8 +39,8 @@ function App() {
 
   return (
     <div className={`${showSideBar ? "flex" : ""}`}>
-      <PoleMiniFilter />
-      {/* {showSideBar && <SideNavigation />}
+      {showSideBar && <SideNavigation />}
+
       <Routes>
         {RouteMappings.map((mapping) => {
           return (
@@ -52,7 +51,7 @@ function App() {
             />
           );
         })}
-      </Routes> */}
+      </Routes>
     </div>
   );
 }
