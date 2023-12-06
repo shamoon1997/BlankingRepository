@@ -1,79 +1,18 @@
-import { MapToolTipContainer } from "@/components";
 import { useMapUrlState } from "@/hooks";
-import { PartitionResult } from "@/utils/map";
-import { Feature, Point } from "geojson";
+import { Feature, Point, Position } from "geojson";
 import mapboxgl from "mapbox-gl";
-import { useState } from "react";
 import { Layer, Marker, Source } from "react-map-gl";
 import { MapZoomedBoxContainer } from "../map-zoomed-box";
 import GridscopeDropdownLayer from "./gridscope-dropdown-layer";
 import { BaseLayerResponse, Device } from "@/api/types/types.ts";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
+import { useMemo } from "react";
 
-// shape of data to be used
-
-// const CircleData = [
-//   {
-//     id: "point1",
-//     latitude: 33.716327,
-//     longitude: 73.040111,
-//     color: "bg-spotty",
-//   },
-//   {
-//     id: "point2",
-//     latitude: 33.717152,
-//     longitude: 73.04163,
-//     color: "bg-spotty",
-//   },
-//   { id: "point3", latitude: 33.71532, longitude: 73.04296, color: "bg-online" },
-//   {
-//     id: "point4",
-//     latitude: 33.715669,
-//     longitude: 73.038894,
-//     color: "bg-offline",
-//   },
-//   {
-//     id: "point5",
-//     latitude: 33.715323,
-//     longitude: 73.03909,
-//     color: "bg-offline",
-//   },
-// ];
-
-const LineLayerStyles: mapboxgl.LinePaint = {
+const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
   "line-opacity": 1,
   "line-width": 8,
   "line-dasharray": [0.22, 0.24],
-};
-
-const GeoJson: Feature = {
-  type: "Feature",
-  //   generate geometry from data
-  geometry: {
-    type: "MultiLineString",
-    coordinates: [
-      [
-        [73.040111, 33.716327],
-        [73.04163, 33.717152],
-      ],
-      [
-        [73.04163, 33.717152], // Duplicate point to connect lines
-        [73.04296, 33.71532],
-      ],
-      [
-        [73.040111, 33.716327],
-        [73.038894, 33.715669],
-      ],
-      [
-        [73.038894, 33.715669],
-        [73.03909, 33.715323],
-      ],
-    ],
-  },
-  properties: {
-    color: "#778FE4", // You can customize this property to set the line color
-  },
 };
 
 type EquipmentLayerProps = {
@@ -81,27 +20,65 @@ type EquipmentLayerProps = {
   isLoading: boolean;
   isError: boolean;
 };
-export const EquipmentLayer = ({
-  data,
-  isError,
-  isLoading,
-}: EquipmentLayerProps) => {
+export const EquipmentLayer = ({ data }: EquipmentLayerProps) => {
   const { validatedMapUrlState } = useMapUrlState();
 
-  let combined: Feature<Point, Device>[] = [];
-  if (data?.devices && data.devices.length > 0) {
-    const modify = data.devices.map((item) => {
-      return {
-        ...item,
-        id: item.hardware_id,
-      };
-    });
-    combined = mapDataToGeoJsonPoints(modify);
-  }
+  const points: Feature<Point, Device>[] = useMemo(() => {
+    if (data?.devices && data.devices.length > 0) {
+      const modify = data.devices.map((item) => {
+        return {
+          ...item,
+          id: item.hardware_id,
+        };
+      });
+      return mapDataToGeoJsonPoints(modify);
+    }
+
+    return [];
+  }, [data?.devices]);
+
+  const lines: Feature = useMemo(() => {
+    const visitedPairs = new Set();
+    const coordinates: Position[][] = [];
+
+    if (data?.devices && data.devices.length > 0) {
+      data.devices.forEach((device) => {
+        return device.neighbors.forEach((neighborId) => {
+          const neighborDevice = data.devices.find(
+            (d) => d.hardware_id === neighborId,
+          );
+
+          // sort is needed to ensure key consistency don't remove
+          const pairKey = [device.hardware_id, neighborId].sort().join("-");
+
+          if (!visitedPairs.has(pairKey) && neighborDevice) {
+            visitedPairs.add(pairKey);
+
+            coordinates.push([
+              [device.longitude, device.latitude],
+              [neighborDevice.longitude, neighborDevice.latitude],
+            ]);
+          }
+        });
+      });
+      console.log(coordinates);
+    }
+
+    return {
+      type: "Feature",
+      geometry: {
+        type: "MultiLineString",
+        coordinates,
+      },
+      properties: {
+        color: "#8A8A8A",
+      },
+    };
+  }, [data?.devices]);
 
   return (
     <>
-      {combined.map((i) => {
+      {points.map((i) => {
         const [lng, lat] = i.geometry.coordinates;
         const color = "bg-offline";
         const id = i.properties.hardware_id;
@@ -115,7 +92,7 @@ export const EquipmentLayer = ({
             </div>
 
             {validatedMapUrlState.zoom > 16 && (
-              <MapZoomedBoxContainer>Tooltip content</MapZoomedBoxContainer>
+              <MapZoomedBoxContainer>{}</MapZoomedBoxContainer>
             )}
           </Marker>
         );
@@ -123,8 +100,8 @@ export const EquipmentLayer = ({
 
       <GridscopeDropdownLayer />
 
-      <Source id="line-source" type="geojson" data={GeoJson}>
-        <Layer id="line-layer" type="line" paint={LineLayerStyles} />
+      <Source id="line-source" type="geojson" data={lines}>
+        <Layer id="line-layer" type="line" paint={EquipmentLayerLineStyles} />
       </Source>
     </>
   );
