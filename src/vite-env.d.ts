@@ -10,6 +10,7 @@ interface ImportMetaEnv {
   readonly VITE_GIT_BRANCH_NAME: string;
   // generated dynamically
   readonly VITE_GIT_COMMIT_HASH: string;
+  readonly VITE_REACT_APP_BASE_URL: string;
 }
 
 interface ImportMeta {

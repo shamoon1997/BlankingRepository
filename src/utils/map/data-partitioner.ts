@@ -2,15 +2,15 @@ import dbScan, { Dbscan } from "@turf/clusters-dbscan";
 import { Units } from "@turf/turf";
 import { Feature, Point, FeatureCollection, GeoJsonProperties } from "geojson";
 
-type MapLikeDataPoint = {
+export type MapLikeDataPoint = {
   latitude: number;
   longitude: number;
   id: number | string;
 };
 
-type PartitionResult = Feature<
+export type PartitionResult<T> = Feature<
   Point,
-  Record<string, unknown> & {
+  T & {
     dbscan?: Dbscan | undefined;
     cluster?: number | undefined;
   }
@@ -27,8 +27,8 @@ const partitionAndClusterPoints = <T extends MapLikeDataPoint>(
         mutate?: boolean | undefined;
       }
     | undefined,
-): PartitionResult => {
-  const res: PartitionResult = [];
+): PartitionResult<T> => {
+  const res: PartitionResult<T> = [];
   for (const callable of partitionFunctions) {
     const filtered = data.filter(callable);
     const mapped: Feature<Point, GeoJsonProperties>[] = filtered.map(
@@ -55,6 +55,7 @@ const partitionAndClusterPoints = <T extends MapLikeDataPoint>(
       clusterOptions,
     );
 
+    // @ts-expect-error type issues ignoring them for now
     res.push(...clusteredFeatureCollection.features);
   }
 
