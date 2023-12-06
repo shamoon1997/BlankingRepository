@@ -1,20 +1,52 @@
 import { useMapUrlState } from "@/hooks";
-import Map, { FullscreenControl, NavigationControl } from "react-map-gl";
-import { GridScopeLayer } from "./map-layers/gridscope-layer";
+import Map, {
+  FullscreenControl,
+  NavigationControl,
+  ViewStateChangeEvent,
+} from "react-map-gl";
+// import { GridScopeLayer } from "./map-layers/gridscope-layer";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { useGetEquipmentLayer } from "@/api/hooks/maps/user-get-equipment-layer.ts";
+import { useMemo, useState } from "react";
+import { CommonLayerPostBody } from "@/api/types/types.ts";
+import debounce from "lodash/debounce";
+import mapboxgl from "mapbox-gl";
+import { EquipmentLayer } from "@/components/map/map-layers/equipment-layer.tsx";
 
 const MapBoxGL = import("mapbox-gl");
 
 export const BaseMap = () => {
   const { setSearchParams, validatedMapUrlState } = useMapUrlState();
+  const [bbox, setBbox] = useState<CommonLayerPostBody | null>(null);
+  // network calls for all the layers
+  const { data, isError, isLoading, isRefetching } = useGetEquipmentLayer(bbox);
+
+  const debounced = useMemo(
+    () =>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      debounce((e: mapboxgl.MapboxEvent<undefined> | ViewStateChangeEvent) => {
+        const bounds = e.target.getBounds();
+        const northWest = bounds.getNorthWest();
+        const southEast = bounds.getSouthEast();
+        setBbox({
+          lat1: northWest.lat,
+          lon1: northWest.lng,
+          lat2: southEast.lat,
+          lon2: southEast.lng,
+        });
+      }, 700),
+    [],
+  );
 
   return (
     <Map
+      onLoad={debounced}
       reuseMaps
       attributionControl={false}
       maxPitch={0}
       minPitch={0}
       onMoveEnd={(e) => {
+        debounced(e);
         setSearchParams(
           {
             lat: String(e.viewState.latitude),
@@ -39,12 +71,27 @@ export const BaseMap = () => {
       style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
       mapStyle="mapbox://styles/mapbox/light-v11"
     >
+      {(isLoading || isRefetching) && (
+        <span className="absolute bottom-[180px] left-2 rounded border-[0.5px] border-default bg-white  p-1 pl-2 pr-2 text-xs shadow-dropdown">
+          Loading...
+        </span>
+      )}
+      {isError && (
+        <span className="absolute bottom-[180px] left-2 rounded border-[0.5px] border-default bg-white  p-1 pl-2 pr-2 text-xs shadow-dropdown">
+          An Error Occurred. Please share logs with the developer team.
+        </span>
+      )}
       <FullscreenControl position="bottom-left" />
-      <NavigationControl position="bottom-left" />
+      <NavigationControl position="bottom-left" showCompass />
 
       {/* show layers based on props in future */}
 
-      <GridScopeLayer />
+      {/*<GridScopeLayer />*/}
+      <EquipmentLayer
+        data={data?.data}
+        isError={isError}
+        isLoading={isLoading}
+      />
     </Map>
   );
 };
