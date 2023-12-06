@@ -12,6 +12,7 @@ import { CommonLayerPostBody } from "@/api/types/types.ts";
 import debounce from "lodash/debounce";
 import mapboxgl from "mapbox-gl";
 import { EquipmentLayer } from "@/components/map/map-layers/equipment-layer.tsx";
+import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 
 const MapBoxGL = import("mapbox-gl");
 
@@ -21,7 +22,7 @@ export const BaseMap = () => {
   // network calls for all the layers
   const { data, isError, isLoading, isRefetching } = useGetEquipmentLayer(bbox);
 
-  const debounced = useMemo(
+  const setDebouncedBbox = useMemo(
     () =>
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       debounce((e: mapboxgl.MapboxEvent<undefined> | ViewStateChangeEvent) => {
@@ -40,13 +41,13 @@ export const BaseMap = () => {
 
   return (
     <Map
-      onLoad={debounced}
+      onLoad={setDebouncedBbox}
       reuseMaps
       attributionControl={false}
       maxPitch={0}
       minPitch={0}
       onMoveEnd={(e) => {
-        debounced(e);
+        setDebouncedBbox(e);
         setSearchParams(
           {
             lat: String(e.viewState.latitude),
@@ -72,14 +73,12 @@ export const BaseMap = () => {
       mapStyle="mapbox://styles/mapbox/light-v11"
     >
       {(isLoading || isRefetching) && (
-        <span className="absolute bottom-[180px] left-2 rounded border-[0.5px] border-default bg-white  p-1 pl-2 pr-2 text-xs shadow-dropdown">
-          Loading...
-        </span>
+        <MapNetworkStatus>Loading...</MapNetworkStatus>
       )}
       {isError && (
-        <span className="absolute bottom-[180px] left-2 rounded border-[0.5px] border-default bg-white  p-1 pl-2 pr-2 text-xs shadow-dropdown">
+        <MapNetworkStatus>
           An Error Occurred. Please share logs with the developer team.
-        </span>
+        </MapNetworkStatus>
       )}
       <FullscreenControl position="bottom-left" />
       <NavigationControl position="bottom-left" showCompass />
