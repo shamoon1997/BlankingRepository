@@ -7,6 +7,7 @@ const MapBoxGL = import("mapbox-gl");
 
 export const BaseMap = () => {
   const { setSearchParams, validatedMapUrlState } = useMapUrlState();
+  // a,b,c,d
 
   return (
     <Map
@@ -16,11 +17,12 @@ export const BaseMap = () => {
       minPitch={0}
       onMoveEnd={(e) => {
         setSearchParams(
-          {
-            lat: String(e.viewState.latitude),
-            lng: String(e.viewState.longitude),
-            bearing: String(e.viewState.bearing),
-            zoom: String(e.viewState.zoom),
+          (params) => {
+            params.set("lat", String(e.viewState.latitude));
+            params.set("lng", String(e.viewState.longitude));
+            params.set("bearing", String(e.viewState.bearing));
+            params.set("zoom", String(e.viewState.zoom));
+            return params;
           },
           {
             replace: true,
@@ -43,7 +45,7 @@ export const BaseMap = () => {
       <NavigationControl position="bottom-left" />
 
       {/* show layers based on props in future */}
-
+      {/*  layer selector*/}
       <GridScopeLayer />
     </Map>
   );

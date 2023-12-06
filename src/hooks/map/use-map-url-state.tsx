@@ -15,12 +15,25 @@ const mapUrlStateSchema = z.object({
 const useMapUrlState = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const mapUrlState = queryString.parse(searchParams.toString());
-  const validatedMapUrlState = mapUrlStateSchema.parse(mapUrlState);
+  const validatedMapUrlState = mapUrlStateSchema.safeParse(mapUrlState);
 
-  return {
-    setSearchParams,
-    validatedMapUrlState,
-  };
+  if (!validatedMapUrlState.success) {
+    // handle error then return
+    return {
+      setSearchParams,
+      validatedMapUrlState: {
+        lat: 33,
+        lng: 70,
+        bearing: 0,
+        zoom: 4,
+      },
+    };
+  } else {
+    return {
+      setSearchParams,
+      validatedMapUrlState: validatedMapUrlState.data,
+    };
+  }
 };
 
 export { useMapUrlState };

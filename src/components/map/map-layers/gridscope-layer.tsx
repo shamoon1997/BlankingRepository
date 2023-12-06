@@ -129,8 +129,6 @@ export const GridScopeLayer = () => {
                       i.properties.id !== id,
                   );
 
-                  console.log({ adjacentPoints });
-
                   setAdjacentPopupInfo(adjacentPoints);
                 } else {
                   setAdjacentPopupInfo(null);
@@ -149,8 +147,6 @@ export const GridScopeLayer = () => {
 
               {popupInfo === id && (
                 <MapToolTipContainer>
-                  {}
-
                   <p>hovering over {id}</p>
                   <pre>
                     adjacent points{" "}
@@ -166,6 +162,7 @@ export const GridScopeLayer = () => {
           </Marker>
         );
       })}
+      {/*layer specific dropdowns*/}
 
       <GridscopeDropdownLayer />
 

@@ -6,7 +6,7 @@ import { Button } from "@/components/common";
 function MapHoverMenu() {
   return (
     <MapToolTipContainer>
-      <div className="flex flex-col">
+      <div className="flex w-[250px] flex-col">
         <div className="flex flex-col gap-2.5 border-b border-solid border-[#d9d9d9] px-2 py-2.5">
           <div className="flex flex-grow items-center justify-between gap-2">
             <div className="flex items-center gap-[7px]">
