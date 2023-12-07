@@ -8,8 +8,8 @@ const mapUrlStateSchema = z.object({
   // range from -180 to 180 dervied from mapbox
   bearing: z.coerce.number().min(-180).max(180).catch(0),
   // https://docs.mapbox.com/help/glossary/lat-lon/
-  lat: z.coerce.number().max(90).min(-90).catch(34.193948),
-  lng: z.coerce.number().max(180).min(-180).catch(118.314959),
+  lat: z.coerce.number().max(90).min(-90).catch(40.66681718965853),
+  lng: z.coerce.number().max(180).min(-180).catch(-111.94993927932325),
 });
 
 const useMapUrlState = () => {
