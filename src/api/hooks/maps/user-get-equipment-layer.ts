@@ -7,8 +7,9 @@ export const useGetEquipmentLayer = (args: EquipmentLayerPostBody | null) => {
   return useQuery({
     queryKey: [
       // IMPORTANT
-      //   always use the route path plus the bounding box, if two calls come under the same path
-      //   differentiate between them using an additional key, otherwise your cache will be mixedup
+      // Always use the route path plus the bounding box, if two calls come under the same path
+      // differentiate between them using an additional unique key, otherwise your cache will be the same
+      // key will be used for two logically different pieces of data causing all sorts of issues
       ApiResources.getEquipmentLayer,
       args?.lat1,
       args?.lat2,
@@ -22,11 +23,6 @@ export const useGetEquipmentLayer = (args: EquipmentLayerPostBody | null) => {
     placeholderData: keepPreviousData,
     // only fire if we get the bbox from the map never remove this
     enabled: !!args,
-    // retry only one dont bombard the server
-    retry: 1,
-    // refetch on mount no brainer
-    refetchOnMount: true,
-    // we dont need to refetch on window focus for now
-    refetchOnWindowFocus: false,
+    // retry only one don't bombard the server
   });
 };

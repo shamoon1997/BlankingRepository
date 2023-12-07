@@ -1,6 +1,6 @@
-import dbScan, { Dbscan } from "@turf/clusters-dbscan";
+import dbScan, { Dbscan, DbscanProps } from "@turf/clusters-dbscan";
 import { Units } from "@turf/turf";
-import { Feature, Point, FeatureCollection, GeoJsonProperties } from "geojson";
+import { Feature, Point, FeatureCollection } from "geojson";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
 
 export type MapLikeDataPoint = {
@@ -11,13 +11,12 @@ export type MapLikeDataPoint = {
 
 export type PartitionResult<T> = Feature<
   Point,
-  T & {
-    dbscan?: Dbscan | undefined;
-    cluster?: number | undefined;
-  }
+  T & MapLikeDataPoint & DbscanProps & Record<string, never>
 >[];
 
-const partitionAndClusterPoints = <T extends MapLikeDataPoint>(
+const partitionAndClusterPoints = <
+  T extends MapLikeDataPoint & Record<string, never>,
+>(
   data: T[],
   partitionFunctions: ((data: T) => boolean)[],
   clusterMaxDistance = 0.1,
@@ -34,7 +33,14 @@ const partitionAndClusterPoints = <T extends MapLikeDataPoint>(
     const filtered = data.filter(callable);
     const mapped = mapDataToGeoJsonPoints<T>(filtered);
 
-    const featureCollection: FeatureCollection<Point, GeoJsonProperties> = {
+    const featureCollection: FeatureCollection<
+      Point,
+      T &
+        MapLikeDataPoint & {
+          dbscan?: Dbscan | undefined;
+          cluster?: number | undefined;
+        } & Record<string, never>
+    > = {
       type: "FeatureCollection",
       features: mapped,
     };
@@ -43,9 +49,11 @@ const partitionAndClusterPoints = <T extends MapLikeDataPoint>(
       featureCollection,
       clusterMaxDistance,
       clusterOptions,
-    );
+    ) as FeatureCollection<
+      Point,
+      T & MapLikeDataPoint & DbscanProps & Record<string, never>
+    >;
 
-    // @ts-expect-error TODO: fix type issues in the future ignoring them for now
     res.push(...clusteredFeatureCollection.features);
   }
 

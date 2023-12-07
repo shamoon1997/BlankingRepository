@@ -3,8 +3,8 @@ import { MapLikeDataPoint } from "@/utils/map/data-partitioner.ts";
 
 export const mapDataToGeoJsonPoints = <T extends MapLikeDataPoint>(
   filtered: T[],
-) => {
-  const mapped: Feature<Point, T>[] = filtered.map((point) => ({
+): Feature<Point, T>[] => {
+  return filtered.map((point) => ({
     type: "Feature",
     geometry: {
       type: "Point",
@@ -14,5 +14,4 @@ export const mapDataToGeoJsonPoints = <T extends MapLikeDataPoint>(
       ...point,
     },
   }));
-  return mapped;
 };
