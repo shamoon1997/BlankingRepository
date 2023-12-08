@@ -123,7 +123,7 @@ export const polePropertyOptions: SelectDropdownType[] = [
   },
 ];
 
-export const gridscopeOptions: SelectDropdownType[] = [
+export const layerOptions: SelectDropdownType[] = [
   {
     value: "gridscope",
     child: (

@@ -2,7 +2,7 @@ import { FilterIcon, GridScopeIcon } from "@/assets";
 import { SelectDropdown } from "@/components/common";
 import CalendarInput from "@/components/common/calendar/calendar-input";
 import {
-  gridscopeOptions,
+  layerOptions,
   poleConnectionStatusOptions,
   polePropertyOptions,
 } from "@/utils/select-dropdown";
@@ -48,8 +48,9 @@ const GridscopeDropdownLayer: React.FC = () => {
                 </div>
               }
               placeholder="Options"
-              options={gridscopeOptions}
-              searchParamKey="gridscope-options"
+              options={layerOptions}
+              searchParamKey="layer"
+              defaultValue={layerOptions[layerOptions.length - 1].value}
             />
           </div>
         </div>
