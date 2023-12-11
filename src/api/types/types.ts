@@ -7,6 +7,7 @@ export interface CommonLayerPostBody {
 
 export type EquipmentLayerPostBody = CommonLayerPostBody;
 export type NetworkLayerPostBody = CommonLayerPostBody;
+export type GridScopeLayerPostBody = CommonLayerPostBody;
 
 export interface BaseLayerResponse {
   summary: Summary;
