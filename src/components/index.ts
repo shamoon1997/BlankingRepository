@@ -8,6 +8,7 @@ import LegendStatus from "./legend/legend-status";
 import LegendRange from "./legend/legend-range";
 import MapHoverMenu from "./map/map-hover-menu/map-hover-menu";
 import SideNavigation from "./side-navigation";
+import PoleViewTabGroup from "./pole-view/pole-view-tab-group";
 
 export {
   GridScopeLayer,
@@ -20,4 +21,5 @@ export {
   MapHoverMenu,
   LegendStatus,
   LegendRange,
+  PoleViewTabGroup,
 };

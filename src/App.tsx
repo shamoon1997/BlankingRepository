@@ -1,6 +1,8 @@
 import { Route, Routes, useLocation } from "react-router-dom";
 import { CallbackPage, DeploymentPage, HomePage, NotFoundPage } from "./pages";
 import { useAuth0 } from "@auth0/auth0-react";
+import { ErrorBoundary } from "react-error-boundary";
+import { FallBackPage } from "./pages/fall-back-page.tsx";
 import { HomeLoader, PageLoader, SideNavigation } from "./components";
 import { AppRoutes } from "./utils/routes";
 import { useShowSideBar } from "./hooks";
@@ -40,17 +42,19 @@ function App() {
   return (
     <div className={`${showSideBar ? "flex" : ""}`}>
       {showSideBar && <SideNavigation />}
-      <Routes>
-        {RouteMappings.map((mapping) => {
-          return (
-            <Route
-              key={mapping.path}
-              path={mapping.path}
-              element={mapping.element}
-            />
-          );
-        })}
-      </Routes>
+      <ErrorBoundary FallbackComponent={FallBackPage}>
+        <Routes>
+          {RouteMappings.map((mapping) => {
+            return (
+              <Route
+                key={mapping.path}
+                path={mapping.path}
+                element={mapping.element}
+              />
+            );
+          })}
+        </Routes>
+      </ErrorBoundary>
     </div>
   );
 }

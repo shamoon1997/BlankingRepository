@@ -4,28 +4,62 @@ Frontend for Gridware systems.
 
 #### React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
+This project uses Vite with react-ts template
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-#### Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+#### Deployment Steps
 
-- Configure the top-level `parserOptions` property like this:
+1. ssh into the server via
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+    `ssh  ubuntu@sherlock-v2.gridware.io `
+2. cd into `gridware-sherlock` repo
+3. run `sh build.sh`
+
+The contents of build.sh are as follows they are self explaining
+
+```shell
+#!/bin/bash
+echo "------ switching to main ------"
+
+git checkout main
+
+echo "------ pulling from repo --------"
+# Perform a git pull to update the repository
+git pull
+
+echo "------ removing node_modules ------"
+# Remove node_modules directory
+rm -rf node_modules
+
+echo "------ Installing dependencies ------"
+# Install dependencies using yarn
+# --frozen-lockfile for reproducible dependencies i.e no version change at all
+yarn install --frozen-lockfile
+
+echo "------ building the project ------"
+# Build the project using yarn (or npm run build for npm)
+yarn build
+
+echo "------ restarting nginx server ------"
+sudo systemctl restart nginx
+
 ```
+IMPORTANT
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Running git pull or even git clone will ask you your password you will need to create a Personal Access Token (PAT) and use that instead of a password, password based logins are not allowed anymore according to Github.
+Create a PAT here https://github.com/settings/tokens?type=beta 
+
+
+If for some reason you need to install dependencies **ALWAYS** ru `yarn install --frozen-lockfile
+` to prevent version drift on production server
+
+When `yarn build` is run the dist folder contains the production release 
+of the application.
+
+Nginx is the server we use to serve our site. It's encrypted with a self-signed certificate.
+
+
+
+
