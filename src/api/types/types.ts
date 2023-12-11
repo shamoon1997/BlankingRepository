@@ -33,3 +33,9 @@ export interface Device {
   neighbors: string[];
   equipment: string[];
 }
+
+export interface DeploymentResponse {
+  name: string;
+  longitude: number;
+  latitude: number;
+}

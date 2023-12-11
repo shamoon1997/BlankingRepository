@@ -9,7 +9,8 @@ interface SearchBarProps {
 }
 
 const listDeployments = debounce(async () => {
-  await getDeploymentsAPI();
+  const { data } = await getDeploymentsAPI();
+  return data;
 }, 2000);
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -21,7 +22,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    await listDeployments();
+    try {
+      const deploymentList = await listDeployments();
+      deploymentList?.filter((item) =>
+        item.name.toLowerCase().includes(e.target.value),
+      );
+    } catch (err) {
+      //
+    }
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {

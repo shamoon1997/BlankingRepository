@@ -1,6 +1,9 @@
 import { API, ApiResources } from "@/api/config/api-config";
-import { BaseLayerResponse } from "@/api/types/types.ts";
+import { DeploymentResponse } from "@/api/types/types.ts";
+import { AxiosResponse } from "axios";
 
-export const getDeploymentsAPI = () => {
-  return API.get<BaseLayerResponse>(ApiResources.listDeployments);
+export const getDeploymentsAPI = (): Promise<
+  AxiosResponse<DeploymentResponse[]>
+> => {
+  return API.get<DeploymentResponse[]>(ApiResources.listDeployments);
 };
