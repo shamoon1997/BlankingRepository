@@ -18,10 +18,8 @@ export {
   PageLoader,
   HomeLoader,
   SideNavigation,
-  LegendTodo,
   LegendContainer,
   MapHoverMenu,
-  LegendStatus,
   LegendRange,
   PoleViewTabGroup,
 };
