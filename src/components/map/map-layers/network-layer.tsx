@@ -87,6 +87,7 @@ export const NetworkLayer = ({ data }: NetworkLayerProps) => {
   return (
     <>
       {points.map((i) => {
+        const id = i.properties.hardware_id;
         const [lng, lat] = i.geometry.coordinates;
         let color = "bg-unknown";
 
@@ -97,7 +98,6 @@ export const NetworkLayer = ({ data }: NetworkLayerProps) => {
         } else if (i.properties.network_mode === 0) {
           color = "bg-unknown";
         }
-        const id = i.properties.hardware_id;
 
         const iconWidth = "w-[13px]";
         let networkStatusText = "Offline";

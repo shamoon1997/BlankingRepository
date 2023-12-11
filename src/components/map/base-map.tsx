@@ -11,8 +11,8 @@ import { CommonLayerPostBody } from "@/api/types/types.ts";
 import debounce from "lodash/debounce";
 import mapboxgl from "mapbox-gl";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
-import { NetworkLayer } from "@/components/map/map-layers/network-layer.tsx";
 import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
+import { GridScopeLayer } from "@/components";
 // import GridscopeDropdownLayer from "@/components/map/map-layers/gridscope-dropdown-layer.tsx";
 
 const MapBoxGL = import("mapbox-gl");
@@ -103,7 +103,7 @@ export const BaseMap = () => {
       {/*  isLoading={isLoading}*/}
       {/*/>*/}
 
-      <NetworkLayer
+      <GridScopeLayer
         data={dataWithLagBuffer}
         isLoading={isError}
         isError={isLoading}
