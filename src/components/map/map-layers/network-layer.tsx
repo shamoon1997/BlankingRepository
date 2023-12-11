@@ -98,17 +98,18 @@ export const NetworkLayer = ({ data }: NetworkLayerProps) => {
         }
         const id = i.properties.hardware_id;
 
+        const iconWidth = "w-[13px]";
         let networkStatusText = "Offline";
-        let NetworkStatusIcon = <OfflineIcon className="w-[12px]" />;
+        let NetworkStatusIcon = <OfflineIcon className={iconWidth} />;
         if (i.properties.online === 0) {
           networkStatusText = "Offline";
-          NetworkStatusIcon = <OfflineIcon className="w-[11px]" />;
+          NetworkStatusIcon = <OfflineIcon className={iconWidth} />;
         } else if (i.properties.online === 1) {
           networkStatusText = "Online";
-          NetworkStatusIcon = <OnlineIcon className="w-[11px]" />;
+          NetworkStatusIcon = <OnlineIcon className={iconWidth} />;
         } else if (i.properties.online === 2) {
           networkStatusText = "Spotty";
-          NetworkStatusIcon = <SpottyIcon className="w-[11px]" />;
+          NetworkStatusIcon = <SpottyIcon className={iconWidth} />;
         }
 
         return (
@@ -121,9 +122,9 @@ export const NetworkLayer = ({ data }: NetworkLayerProps) => {
 
             {validatedMapUrlState.zoom > 16 && (
               <MapZoomedBoxContainer>
-                <div className="flex flex-col gap-[5px] whitespace-nowrap text-[11px] text-white">
-                  <div className="flex items-center gap-[5px] font-medium">
-                    <HoverPinIcon className="w-[11px]" />
+                <div className="flex flex-col gap-[3px] whitespace-nowrap text-[11px] text-white">
+                  <div className="flex items-center gap-[6px] font-medium">
+                    <HoverPinIcon className="w-[12px]" />
                     <p>
                       {i.properties.pole_id} • {i.properties.device_sn}
                     </p>
@@ -146,9 +147,9 @@ export const NetworkLayer = ({ data }: NetworkLayerProps) => {
       </Source>
 
       <LegendContainer>
-        <LegendItem color={"bg-lora"} text={"Lora"} />
-        <LegendItem color={"bg-cellular"} text={"Cellular"} />
-        <LegendItem color={"bg-unknown"} text={"Unknown Mode"} />
+        <LegendItem color="bg-lora" text="Lora" />
+        <LegendItem color="bg-cellular" text="Cellular" />
+        <LegendItem color="bg-unknown" text="Unknown Mode" />
       </LegendContainer>
     </>
   );
