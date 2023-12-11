@@ -2,11 +2,11 @@ import { useMapUrlState } from "@/hooks";
 import { Feature, Point, Position } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
-import { MapZoomedBoxContainer } from "../map-zoomed-box";
 import GridscopeDropdownLayer from "./gridscope-dropdown-layer";
 import { BaseLayerResponse, Device } from "@/api/types/types.ts";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
 import { useMemo } from "react";
+import { MapZoomedBoxContainer } from "@/components/map/map-zoomed-box";
 
 const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -61,7 +61,6 @@ export const EquipmentLayer = ({ data }: EquipmentLayerProps) => {
           }
         });
       });
-      console.log(coordinates);
     }
 
     return {
@@ -92,7 +91,11 @@ export const EquipmentLayer = ({ data }: EquipmentLayerProps) => {
             </div>
 
             {validatedMapUrlState.zoom > 16 && (
-              <MapZoomedBoxContainer>{}</MapZoomedBoxContainer>
+              <MapZoomedBoxContainer>
+                {i.properties.equipment.map((eq, index) => (
+                  <div key={i.properties.hardware_id + index}>{eq}</div>
+                ))}
+              </MapZoomedBoxContainer>
             )}
           </Marker>
         );
