@@ -124,8 +124,8 @@ export const NetworkLayer = ({ data }: NetworkLayerProps) => {
             {validatedMapUrlState.zoom > 16 && (
               <MapZoomedBoxContainer>
                 <div className="flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
-                  <div className="flex items-center gap-[6px] font-medium">
-                    <HoverPinIcon className="w-[12px]" />
+                  <div className="flex items-center gap-[7px] font-medium">
+                    <HoverPinIcon className="w-[11px]" />
                     <p>
                       {i.properties.pole_id} •{" "}
                       {stripZeros(i.properties.device_sn ?? "")}
