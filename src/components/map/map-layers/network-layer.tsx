@@ -15,6 +15,7 @@ import {
 } from "@/assets/pole-hover";
 import { LegendContainer } from "@/components";
 import { LegendItem } from "@/components/map/legend-item/legend-item.tsx";
+import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 
 const NetworkLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -122,11 +123,12 @@ export const NetworkLayer = ({ data }: NetworkLayerProps) => {
 
             {validatedMapUrlState.zoom > 16 && (
               <MapZoomedBoxContainer>
-                <div className="flex flex-col gap-[3px] whitespace-nowrap text-[11px] text-white">
+                <div className="flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
                   <div className="flex items-center gap-[6px] font-medium">
                     <HoverPinIcon className="w-[12px]" />
                     <p>
-                      {i.properties.pole_id} • {i.properties.device_sn}
+                      {i.properties.pole_id} •{" "}
+                      {stripZeros(i.properties.device_sn ?? "")}
                     </p>
                   </div>
                   <div className="flex items-center gap-[5px]">
