@@ -9,8 +9,12 @@ interface SearchBarProps {
 }
 
 const listDeployments = debounce(async () => {
-  const { data } = await getDeploymentsAPI();
-  return data;
+  try {
+    const { data } = await getDeploymentsAPI();
+    return data;
+  } catch (error) {
+    //
+  }
 }, 2000);
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -26,10 +30,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       const deploymentList = await listDeployments();
 
       if (deploymentList?.length) {
-        deploymentList?.filter((item) =>
-          item.name.toLowerCase().includes(e.target.value),
+        const filteredDeployments = deploymentList?.filter((item) =>
+          item.name.toLowerCase().includes(e.target.value.toLowerCase()),
         );
-        console.log("BOOO");
+        console.log(filteredDeployments);
       }
     } catch (err) {
       // Handle Err here
