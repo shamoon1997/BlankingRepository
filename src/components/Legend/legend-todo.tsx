@@ -1,4 +1,4 @@
-function Legend() {
+function LegendTodo() {
   return (
     <div className="absolute bottom-12 right-10">
       <div className="border-[rgba(91, 91, 91, 0.50)] flex w-full max-w-[150px] flex-col gap-2.5 rounded border border-solid border-opacity-50 bg-white px-3 py-3.5 shadow-tooltip">
@@ -43,4 +43,4 @@ function Legend() {
   );
 }
 
-export default Legend;
+export default LegendTodo;
