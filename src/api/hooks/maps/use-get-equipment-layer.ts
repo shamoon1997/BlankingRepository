@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ApiResources } from "@/api/config/api-config.ts";
+import { ApiResources, MAX_LAG_BUFFER_LIMIT } from "@/api/config/api-config.ts";
 import {
   BaseLayerResponse,
   Device,
@@ -11,7 +11,6 @@ import { uniqBy } from "lodash";
 
 export const useGetEquipmentLayer = (args: EquipmentLayerPostBody | null) => {
   const lagBuffer = useRef<Device[] | undefined>([]);
-  // const ref = useRef(new Set<string>());
   const { data, ...rest } = useQuery({
     queryKey: [
       // IMPORTANT
@@ -37,8 +36,6 @@ export const useGetEquipmentLayer = (args: EquipmentLayerPostBody | null) => {
   const dataWithLagBuffer: BaseLayerResponse | undefined = useMemo(() => {
     if (!data) return undefined;
 
-    const MAX_LIMIT = 3;
-
     // LOGIC for the lag buffer if max lag buffer size is 3 for example.
     // get a,b,c,d,e -> A is a fetch call
     // prev is null -> B is a fetch call
@@ -60,17 +57,17 @@ export const useGetEquipmentLayer = (args: EquipmentLayerPostBody | null) => {
     ];
 
     // de-duplicate points by hardware id
+    // hardware id must ALWAYS be unique GLOBALLY
     const deduplicatedDevices = uniqBy(newDevices, (dev) => dev.hardware_id);
 
     // updated the prev buffer and use it to the maximum amount
-    const prevData = data.data.devices.slice(-MAX_LIMIT);
+    const prevData = data.data.devices.slice(-MAX_LAG_BUFFER_LIMIT);
     const bufferLength = lagBuffer.current?.length ?? 0;
     const combinedLength = bufferLength + prevData.length;
 
-    if (combinedLength > MAX_LIMIT) {
-      const itemsToDelete = combinedLength - MAX_LIMIT;
+    if (combinedLength > MAX_LAG_BUFFER_LIMIT) {
+      const itemsToDelete = combinedLength - MAX_LAG_BUFFER_LIMIT;
       lagBuffer.current?.splice(0, itemsToDelete);
-      // remove deleted item id's
     }
     lagBuffer.current?.push(...prevData);
 
