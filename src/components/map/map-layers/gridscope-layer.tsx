@@ -13,8 +13,8 @@ import {
   OnlineIcon,
   SpottyIcon,
 } from "@/assets/pole-hover";
-import { LegendContainer } from "@/components";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
+import { LegendRange } from "@/components";
 
 const GridScopeLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -148,9 +148,10 @@ export const GridScopeLayer = ({ data }: GridScopeLayerProps) => {
         <Layer id="line-layer" type="line" paint={GridScopeLayerLineStyles} />
       </Source>
 
-      <LegendContainer>
-        <div></div>
-      </LegendContainer>
+      <LegendRange
+        colors={["bg-online", "bg-offline", "bg-spotty"]}
+        labels={["Online", "Offline", "Spotty"]}
+      />
     </>
   );
 };

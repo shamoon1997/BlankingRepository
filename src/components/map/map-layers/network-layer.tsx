@@ -14,7 +14,7 @@ import {
   SpottyIcon,
 } from "@/assets/pole-hover";
 import { LegendContainer } from "@/components";
-import { LegendItem } from "@/components/map/legend-item/legend-item.tsx";
+import { LegendItem } from "@/components/legend/legend-item/legend-item.tsx";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 
 const NetworkLayerLineStyles: mapboxgl.LinePaint = {
@@ -149,9 +149,11 @@ export const NetworkLayer = ({ data }: NetworkLayerProps) => {
       </Source>
 
       <LegendContainer>
-        <LegendItem color="bg-lora" text="Lora" />
-        <LegendItem color="bg-cellular" text="Cellular" />
-        <LegendItem color="bg-unknown" text="Unknown Mode" />
+        <div className="flex flex-col gap-[10px] p-[10px]">
+          <LegendItem color="bg-lora" text="Lora" />
+          <LegendItem color="bg-cellular" text="Cellular" />
+          <LegendItem color="bg-unknown" text="Unknown Mode" />
+        </div>
       </LegendContainer>
     </>
   );

@@ -3,9 +3,8 @@ import { BaseMap } from "./map";
 import { MapToolTipContainer } from "./map/map-tooltip";
 import { PageLoader } from "./page-loaders/page-loader";
 import { HomeLoader } from "./page-loaders/home-loader";
-import LegendContainer from "@/components/map/legend-container/legend-container";
-import LegendStatus from "./Legend/legend-status.tsx";
-import LegendRange from "./Legend/legend-range";
+import LegendContainer from "@/components/legend/legend-container/legend-container";
+import LegendRange from "@/components/legend/legend-range/legend-range.tsx";
 import MapHoverMenu from "./map/map-hover-menu/map-hover-menu";
 import SideNavigation from "./side-navigation";
 import PoleViewTabGroup from "./pole-view/pole-view-tab-group";
@@ -19,7 +18,6 @@ export {
   SideNavigation,
   LegendContainer,
   MapHoverMenu,
-  LegendStatus,
   LegendRange,
   PoleViewTabGroup,
 };
