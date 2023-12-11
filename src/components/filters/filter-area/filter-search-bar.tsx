@@ -1,10 +1,16 @@
 import React, { useState, ChangeEvent, KeyboardEvent } from "react";
 import { FilterIcon, SearchIcon, CrossIcon } from "@/assets";
+import { debounce } from "lodash";
+import { getDeploymentsAPI } from "@/api/deployments";
 
 interface SearchBarProps {
   toggleFilterActive: () => void;
   filterActive: boolean;
 }
+
+const listDeployments = debounce(async () => {
+  await getDeploymentsAPI();
+}, 2000);
 
 export const SearchBar: React.FC<SearchBarProps> = ({
   toggleFilterActive,
@@ -13,8 +19,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [chips, setChips] = useState<string[]>([]);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
+    await listDeployments();
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -55,7 +62,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         <input
           type="text"
           value={searchTerm}
-          onChange={handleInputChange}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            void handleInputChange(e);
+          }}
           onKeyDown={handleKeyPress}
           className="ml-1 flex-1 text-xs font-semibold text-primary-hard outline-none"
         />
