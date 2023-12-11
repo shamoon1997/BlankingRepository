@@ -24,11 +24,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     setSearchTerm(e.target.value);
     try {
       const deploymentList = await listDeployments();
-      deploymentList?.filter((item) =>
-        item.name.toLowerCase().includes(e.target.value),
-      );
+
+      if (deploymentList?.length) {
+        deploymentList?.filter((item) =>
+          item.name.toLowerCase().includes(e.target.value),
+        );
+        console.log("BOOO");
+      }
     } catch (err) {
-      //
+      // Handle Err here
     }
   };
 
