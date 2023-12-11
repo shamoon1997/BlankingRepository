@@ -1,4 +1,4 @@
-import { useMapUrlState } from "@/hooks";
+import { useMapUrlState, useLayerOptions } from "@/hooks";
 import Map, {
   FullscreenControl,
   NavigationControl,
@@ -19,6 +19,7 @@ const MapBoxGL = import("mapbox-gl");
 
 export const BaseMap = () => {
   const { setSearchParams, validatedMapUrlState } = useMapUrlState();
+  const layerOptions = useLayerOptions() || "equipment";
   const [bbox, setBbox] = useState<CommonLayerPostBody | null>(null);
   // network calls for all the layers
   const { dataWithLagBuffer, isError, isLoading, isRefetching, isSuccess } =
@@ -58,6 +59,7 @@ export const BaseMap = () => {
             lng: String(e.viewState.longitude),
             bearing: String(e.viewState.bearing),
             zoom: String(e.viewState.zoom),
+            layer: layerOptions,
           },
           {
             replace: true,
