@@ -34,6 +34,9 @@ export default {
         offline: "#DF4C2B",
         spotty: "#F4B849",
         online: "#5BC760",
+        lora: "#D175BD",
+        cellular: "#676DFF",
+        unknown: "#686868",
 
         // ALERT COLORS
         "alert-high": "#EE4722",

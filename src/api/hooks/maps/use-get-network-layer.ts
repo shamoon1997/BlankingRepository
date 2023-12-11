@@ -5,11 +5,11 @@ import {
   Device,
   EquipmentLayerPostBody,
 } from "@/api/types/types.ts";
-import { getEquipmentLayer } from "@/api/api-calls/get-equipment-layer.ts";
 import { useMemo, useRef } from "react";
 import { uniqBy } from "lodash";
+import { getNetworkLayer } from "@/api/api-calls/get-network-layer.ts";
 
-export const useGetEquipmentLayer = (args: EquipmentLayerPostBody | null) => {
+export const useGetNetworkLayer = (args: EquipmentLayerPostBody | null) => {
   const lagBuffer = useRef<Device[] | undefined>([]);
   const { data, ...rest } = useQuery({
     queryKey: [
@@ -17,14 +17,14 @@ export const useGetEquipmentLayer = (args: EquipmentLayerPostBody | null) => {
       // Always use the route path plus the bounding box, if two calls come under the same path
       // differentiate between them using an additional unique key, otherwise your cache will be the same
       // and the key same will be used for two logically different pieces of data causing all sorts of issues
-      ApiResources.getEquipmentLayer,
+      ApiResources.getNetworkLayer,
       args?.lat1,
       args?.lat2,
       args?.lon1,
       args?.lon2,
     ],
     queryFn: ({ signal }) => {
-      return getEquipmentLayer(args!, signal);
+      return getNetworkLayer(args!, signal);
     },
     // keeps previous data in cache until we get new data
     placeholderData: keepPreviousData,

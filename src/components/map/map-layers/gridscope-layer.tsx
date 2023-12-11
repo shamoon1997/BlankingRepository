@@ -1,6 +1,6 @@
 import { MapToolTipContainer } from "@/components";
 import { useMapUrlState } from "@/hooks";
-import { partitionAndClusterPoints } from "@/utils/map";
+import { MapLikeDataPoint, partitionAndClusterPoints } from "@/utils/map";
 import { Feature } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { useState } from "react";
@@ -10,7 +10,8 @@ import GridscopeDropdownLayer from "./gridscope-dropdown-layer";
 
 // shape of data to be used
 
-const CircleData = [
+type Circletype = MapLikeDataPoint & Record<string, string | number>;
+const CircleData: Circletype[] = [
   {
     id: "point1",
     latitude: 33.716327,

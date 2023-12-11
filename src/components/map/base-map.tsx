@@ -6,13 +6,13 @@ import Map, {
 } from "react-map-gl";
 // import { GridScopeLayer } from "./map-layers/gridscope-layer";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useGetEquipmentLayer } from "@/api/hooks/maps/use-get-equipment-layer.ts";
 import { useMemo, useState } from "react";
 import { CommonLayerPostBody } from "@/api/types/types.ts";
 import debounce from "lodash/debounce";
 import mapboxgl from "mapbox-gl";
-import { EquipmentLayer } from "@/components/map/map-layers/equipment-layer.tsx";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
+import { NetworkLayer } from "@/components/map/map-layers/network-layer.tsx";
+import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
 // import GridscopeDropdownLayer from "@/components/map/map-layers/gridscope-dropdown-layer.tsx";
 
 const MapBoxGL = import("mapbox-gl");
@@ -22,7 +22,7 @@ export const BaseMap = () => {
   const [bbox, setBbox] = useState<CommonLayerPostBody | null>(null);
   // network calls for all the layers
   const { dataWithLagBuffer, isError, isLoading, isRefetching, isSuccess } =
-    useGetEquipmentLayer(bbox);
+    useGetNetworkLayer(bbox);
 
   const setDebouncedBbox = useMemo(
     () =>
@@ -97,10 +97,16 @@ export const BaseMap = () => {
 
       {/*<GridScopeLayer />*/}
 
-      <EquipmentLayer
+      {/*<EquipmentLayer*/}
+      {/*  data={dataWithLagBuffer}*/}
+      {/*  isError={isError}*/}
+      {/*  isLoading={isLoading}*/}
+      {/*/>*/}
+
+      <NetworkLayer
         data={dataWithLagBuffer}
-        isError={isError}
-        isLoading={isLoading}
+        isLoading={isError}
+        isError={isLoading}
       />
     </Map>
   );
