@@ -1,6 +1,6 @@
-import { MapToolTipContainer } from "../map-tooltip";
+import { MapToolTipContainer } from "@/components";
 import MapPowerEquipmentInfo from "../map-power-equipment-info/map-power-equipment-info";
-import { StatusIcon, ElectrometerIcon, MapsIcon } from "@/assets/pole-hover";
+import { ElectrometerIcon, MapsIcon, OnlineIcon } from "@/assets/pole-hover";
 import { Button } from "@/components/common";
 
 function MapHoverMenu() {
@@ -19,7 +19,7 @@ function MapHoverMenu() {
             </div>
             <div className="flex items-center gap-1">
               <div className="[&_svg]:h-2.5 [&_svg]:w-2.5">
-                <StatusIcon />
+                <OnlineIcon />
               </div>
               <div className="font-mont text-[8px] font-normal capitalize leading-normal text-black">
                 online
@@ -70,7 +70,7 @@ function MapHoverMenu() {
             </div>
             <div className="flex items-center gap-1">
               <div className="[&_svg]:h-2.5 [&_svg]:w-2.5">
-                <StatusIcon />
+                <OnlineIcon />
               </div>
               <div className="font-mont text-[8px] font-normal capitalize leading-normal text-black">
                 online
@@ -107,7 +107,7 @@ function MapHoverMenu() {
             </div>
             <div className="flex items-center gap-1">
               <div className="[&_svg]:h-2.5 [&_svg]:w-2.5">
-                <StatusIcon />
+                <OnlineIcon />
               </div>
               <div className="font-mont text-[8px] font-normal capitalize leading-normal text-black">
                 online
@@ -145,7 +145,7 @@ function MapHoverMenu() {
             </div>
             <div className="flex items-center gap-1">
               <div className="[&_svg]:h-2.5 [&_svg]:w-2.5">
-                <StatusIcon />
+                <OnlineIcon />
               </div>
               <div className="font-mont text-[8px] font-normal capitalize leading-normal text-black">
                 online

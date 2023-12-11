@@ -6,6 +6,7 @@ export interface CommonLayerPostBody {
 }
 
 export type EquipmentLayerPostBody = CommonLayerPostBody;
+export type NetworkLayerPostBody = CommonLayerPostBody;
 
 export interface BaseLayerResponse {
   summary: Summary;

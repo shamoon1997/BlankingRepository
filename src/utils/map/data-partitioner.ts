@@ -11,7 +11,7 @@ export type MapLikeDataPoint = {
 
 export type PartitionResult<T> = Feature<
   Point,
-  T & MapLikeDataPoint & DbscanProps & Record<string, never>
+  T & MapLikeDataPoint & DbscanProps & Record<string, unknown>
 >[];
 
 const partitionAndClusterPoints = <
