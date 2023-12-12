@@ -6,28 +6,31 @@ import {
   poleConnectionStatusOptions,
   polePropertyOptions,
 } from "@/utils/select-dropdown";
+import { useLayerOptions } from "@/hooks";
 import React from "react";
 
-const GridscopeDropdownLayer: React.FC = () => {
+const DropDownLayers: React.FC = () => {
+  const { validatedLayerUrlState } = useLayerOptions();
+
   return (
     <>
       <div className="absolute z-[2] flex w-full justify-between gap-2 p-2 pr-4 pt-4">
         {/* LEFT GROUP */}
+
         <div className="flex gap-2">
           <div className="w-[240px]">
-            <CalendarInput />
+            {validatedLayerUrlState.layer !== "gridscope" && <CalendarInput />}
           </div>
         </div>
 
         {/* RIGHT GROUP */}
         <div className="flex gap-2">
-          <div className="w-[170px]">
+          {/* <div className="w-[170px]">
             <SelectDropdown
-              placeholder="Property"
               options={polePropertyOptions}
               searchParamKey="pole-property"
             />
-          </div>
+          </div> */}
           <div className="w-[170px]">
             <SelectDropdown
               triggerIcon={
@@ -37,7 +40,7 @@ const GridscopeDropdownLayer: React.FC = () => {
               }
               placeholder="Status"
               options={poleConnectionStatusOptions}
-              searchParamKey="connection-status"
+              searchParamKey="gridScopeOptions"
             />
           </div>
           <div className="w-[170px]">
@@ -50,7 +53,6 @@ const GridscopeDropdownLayer: React.FC = () => {
               placeholder="Options"
               options={layerOptions}
               searchParamKey="layer"
-              defaultValue={layerOptions[layerOptions.length - 1].value}
             />
           </div>
         </div>
@@ -59,4 +61,4 @@ const GridscopeDropdownLayer: React.FC = () => {
   );
 };
 
-export default GridscopeDropdownLayer;
+export default DropDownLayers;
