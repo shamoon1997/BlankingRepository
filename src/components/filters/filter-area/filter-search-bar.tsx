@@ -1,23 +1,13 @@
-import React, { useState, ChangeEvent, KeyboardEvent, useRef } from "react";
+import React, { useState, ChangeEvent, useRef } from "react";
 import { FilterIcon, SearchIcon, CrossIcon } from "@/assets";
-import { debounce } from "lodash";
-import { getDeploymentsAPI } from "@/api/deployments";
 import * as Portal from "@radix-ui/react-portal";
 import { DeploymentResponse } from "@/api/types/types";
+import { useFetchDeployments } from "@/api/hooks/deployments/use-fetch-deployments";
 
 interface SearchBarProps {
   toggleFilterActive: () => void;
   filterActive: boolean;
 }
-
-const listDeployments = debounce(async () => {
-  try {
-    const { data } = await getDeploymentsAPI();
-    return data;
-  } catch (error) {
-    //
-  }
-}, 2000);
 
 export const SearchBar: React.FC<SearchBarProps> = ({
   toggleFilterActive,
@@ -31,34 +21,29 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const [searchSuggestions, setSearchSuggestions] = useState<
     DeploymentResponse[]
   >([]);
+  const { data: deployments } = useFetchDeployments();
 
-  const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    if (e.target.value.trim().length === 0) {
-      setSearchSuggestions([]);
-      return;
-    }
-    try {
-      const deploymentList = await listDeployments();
 
-      if (deploymentList?.length) {
-        const filteredDeployments = deploymentList?.filter((item) =>
-          item.name.toLowerCase().includes(e.target.value.toLowerCase()),
-        );
-        setSearchSuggestions(filteredDeployments);
-        console.log(filteredDeployments);
-      }
-    } catch (err) {
-      // Handle Err here
+    if (e.target.value.trim().length === 0) return setSearchSuggestions([]);
+
+    if (deployments?.data.length) {
+      const filteredDeployments = deployments?.data?.filter((item) =>
+        item.name.toLowerCase().includes(e.target.value.toLowerCase()),
+      );
+      setSearchSuggestions(filteredDeployments);
+      console.log(filteredDeployments);
     }
   };
 
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchTerm.trim() !== "") {
-      setChips([...chips, searchTerm.trim()]);
-      setSearchTerm("");
-    }
-  };
+  // SINCE WE'RE DROPPING THE ENTER BTN FUNCTIONALITY FOR NOW
+  // const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+  // if (e.key === "Enter" && searchTerm.trim() !== "") {
+  //   setChips([...chips, searchTerm.trim()]);
+  //   setSearchTerm("");
+  // }
+  // };
 
   const removeChip = (index: number) => {
     const updatedChips = [...chips];
@@ -95,7 +80,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               void handleInputChange(e);
             }}
-            onKeyDown={handleKeyPress}
             className="ml-1 flex-1 text-xs font-semibold text-primary-hard outline-none"
           />
         </div>

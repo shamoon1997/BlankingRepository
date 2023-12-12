@@ -5,7 +5,8 @@ export const useFetchDeployments = () => {
   return useQuery({
     queryKey: ["deployments"],
     queryFn: () => {
-      return getDeploymentsAPI();
+      const data = getDeploymentsAPI();
+      return data;
     },
   });
 };
