@@ -3,6 +3,7 @@ import { FilterIcon, SearchIcon, CrossIcon } from "@/assets";
 import * as Portal from "@radix-ui/react-portal";
 import { DeploymentResponse } from "@/api/types/types";
 import { useFetchDeployments } from "@/api/hooks/deployments/use-fetch-deployments";
+import * as ScrollArea from "@radix-ui/react-scroll-area";
 
 interface SearchBarProps {
   toggleFilterActive: () => void;
@@ -93,27 +94,40 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         </button>
       </div>
 
-      <Portal.Root container={dropdownRef?.current} asChild={true}>
-        <div className="z-10 max-h-[80px] overflow-y-auto">
-          <ul className="">
-            {searchSuggestions?.map((item) => {
-              return (
-                <li
-                  key={item?.name}
-                  className="cursor-pointer rounded-md px-[4px] py-[6px] text-[10px] font-semibold hover:bg-slate-200"
-                  onClick={() => {
-                    setChips([item?.name]);
-                    setSearchTerm("");
-                    setSearchSuggestions([]);
-                  }}
-                >
-                  {item.name}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </Portal.Root>
+      {searchSuggestions?.length > 0 && (
+        <Portal.Root container={dropdownRef?.current} asChild={true}>
+          <ScrollArea.Root>
+            <ScrollArea.Viewport asChild={true}>
+              <div className="z-10 mt-[6px] max-h-[80px] overflow-y-auto">
+                <ul className="">
+                  {searchSuggestions?.map((item) => {
+                    return (
+                      <li
+                        key={item?.name}
+                        className="hover:bg-selected cursor-pointer rounded-md px-[4px] py-[6px] text-[12px] text-primary"
+                        onClick={() => {
+                          setChips([item?.name]);
+                          setSearchTerm("");
+                          setSearchSuggestions([]);
+                        }}
+                      >
+                        {item.name}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </ScrollArea.Viewport>
+
+            <ScrollArea.Scrollbar
+              className="mr-1 w-1 pb-3"
+              orientation="vertical"
+            >
+              <ScrollArea.Thumb className="rounded bg-[#1616164D]" />
+            </ScrollArea.Scrollbar>
+          </ScrollArea.Root>
+        </Portal.Root>
+      )}
     </div>
   );
 };

@@ -56,6 +56,7 @@ export default {
       },
       backgroundColor: {
         "map-zoomed-box": "rgba(22, 22, 22, 0.70)",
+        selected: "#F2F2F2",
       },
     },
   },
