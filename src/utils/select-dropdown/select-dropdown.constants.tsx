@@ -123,7 +123,7 @@ export const polePropertyOptions: SelectDropdownType[] = [
   },
 ];
 
-export const gridscopeOptions: SelectDropdownType[] = [
+export const layerOptions: SelectDropdownType[] = [
   {
     value: "gridscope",
     child: (
@@ -137,14 +137,6 @@ export const gridscopeOptions: SelectDropdownType[] = [
     child: (
       <TextLimiter>
         <Select.ItemText>Alert</Select.ItemText>
-      </TextLimiter>
-    ),
-  },
-  {
-    value: "incident",
-    child: (
-      <TextLimiter>
-        <Select.ItemText>Incident</Select.ItemText>
       </TextLimiter>
     ),
   },

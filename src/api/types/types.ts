@@ -3,11 +3,14 @@ export interface CommonLayerPostBody {
   lon1: number;
   lat2: number;
   lon2: number;
+  t1?: string;
+  t2?: string;
 }
 
 export type EquipmentLayerPostBody = CommonLayerPostBody;
 export type NetworkLayerPostBody = CommonLayerPostBody;
 export type GridScopeLayerPostBody = CommonLayerPostBody;
+export type HeatMapLayerPostBody = CommonLayerPostBody;
 
 export interface BaseLayerResponse {
   summary: Summary;

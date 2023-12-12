@@ -4,7 +4,6 @@ import Map, {
   NavigationControl,
   ViewStateChangeEvent,
 } from "react-map-gl";
-// import { GridScopeLayer } from "./map-layers/gridscope-layer";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useMemo, useState } from "react";
 import { CommonLayerPostBody } from "@/api/types/types.ts";
@@ -13,12 +12,13 @@ import mapboxgl from "mapbox-gl";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
 import { GridScopeLayer } from "@/components";
-// import GridscopeDropdownLayer from "@/components/map/map-layers/gridscope-dropdown-layer.tsx";
 
 const MapBoxGL = import("mapbox-gl");
 
 export const BaseMap = () => {
-  const { setSearchParams, validatedMapUrlState } = useMapUrlState();
+  const { searchParams, setSearchParams, validatedMapUrlState } =
+    useMapUrlState();
+
   const [bbox, setBbox] = useState<CommonLayerPostBody | null>(null);
   // network calls for all the layers
   const { dataWithLagBuffer, isError, isLoading, isRefetching, isSuccess } =
@@ -52,18 +52,14 @@ export const BaseMap = () => {
       minZoom={12}
       onMoveEnd={(e) => {
         setDebouncedBbox(e);
-        setSearchParams(
-          {
-            lat: String(e.viewState.latitude),
-            lng: String(e.viewState.longitude),
-            bearing: String(e.viewState.bearing),
-            zoom: String(e.viewState.zoom),
-          },
-          {
-            replace: true,
-            preventScrollReset: true,
-          },
-        );
+        searchParams.set("lat", String(e.viewState.latitude));
+        searchParams.set("lng", String(e.viewState.longitude));
+        searchParams.set("bearing", String(e.viewState.bearing));
+        searchParams.set("zoom", String(e.viewState.zoom));
+        setSearchParams(searchParams, {
+          replace: true,
+          preventScrollReset: true,
+        });
       }}
       initialViewState={{
         latitude: validatedMapUrlState.lat,

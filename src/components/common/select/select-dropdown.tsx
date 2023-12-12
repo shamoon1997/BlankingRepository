@@ -2,18 +2,21 @@ import { ChevronIcon } from "@/assets";
 import * as Select from "@radix-ui/react-select";
 import React, { ReactNode } from "react";
 import SelectItem from "./select-item";
-import { useSearchParams } from "react-router-dom";
+import {
+  useLayerOptions,
+  LayerOptionsSchemaType,
+} from "@/hooks/layer-options/use-get-layer-options";
 import { TextLimiter } from "..";
 
 type Props = {
   placeholder?: string;
-  triggerIcon?: ReactNode; //Adds fixed icon on dropdown
+  triggerIcon?: ReactNode;
   options: {
     value: string;
     child: string | React.JSX.Element;
     icon?: React.JSX.Element;
   }[];
-  searchParamKey?: string;
+  searchParamKey: keyof LayerOptionsSchemaType;
 };
 
 const SelectDropdown: React.FC<Props> = ({
@@ -22,34 +25,25 @@ const SelectDropdown: React.FC<Props> = ({
   options,
   searchParamKey,
 }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { setSearchParams, validatedLayerUrlState, searchParams } =
+    useLayerOptions();
 
   if (options.length === 0) {
     console.error(
       "Select Dropdown: options length is 0, it must contain at least 1 item.",
     );
-    return;
-  }
-
-  // TODO: add zod validation and make this into a separate hook look at /src/hooks/map/use-map-url-state.tsx - for Waleed
-  let valueFromQuery: string | undefined = undefined;
-  if (searchParamKey) {
-    const keyInUrl = searchParams.get(searchParamKey);
-    if (keyInUrl) {
-      const preSelectedOption = options.find((item) => item.value === keyInUrl);
-      valueFromQuery = preSelectedOption?.value ?? undefined;
-    }
+    return null;
   }
 
   return (
     <Select.Root
       onValueChange={(value: string) => {
+        if (value === "gridscope") searchParams.delete("poleOptions");
         if (!searchParamKey?.length) return;
         searchParams.set(searchParamKey, value);
         setSearchParams(searchParams);
       }}
-      value={valueFromQuery}
-      defaultValue={options[0].value}
+      value={validatedLayerUrlState[searchParamKey]}
     >
       <Select.Trigger
         className="inline-flex h-[38px] w-full cursor-pointer items-center justify-between rounded-md border-[0.5px] border-default bg-white px-2 pl-3 font-mont text-sm leading-none text-primary-hard shadow-dropdown outline-none data-[placeholder]:text-primary-hard"
