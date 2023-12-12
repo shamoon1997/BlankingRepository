@@ -1,8 +1,11 @@
 import { ChevronIcon } from "@/assets";
 import * as Select from "@radix-ui/react-select";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import SelectItem from "./select-item";
-import { useSearchParams } from "react-router-dom";
+import {
+  useLayerOptions,
+  LayerOptionsSchemaType,
+} from "@/hooks/layer-options/use-get-layer-options";
 import { TextLimiter } from "..";
 
 type Props = {
@@ -13,8 +16,7 @@ type Props = {
     child: string | React.JSX.Element;
     icon?: React.JSX.Element;
   }[];
-  searchParamKey?: string;
-  defaultValue?: string; // Added prop for default value
+  searchParamKey: keyof LayerOptionsSchemaType;
 };
 
 const SelectDropdown: React.FC<Props> = ({
@@ -22,9 +24,9 @@ const SelectDropdown: React.FC<Props> = ({
   triggerIcon,
   options,
   searchParamKey,
-  defaultValue,
 }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { setSearchParams, validatedLayerUrlState, searchParams } =
+    useLayerOptions();
 
   if (options.length === 0) {
     console.error(
@@ -33,24 +35,6 @@ const SelectDropdown: React.FC<Props> = ({
     return null;
   }
 
-  let valueFromQuery: string | undefined = undefined;
-  if (searchParamKey) {
-    const keyInUrl = searchParams.get(searchParamKey);
-    if (keyInUrl) {
-      const preSelectedOption = options.find((item) => item.value === keyInUrl);
-      valueFromQuery = preSelectedOption?.value ?? undefined;
-    }
-  }
-
-  const selectedValue = valueFromQuery || defaultValue || options[0].value;
-
-  useEffect(() => {
-    if (searchParamKey?.length) {
-      searchParams.set(searchParamKey, selectedValue);
-      setSearchParams(searchParams);
-    }
-  }, [selectedValue, searchParamKey, searchParams, setSearchParams]);
-
   return (
     <Select.Root
       onValueChange={(value: string) => {
@@ -58,8 +42,7 @@ const SelectDropdown: React.FC<Props> = ({
         searchParams.set(searchParamKey, value);
         setSearchParams(searchParams);
       }}
-      value={valueFromQuery}
-      defaultValue={selectedValue}
+      value={validatedLayerUrlState[searchParamKey]}
     >
       <Select.Trigger
         className="inline-flex h-[38px] w-full cursor-pointer items-center justify-between rounded-md border-[0.5px] border-default bg-white px-2 pl-3 font-mont text-sm leading-none text-primary-hard shadow-dropdown outline-none data-[placeholder]:text-primary-hard"

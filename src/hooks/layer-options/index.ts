@@ -1,1 +1,1 @@
-export * from "./get-layer-options";
+export * from "./use-get-layer-options";

@@ -3,7 +3,7 @@ import { Feature, Point, Position } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
 import { MapZoomedBoxContainer } from "../map-zoomed-box";
-import GridscopeDropdownLayer from "./gridscope-dropdown-layer";
+import GridscopeDropdownLayer from "./dropdown-layers";
 import { BaseLayerResponse, Device } from "@/api/types/types.ts";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
 import { useMemo } from "react";
