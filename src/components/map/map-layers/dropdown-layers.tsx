@@ -9,7 +9,7 @@ import {
 import { useLayerOptions } from "@/hooks";
 import React from "react";
 
-const DropDownLayers: React.FC = () => {
+export const DropDownLayers: React.FC = () => {
   const { validatedLayerUrlState } = useLayerOptions();
 
   return (
@@ -25,12 +25,14 @@ const DropDownLayers: React.FC = () => {
 
         {/* RIGHT GROUP */}
         <div className="flex gap-2">
-          {/* <div className="w-[170px]">
-            <SelectDropdown
-              options={polePropertyOptions}
-              searchParamKey="pole-property"
-            />
-          </div> */}
+          <div className="w-[170px]">
+            {validatedLayerUrlState.layer !== "gridscope" && (
+              <SelectDropdown
+                options={polePropertyOptions}
+                searchParamKey="poleOptions"
+              />
+            )}
+          </div>
           <div className="w-[170px]">
             <SelectDropdown
               triggerIcon={
@@ -60,5 +62,3 @@ const DropDownLayers: React.FC = () => {
     </>
   );
 };
-
-export default DropDownLayers;

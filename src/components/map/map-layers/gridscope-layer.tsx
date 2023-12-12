@@ -2,7 +2,7 @@ import { useMapUrlState } from "@/hooks";
 import { Feature, Point, Position } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
-import GridscopeDropdownLayer from "./dropdown-layers";
+import { DropDownLayers } from "./dropdown-layers";
 import { BaseLayerResponse, Device } from "@/api/types/types.ts";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
 import { useMemo } from "react";
@@ -142,7 +142,7 @@ export const GridScopeLayer = ({ data }: GridScopeLayerProps) => {
         );
       })}
 
-      <GridscopeDropdownLayer />
+      <DropDownLayers />
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={GridScopeLayerLineStyles} />
