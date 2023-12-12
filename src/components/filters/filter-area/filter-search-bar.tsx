@@ -4,6 +4,7 @@ import * as Portal from "@radix-ui/react-portal";
 import { DeploymentResponse } from "@/api/types/types";
 import { useFetchDeployments } from "@/api/hooks/deployments/use-fetch-deployments";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
+import Fuse from "fuse.js";
 
 interface SearchBarProps {
   toggleFilterActive: () => void;
@@ -23,16 +24,21 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     DeploymentResponse[]
   >([]);
   const { data: deployments } = useFetchDeployments();
+  const fuse = new Fuse(deployments?.data ?? [], {
+    keys: ["name"],
+    threshold: 0.6,
+  });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+    const text = e.target.value;
+    setSearchTerm(text);
 
-    if (e.target.value.trim().length === 0) return setSearchSuggestions([]);
+    if (text.trim().length === 0) return setSearchSuggestions([]);
 
     if (deployments?.data.length) {
-      const filteredDeployments = deployments?.data?.filter((item) =>
-        item.name.toLowerCase().includes(e.target.value.toLowerCase()),
-      );
+      const filteredDeployments: DeploymentResponse[] = fuse
+        .search<DeploymentResponse>(text)
+        .map((item) => item.item);
       setSearchSuggestions(filteredDeployments);
       console.log(filteredDeployments);
     }
