@@ -15,6 +15,7 @@ export default {
         "pole-view": "2px 2px 4px 0px rgba(0, 0, 0, 0.1)",
         "zoomed-box": "0.2px 0.2px 0.5px 0px rgba(0, 0, 0, 0.10)",
         "filter-area": "0px 4px 8px 0px rgba(0, 0, 0, 0.1)",
+        "device-data": "0px 0px 5px 0px rgba(0, 0, 0, 0.10)",
         dropdown: "2px 2px 3px 0px rgba(0, 0, 0, 0.15)",
         "pole-filter": "0px 0px 5px 0px rgba(0, 0, 0, 0.10)",
       },
@@ -48,6 +49,12 @@ export default {
         customSideColor: "#3B3C4F",
 
         popUpHoverColor: "#D9D9D9",
+
+        // POLEVIEW COLORS
+        poleViewRed: "#C93B54",
+        poleViewGreed: "#2CB369",
+        poleViewBlue: "#3569E7",
+        poleViewTextLight: "#16161680",
       },
       backgroundColor: {
         "map-zoomed-box": "rgba(22, 22, 22, 0.70)",
