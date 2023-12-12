@@ -38,6 +38,7 @@ const SelectDropdown: React.FC<Props> = ({
   return (
     <Select.Root
       onValueChange={(value: string) => {
+        if (value === "gridscope") searchParams.delete("poleOptions");
         if (!searchParamKey?.length) return;
         searchParams.set(searchParamKey, value);
         setSearchParams(searchParams);

@@ -141,14 +141,6 @@ export const layerOptions: SelectDropdownType[] = [
     ),
   },
   {
-    value: "incident",
-    child: (
-      <TextLimiter>
-        <Select.ItemText>Incident</Select.ItemText>
-      </TextLimiter>
-    ),
-  },
-  {
     value: "network",
     child: (
       <TextLimiter>
