@@ -3,10 +3,10 @@ import { Feature, Point, Position } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
 import { MapZoomedBoxContainer } from "../map-zoomed-box";
-import GridscopeDropdownLayer from "./dropdown-layers";
 import { BaseLayerResponse, Device } from "@/api/types/types.ts";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
 import { useMemo } from "react";
+import { HeatMapControlLayer } from "@/components/map/dropdown-layers/heatmap-control-layer";
 
 const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -98,7 +98,7 @@ export const HeatMapLayer = ({ data }: EquipmentLayerProps) => {
         );
       })}
 
-      <GridscopeDropdownLayer />
+      <HeatMapControlLayer />
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={EquipmentLayerLineStyles} />

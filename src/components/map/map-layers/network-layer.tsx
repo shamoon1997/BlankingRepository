@@ -2,9 +2,8 @@ import { useMapUrlState } from "@/hooks";
 import { Feature, Point, Position } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
-import GridscopeDropdownLayer from "./dropdown-layers";
-import { BaseLayerResponse, Device } from "@/api/types/types.ts";
-import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
+import { BaseLayerResponse, Device } from "@/api/types/types";
+import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators";
 import { useMemo } from "react";
 import { MapZoomedBoxContainer } from "@/components/map/map-zoomed-box";
 import {
@@ -14,8 +13,9 @@ import {
   SpottyIcon,
 } from "@/assets/pole-hover";
 import { LegendContainer } from "@/components";
-import { LegendItem } from "@/components/legend/legend-item/legend-item.tsx";
-import { stripZeros } from "@/utils/strings/strip-zeros.ts";
+import { LegendItem } from "@/components/legend/legend-item/legend-item";
+import { stripZeros } from "@/utils/strings/strip-zeros";
+import { NetworkControlLayer } from "@/components/map/dropdown-layers/network-control-layer";
 
 const NetworkLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -142,7 +142,7 @@ export const NetworkLayer = ({ data }: NetworkLayerProps) => {
         );
       })}
 
-      <GridscopeDropdownLayer />
+      <NetworkControlLayer />
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={NetworkLayerLineStyles} />
