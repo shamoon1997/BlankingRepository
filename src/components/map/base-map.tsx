@@ -5,24 +5,27 @@ import Map, {
   NavigationControl,
   ViewStateChangeEvent,
 } from "react-map-gl";
-// import { GridScopeLayer } from "./map-layers/gridscope-layer";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useGetEquipmentLayer } from "@/api/hooks/maps/user-get-equipment-layer.ts";
+// import { useGetEquipmentLayer } from "@/api/hooks/maps/user-get-equipment-layer.ts";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CommonLayerPostBody } from "@/api/types/types.ts";
 import debounce from "lodash/debounce";
 import mapboxgl from "mapbox-gl";
-import { EquipmentLayer } from "@/components/map/map-layers/equipment-layer.tsx";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
+import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
+import { GridScopeLayer } from "@/components";
 
 const MapBoxGL = import("mapbox-gl");
 
 export const BaseMap = () => {
-  const { setSearchParams, validatedMapUrlState } = useMapUrlState();
+  const { searchParams, setSearchParams, validatedMapUrlState } =
+    useMapUrlState();
+
   const [bbox, setBbox] = useState<CommonLayerPostBody | null>(null);
   const ref = useRef<MapRef | null>(null);
   // network calls for all the layers
-  const { data, isError, isLoading, isRefetching } = useGetEquipmentLayer(bbox);
+  const { dataWithLagBuffer, isError, isLoading, isRefetching, isSuccess } =
+    useGetNetworkLayer(bbox);
 
   useEffect(() => {
     ref.current?.flyTo({
@@ -46,13 +49,14 @@ export const BaseMap = () => {
         const bounds = e.target.getBounds();
         const northWest = bounds.getNorthWest();
         const southEast = bounds.getSouthEast();
+
         setBbox({
           lat1: northWest.lat,
           lon1: northWest.lng,
           lat2: southEast.lat,
           lon2: southEast.lng,
         });
-      }, 700),
+      }, 600),
     [],
   );
 
@@ -64,20 +68,17 @@ export const BaseMap = () => {
       attributionControl={false}
       maxPitch={0}
       minPitch={0}
+      minZoom={12}
       onMoveEnd={(e) => {
         setDebouncedBbox(e);
-        setSearchParams(
-          {
-            lat: String(e.viewState.latitude),
-            lng: String(e.viewState.longitude),
-            bearing: String(e.viewState.bearing),
-            zoom: String(e.viewState.zoom),
-          },
-          {
-            replace: true,
-            preventScrollReset: true,
-          },
-        );
+        searchParams.set("lat", String(e.viewState.latitude));
+        searchParams.set("lng", String(e.viewState.longitude));
+        searchParams.set("bearing", String(e.viewState.bearing));
+        searchParams.set("zoom", String(e.viewState.zoom));
+        setSearchParams(searchParams, {
+          replace: true,
+          preventScrollReset: true,
+        });
       }}
       initialViewState={{
         latitude: validatedMapUrlState.lat,
@@ -93,6 +94,12 @@ export const BaseMap = () => {
       {(isLoading || isRefetching) && (
         <MapNetworkStatus>Loading...</MapNetworkStatus>
       )}
+      {!isLoading &&
+        !isRefetching &&
+        isSuccess &&
+        dataWithLagBuffer?.devices.length === 0 && (
+          <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
+        )}
       {isError && (
         <MapNetworkStatus>
           An Error Occurred. Please share logs with the developer team.
@@ -104,10 +111,17 @@ export const BaseMap = () => {
       {/* show layers based on props in future */}
 
       {/*<GridScopeLayer />*/}
-      <EquipmentLayer
-        data={data?.data}
-        isError={isError}
-        isLoading={isLoading}
+
+      {/*<EquipmentLayer*/}
+      {/*  data={dataWithLagBuffer}*/}
+      {/*  isError={isError}*/}
+      {/*  isLoading={isLoading}*/}
+      {/*/>*/}
+
+      <GridScopeLayer
+        data={dataWithLagBuffer}
+        isLoading={isError}
+        isError={isLoading}
       />
     </Map>
   );

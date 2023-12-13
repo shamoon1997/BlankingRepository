@@ -33,6 +33,7 @@ const useMapUrlState = () => {
   const validatedMapUrlState = mapUrlStateSchema.parse(mapUrlState);
 
   return {
+    searchParams,
     setSearchParams,
     validatedMapUrlState,
   };

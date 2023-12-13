@@ -6,7 +6,7 @@ type Props = {
 
 export const MapZoomedBoxContainer = ({ children }: Props) => {
   return (
-    <div className="bg-map-zoomed-box shadow-zoomed-box absolute bottom-[-33px] left-[24px]  rounded-sm bg-black p-[6px] text-white">
+    <div className="absolute bottom-[-50px] left-[26px] rounded-sm bg-black  bg-map-zoomed-box p-[6px] text-white shadow-zoomed-box">
       {children}
     </div>
   );

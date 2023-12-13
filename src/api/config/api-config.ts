@@ -16,3 +16,5 @@ export const ApiResources = {
   getHeatMapLayer: "layer/heatmap",
   getEquipmentLayer: "layer/equipment",
 };
+
+export const MAX_LAG_BUFFER_LIMIT = 100;

@@ -7,20 +7,29 @@ import { BaseLayerResponse, Device } from "@/api/types/types.ts";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
 import { useMemo } from "react";
 import { MapZoomedBoxContainer } from "@/components/map/map-zoomed-box";
+import {
+  HoverPinIcon,
+  OfflineIcon,
+  OnlineIcon,
+  SpottyIcon,
+} from "@/assets/pole-hover";
+import { LegendContainer } from "@/components";
+import { LegendItem } from "@/components/legend/legend-item/legend-item.tsx";
+import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 
-const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
+const NetworkLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
   "line-opacity": 1,
   "line-width": 8,
   "line-dasharray": [0.22, 0.24],
 };
 
-type EquipmentLayerProps = {
+type NetworkLayerProps = {
   data: BaseLayerResponse | undefined;
   isLoading: boolean;
   isError: boolean;
 };
-export const EquipmentLayer = ({ data }: EquipmentLayerProps) => {
+export const NetworkLayer = ({ data }: NetworkLayerProps) => {
   const { validatedMapUrlState } = useMapUrlState();
 
   const points: Feature<Point, Device>[] = useMemo(() => {
@@ -78,9 +87,31 @@ export const EquipmentLayer = ({ data }: EquipmentLayerProps) => {
   return (
     <>
       {points.map((i) => {
-        const [lng, lat] = i.geometry.coordinates;
-        const color = "bg-offline";
         const id = i.properties.hardware_id;
+        const [lng, lat] = i.geometry.coordinates;
+        let color = "bg-unknown";
+
+        if (i.properties.network_mode === 1) {
+          color = "bg-cellular";
+        } else if (i.properties.network_mode === 2) {
+          color = "bg-lora";
+        } else if (i.properties.network_mode === 0) {
+          color = "bg-unknown";
+        }
+
+        const iconWidth = "w-[13px]";
+        let networkStatusText = "Offline";
+        let NetworkStatusIcon = <OfflineIcon className={iconWidth} />;
+        if (i.properties.online === 0) {
+          networkStatusText = "Offline";
+          NetworkStatusIcon = <OfflineIcon className={iconWidth} />;
+        } else if (i.properties.online === 1) {
+          networkStatusText = "Online";
+          NetworkStatusIcon = <OnlineIcon className={iconWidth} />;
+        } else if (i.properties.online === 2) {
+          networkStatusText = "Spotty";
+          NetworkStatusIcon = <SpottyIcon className={iconWidth} />;
+        }
 
         return (
           <Marker key={id} latitude={lat} longitude={lng}>
@@ -92,9 +123,19 @@ export const EquipmentLayer = ({ data }: EquipmentLayerProps) => {
 
             {validatedMapUrlState.zoom > 16 && (
               <MapZoomedBoxContainer>
-                {i.properties.equipment.map((eq, index) => (
-                  <div key={i.properties.hardware_id + index}>{eq}</div>
-                ))}
+                <div className="flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
+                  <div className="flex items-center gap-[7px] font-medium">
+                    <HoverPinIcon className="w-[11px]" />
+                    <p>
+                      {i.properties.pole_id} •{" "}
+                      {stripZeros(i.properties.device_sn ?? "")}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-[5px]">
+                    {NetworkStatusIcon}
+                    <p>{networkStatusText}</p>
+                  </div>
+                </div>
               </MapZoomedBoxContainer>
             )}
           </Marker>
@@ -104,8 +145,16 @@ export const EquipmentLayer = ({ data }: EquipmentLayerProps) => {
       <GridscopeDropdownLayer />
 
       <Source id="line-source" type="geojson" data={lines}>
-        <Layer id="line-layer" type="line" paint={EquipmentLayerLineStyles} />
+        <Layer id="line-layer" type="line" paint={NetworkLayerLineStyles} />
       </Source>
+
+      <LegendContainer>
+        <div className="flex flex-col gap-[10px] p-[10px]">
+          <LegendItem color="bg-lora" text="Lora" />
+          <LegendItem color="bg-cellular" text="Cellular" />
+          <LegendItem color="bg-unknown" text="Unknown Mode" />
+        </div>
+      </LegendContainer>
     </>
   );
 };
