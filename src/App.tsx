@@ -6,7 +6,6 @@ import { FallBackPage } from "./pages/fall-back-page.tsx";
 import { HomeLoader, PageLoader, SideNavigation } from "./components";
 import { AppRoutes } from "./utils/routes";
 import { useShowSideBar } from "./hooks";
-import { Toaster } from "sonner";
 
 const RouteMappings = [
   {
