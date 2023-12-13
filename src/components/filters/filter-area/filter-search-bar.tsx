@@ -102,12 +102,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         </button>
       </div>
 
+      {/* DROPDOWN TO SHOW SEARCH SUGGESTIONS */}
       {searchSuggestions?.length > 0 && (
         <Portal.Root container={dropdownRef?.current} asChild={true}>
           <ScrollArea.Root>
             <ScrollArea.Viewport asChild={true}>
               <div className="z-10 mt-[6px] max-h-[80px] overflow-y-auto">
-                <ul className="">
+                <ul>
                   {searchSuggestions?.map((item) => {
                     const { latitude, longitude } = item;
                     return (

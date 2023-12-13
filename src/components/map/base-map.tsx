@@ -1,13 +1,14 @@
 import { useMapUrlState } from "@/hooks";
 import Map, {
   FullscreenControl,
+  MapRef,
   NavigationControl,
   ViewStateChangeEvent,
 } from "react-map-gl";
 // import { GridScopeLayer } from "./map-layers/gridscope-layer";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useGetEquipmentLayer } from "@/api/hooks/maps/user-get-equipment-layer.ts";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CommonLayerPostBody } from "@/api/types/types.ts";
 import debounce from "lodash/debounce";
 import mapboxgl from "mapbox-gl";
@@ -19,8 +20,24 @@ const MapBoxGL = import("mapbox-gl");
 export const BaseMap = () => {
   const { setSearchParams, validatedMapUrlState } = useMapUrlState();
   const [bbox, setBbox] = useState<CommonLayerPostBody | null>(null);
+  const ref = useRef<MapRef | null>(null);
   // network calls for all the layers
   const { data, isError, isLoading, isRefetching } = useGetEquipmentLayer(bbox);
+
+  useEffect(() => {
+    ref.current?.flyTo({
+      bearing: validatedMapUrlState.bearing,
+      center: {
+        lat: validatedMapUrlState.lat,
+        lng: validatedMapUrlState.lng,
+      },
+    });
+  }, [
+    validatedMapUrlState.bearing,
+    validatedMapUrlState.lat,
+    validatedMapUrlState.lng,
+    validatedMapUrlState.zoom,
+  ]);
 
   const setDebouncedBbox = useMemo(
     () =>
@@ -41,6 +58,7 @@ export const BaseMap = () => {
 
   return (
     <Map
+      ref={ref}
       onLoad={setDebouncedBbox}
       reuseMaps
       attributionControl={false}
