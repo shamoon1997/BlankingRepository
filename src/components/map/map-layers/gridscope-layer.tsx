@@ -1,11 +1,11 @@
-import { useMapUrlState } from "@/hooks";
+import { useLayerControlUrlState, useMapUrlState } from "@/hooks";
 import { Feature, Point, Position } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
 import { GridscopeControlLayer } from "../dropdown-layers/gridscope-control-layer.tsx";
-import { BaseLayerResponse, Device } from "@/api/types/types.ts";
+import { Device } from "@/api/types/types.ts";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { MapZoomedBoxContainer } from "@/components/map/map-zoomed-box";
 import {
   HoverPinIcon,
@@ -15,6 +15,9 @@ import {
 } from "@/assets/pole-hover";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 import { LegendRange } from "@/components";
+import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
+import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
+import { MapBboxContext } from "@/state/providers/map/bbox-provider.tsx";
 
 const GridScopeLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -23,17 +26,35 @@ const GridScopeLayerLineStyles: mapboxgl.LinePaint = {
   "line-dasharray": [0.22, 0.24],
 };
 
-type GridScopeLayerProps = {
-  data: BaseLayerResponse | undefined;
-  isLoading: boolean;
-  isError: boolean;
-};
-export const GridScopeLayer = ({ data }: GridScopeLayerProps) => {
+export const GridScopeLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
+  const { validatedLayerUrlState } = useLayerControlUrlState();
+  const { bbox } = useContext(MapBboxContext);
+
+  const {
+    dataWithLagBuffer: data,
+    isError,
+    isLoading,
+    isRefetching,
+    isSuccess,
+  } = useGetGridScopeLayer(bbox);
+
+  const filteredData = data?.devices.filter((i) => {
+    const gridscopeFilter = validatedLayerUrlState.gridscope;
+    if (gridscopeFilter === "offline") {
+      return i.online === 0;
+    } else if (gridscopeFilter === "online") {
+      return i.online === 1;
+    } else if (gridscopeFilter === "spotty") {
+      return i.online === 2;
+    } else if (gridscopeFilter === "all") {
+      return true;
+    }
+  });
 
   const points: Feature<Point, Device>[] = useMemo(() => {
-    if (data?.devices && data.devices.length > 0) {
-      const modify = data.devices.map((item) => {
+    if (filteredData && filteredData.length > 0) {
+      const modify = filteredData.map((item) => {
         return {
           ...item,
           id: item.hardware_id,
@@ -43,16 +64,16 @@ export const GridScopeLayer = ({ data }: GridScopeLayerProps) => {
     }
 
     return [];
-  }, [data?.devices]);
+  }, [filteredData]);
 
   const lines: Feature = useMemo(() => {
     const visitedPairs = new Set();
     const coordinates: Position[][] = [];
 
-    if (data?.devices && data.devices.length > 0) {
-      data.devices.forEach((device) => {
+    if (filteredData && filteredData.length > 0) {
+      filteredData.forEach((device) => {
         return device.neighbors.forEach((neighborId) => {
-          const neighborDevice = data.devices.find(
+          const neighborDevice = filteredData.find(
             (d) => d.hardware_id === neighborId,
           );
 
@@ -81,7 +102,7 @@ export const GridScopeLayer = ({ data }: GridScopeLayerProps) => {
         color: "#8A8A8A",
       },
     };
-  }, [data?.devices]);
+  }, [filteredData]);
 
   return (
     <>
@@ -152,6 +173,21 @@ export const GridScopeLayer = ({ data }: GridScopeLayerProps) => {
         colors={["bg-online", "bg-offline", "bg-spotty"]}
         labels={["Online", "Offline", "Spotty"]}
       />
+
+      {(isLoading || isRefetching) && (
+        <MapNetworkStatus>Loading...</MapNetworkStatus>
+      )}
+      {!isLoading &&
+        !isRefetching &&
+        isSuccess &&
+        data?.devices.length === 0 && (
+          <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
+        )}
+      {isError && (
+        <MapNetworkStatus>
+          An Error Occurred. Please share logs with the developer team.
+        </MapNetworkStatus>
+      )}
     </>
   );
 };

@@ -17,12 +17,10 @@ export const useLayerControlUrlState = () => {
       setSearchParams,
       validatedLayerUrlState: {
         layer: "gridscope",
-        "grid-scope-options": "all",
-        "pole-options": "all",
-        equipments: "",
-        "network-type": "all",
-        heatmap: "vibration",
         gridscope: "all",
+        equipments: "",
+        network: "all",
+        heatmap: "vibration",
       } as LayerControlsSchemaType,
       searchParams,
     };

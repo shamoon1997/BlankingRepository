@@ -3,10 +3,13 @@ import { Feature, Point, Position } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
 import { MapZoomedBoxContainer } from "../map-zoomed-box";
-import { BaseLayerResponse, Device } from "@/api/types/types.ts";
+import { Device } from "@/api/types/types.ts";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { HeatMapControlLayer } from "@/components/map/dropdown-layers/heatmap-control-layer";
+import { MapBboxContext } from "@/state/providers/map/bbox-provider.tsx";
+import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
+import { useGetHeatMapLayer } from "@/api/hooks/maps/user-get-heat-map-layer.ts";
 
 const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -15,13 +18,17 @@ const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-dasharray": [0.22, 0.24],
 };
 
-type EquipmentLayerProps = {
-  data: BaseLayerResponse | undefined;
-  isLoading: boolean;
-  isError: boolean;
-};
-export const HeatMapLayer = ({ data }: EquipmentLayerProps) => {
+export const HeatMapLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
+  const { bbox } = useContext(MapBboxContext);
+
+  const {
+    dataWithLagBuffer: data,
+    isError,
+    isLoading,
+    isRefetching,
+    isSuccess,
+  } = useGetHeatMapLayer(bbox);
 
   const points: Feature<Point, Device>[] = useMemo(() => {
     if (data?.devices && data.devices.length > 0) {
@@ -103,6 +110,21 @@ export const HeatMapLayer = ({ data }: EquipmentLayerProps) => {
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={EquipmentLayerLineStyles} />
       </Source>
+
+      {(isLoading || isRefetching) && (
+        <MapNetworkStatus>Loading...</MapNetworkStatus>
+      )}
+      {!isLoading &&
+        !isRefetching &&
+        isSuccess &&
+        data?.devices.length === 0 && (
+          <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
+        )}
+      {isError && (
+        <MapNetworkStatus>
+          An Error Occurred. Please share logs with the developer team.
+        </MapNetworkStatus>
+      )}
     </>
   );
 };
