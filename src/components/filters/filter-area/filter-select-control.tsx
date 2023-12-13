@@ -4,9 +4,11 @@ import { FilterSelectItem, FilterSelectItemProps } from "./filter-select-item";
 
 type FilterSelectControlProps = {
   selectItems: FilterSelectItemProps[];
+  setOption?: React.Dispatch<React.SetStateAction<string>>;
 };
 export const FilterSelectControl = ({
   selectItems,
+  setOption,
 }: FilterSelectControlProps) => {
   return (
     <div className="flex justify-between text-xs font-semibold">
@@ -14,6 +16,10 @@ export const FilterSelectControl = ({
 
       <Select.Root
         defaultValue={selectItems.length > 0 ? selectItems[0].value : undefined}
+        onValueChange={(val) => {
+          console.log(val);
+          setOption && setOption(val);
+        }}
       >
         <Select.Trigger
           className="flex w-1/2 cursor-pointer items-center justify-between text-left text-primary"
