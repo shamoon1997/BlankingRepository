@@ -5,6 +5,7 @@ import { DeploymentResponse } from "@/api/types/types";
 import { useFetchDeployments } from "@/api/hooks/deployments/use-fetch-deployments";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import Fuse from "fuse.js";
+import { mapUrlStateKeys, useMapUrlState } from "@/hooks";
 
 interface SearchBarProps {
   toggleFilterActive: () => void;
@@ -28,6 +29,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     keys: ["name"],
     threshold: 0.6,
   });
+  const { setSearchParams } = useMapUrlState();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
@@ -107,14 +109,21 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               <div className="z-10 mt-[6px] max-h-[80px] overflow-y-auto">
                 <ul className="">
                   {searchSuggestions?.map((item) => {
+                    const { latitude, longitude } = item;
                     return (
                       <li
                         key={item?.name}
-                        className="hover:bg-selected cursor-pointer rounded-md px-[4px] py-[6px] text-[12px] text-primary"
+                        className="cursor-pointer rounded-md px-[4px] py-[6px] text-[12px] text-primary hover:bg-selected"
                         onClick={() => {
                           setChips([item?.name]);
                           setSearchTerm("");
                           setSearchSuggestions([]);
+                          setSearchParams((searchParams) => {
+                            const { lat, lng } = mapUrlStateKeys;
+                            searchParams.set(lat, `${latitude}`);
+                            searchParams.set(lng, `${longitude}`);
+                            return searchParams;
+                          });
                         }}
                       >
                         {item.name}
