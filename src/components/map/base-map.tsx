@@ -3,19 +3,14 @@ import Map, {
   FullscreenControl,
   MapRef,
   NavigationControl,
-  ViewStateChangeEvent,
 } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { CommonLayerPostBody } from "@/api/types/types.ts";
-import debounce from "lodash/debounce";
-import mapboxgl from "mapbox-gl";
-import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
+import { useContext, useEffect, useRef } from "react";
 import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
 import { GridScopeLayer } from "@/components";
-import { HeatMapLayer } from "@/components/map/map-layers/heat-map-layer.tsx";
-import { EquipmentLayer } from "@/components/map/map-layers/equipment-layer.tsx";
 import { NetworkLayer } from "@/components/map/map-layers/network-layer.tsx";
+import { MapBboxContext } from "@/state/providers/map/bbox-provider.tsx";
+import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
 
 const MapBoxGL = import("mapbox-gl");
 
@@ -25,28 +20,10 @@ export const BaseMap = () => {
   const { validatedLayerUrlState } = useLayerControlUrlState();
   const ref = useRef<MapRef | null>(null);
 
-  const [bbox, setBbox] = useState<CommonLayerPostBody | null>(null);
-  // network calls for all the layers
-  const { dataWithLagBuffer, isError, isLoading, isRefetching, isSuccess } =
-    useGetNetworkLayer(bbox);
-
-  const setDebouncedBbox = useMemo(
-    () =>
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      debounce((e: mapboxgl.MapboxEvent<undefined> | ViewStateChangeEvent) => {
-        const bounds = e.target.getBounds();
-        const northWest = bounds.getNorthWest();
-        const southEast = bounds.getSouthEast();
-
-        setBbox({
-          lat1: northWest.lat,
-          lon1: northWest.lng,
-          lat2: southEast.lat,
-          lon2: southEast.lng,
-        });
-      }, 600),
-    [],
-  );
+  const { bbox, setDebouncedBbox } = useContext(MapBboxContext);
+  // network calls for all the layers in parallel
+  useGetNetworkLayer(bbox);
+  useGetGridScopeLayer(bbox);
 
   useEffect(() => {
     ref.current?.flyTo({
@@ -94,57 +71,21 @@ export const BaseMap = () => {
       style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
       mapStyle="mapbox://styles/mapbox/light-v11"
     >
-      {(isLoading || isRefetching) && (
-        <MapNetworkStatus>Loading...</MapNetworkStatus>
-      )}
-      {!isLoading &&
-        !isRefetching &&
-        isSuccess &&
-        dataWithLagBuffer?.devices.length === 0 && (
-          <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
-        )}
-      {isError && (
-        <MapNetworkStatus>
-          An Error Occurred. Please share logs with the developer team.
-        </MapNetworkStatus>
-      )}
       <FullscreenControl position="bottom-left" />
       <NavigationControl position="bottom-left" showCompass />
-
       {validatedLayerUrlState.layer === "gridscope" && (
-        <GridScopeLayer
-          key="gridscope"
-          data={dataWithLagBuffer}
-          isLoading={isError}
-          isError={isLoading}
-        />
+        <GridScopeLayer key="gridscope" />
       )}
-
-      {validatedLayerUrlState.layer === "heatmap" && (
-        <HeatMapLayer
-          key="heatmap"
-          data={dataWithLagBuffer}
-          isLoading={isError}
-          isError={isLoading}
-        />
-      )}
-
-      {validatedLayerUrlState.layer === "equipment" && (
-        <EquipmentLayer
-          key="equipment"
-          data={dataWithLagBuffer}
-          isLoading={isError}
-          isError={isLoading}
-        />
-      )}
-
+      {/*//TODO: re-enable when calendar is done this week*/}
+      {/*{validatedLayerUrlState.layer === "heatmap" && (*/}
+      {/*  <HeatMapLayer key="heatmap" />*/}
+      {/*)}*/}
+      {/*  // TODO: re-enable when multi select drop down is done this week */}
+      {/*{validatedLayerUrlState.layer === "equipment" && (*/}
+      {/*  <EquipmentLayer key="equipment" />*/}
+      {/*)}*/}
       {validatedLayerUrlState.layer === "network" && (
-        <NetworkLayer
-          key="network"
-          data={dataWithLagBuffer}
-          isLoading={isError}
-          isError={isLoading}
-        />
+        <NetworkLayer key="network" />
       )}
     </Map>
   );

@@ -1,10 +1,10 @@
-import { useMapUrlState } from "@/hooks";
+import { useLayerControlUrlState, useMapUrlState } from "@/hooks";
 import { Feature, Point, Position } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
-import { BaseLayerResponse, Device } from "@/api/types/types";
+import { Device } from "@/api/types/types";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { MapZoomedBoxContainer } from "@/components/map/map-zoomed-box";
 import {
   HoverPinIcon,
@@ -16,6 +16,9 @@ import { LegendContainer } from "@/components";
 import { LegendItem } from "@/components/legend/legend-item/legend-item";
 import { stripZeros } from "@/utils/strings/strip-zeros";
 import { NetworkControlLayer } from "@/components/map/dropdown-layers/network-control-layer";
+import { MapBboxContext } from "@/state/providers/map/bbox-provider.tsx";
+import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
+import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
 
 const NetworkLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -24,17 +27,35 @@ const NetworkLayerLineStyles: mapboxgl.LinePaint = {
   "line-dasharray": [0.22, 0.24],
 };
 
-type NetworkLayerProps = {
-  data: BaseLayerResponse | undefined;
-  isLoading: boolean;
-  isError: boolean;
-};
-export const NetworkLayer = ({ data }: NetworkLayerProps) => {
+export const NetworkLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
+  const { bbox } = useContext(MapBboxContext);
+  const {
+    dataWithLagBuffer: data,
+    isError,
+    isLoading,
+    isRefetching,
+    isSuccess,
+  } = useGetNetworkLayer(bbox);
+
+  const { validatedLayerUrlState } = useLayerControlUrlState();
+
+  const filteredData = data?.devices.filter((i) => {
+    const networkFilter = validatedLayerUrlState.network;
+    if (networkFilter === "cellular") {
+      return i.network_mode === 1;
+    } else if (networkFilter === "lora") {
+      return i.network_mode === 2;
+    } else if (networkFilter === "unknown") {
+      return i.network_mode === 0;
+    } else if (networkFilter === "all") {
+      return true;
+    }
+  });
 
   const points: Feature<Point, Device>[] = useMemo(() => {
-    if (data?.devices && data.devices.length > 0) {
-      const modify = data.devices.map((item) => {
+    if (filteredData && filteredData.length > 0) {
+      const modify = filteredData.map((item) => {
         return {
           ...item,
           id: item.hardware_id,
@@ -44,16 +65,16 @@ export const NetworkLayer = ({ data }: NetworkLayerProps) => {
     }
 
     return [];
-  }, [data?.devices]);
+  }, [filteredData]);
 
   const lines: Feature = useMemo(() => {
     const visitedPairs = new Set();
     const coordinates: Position[][] = [];
 
-    if (data?.devices && data.devices.length > 0) {
-      data.devices.forEach((device) => {
+    if (filteredData && filteredData.length > 0) {
+      filteredData.forEach((device) => {
         return device.neighbors.forEach((neighborId) => {
-          const neighborDevice = data.devices.find(
+          const neighborDevice = filteredData.find(
             (d) => d.hardware_id === neighborId,
           );
 
@@ -82,7 +103,7 @@ export const NetworkLayer = ({ data }: NetworkLayerProps) => {
         color: "#8A8A8A",
       },
     };
-  }, [data?.devices]);
+  }, [filteredData]);
 
   return (
     <>
@@ -155,6 +176,21 @@ export const NetworkLayer = ({ data }: NetworkLayerProps) => {
           <LegendItem color="bg-unknown" text="Unknown Mode" />
         </div>
       </LegendContainer>
+
+      {(isLoading || isRefetching) && (
+        <MapNetworkStatus>Loading...</MapNetworkStatus>
+      )}
+      {!isLoading &&
+        !isRefetching &&
+        isSuccess &&
+        data?.devices.length === 0 && (
+          <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
+        )}
+      {isError && (
+        <MapNetworkStatus>
+          An Error Occurred. Please share logs with the developer team.
+        </MapNetworkStatus>
+      )}
     </>
   );
 };
