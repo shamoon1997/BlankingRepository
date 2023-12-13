@@ -1,23 +1,29 @@
-import { useMapUrlState } from "@/hooks";
+import { useLayerControlUrlState, useMapUrlState } from "@/hooks";
 import Map, {
   FullscreenControl,
+  MapRef,
   NavigationControl,
   ViewStateChangeEvent,
 } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CommonLayerPostBody } from "@/api/types/types.ts";
 import debounce from "lodash/debounce";
 import mapboxgl from "mapbox-gl";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
 import { GridScopeLayer } from "@/components";
+import { HeatMapLayer } from "@/components/map/map-layers/heat-map-layer.tsx";
+import { EquipmentLayer } from "@/components/map/map-layers/equipment-layer.tsx";
+import { NetworkLayer } from "@/components/map/map-layers/network-layer.tsx";
 
 const MapBoxGL = import("mapbox-gl");
 
 export const BaseMap = () => {
   const { searchParams, setSearchParams, validatedMapUrlState } =
     useMapUrlState();
+  const { validatedLayerUrlState } = useLayerControlUrlState();
+  const ref = useRef<MapRef | null>(null);
 
   const [bbox, setBbox] = useState<CommonLayerPostBody | null>(null);
   // network calls for all the layers
@@ -42,8 +48,24 @@ export const BaseMap = () => {
     [],
   );
 
+  useEffect(() => {
+    ref.current?.flyTo({
+      bearing: validatedMapUrlState.bearing,
+      center: {
+        lat: validatedMapUrlState.lat,
+        lng: validatedMapUrlState.lng,
+      },
+    });
+  }, [
+    validatedMapUrlState.bearing,
+    validatedMapUrlState.lat,
+    validatedMapUrlState.lng,
+    validatedMapUrlState.zoom,
+  ]);
+
   return (
     <Map
+      ref={ref}
       onLoad={setDebouncedBbox}
       reuseMaps
       attributionControl={false}
@@ -89,21 +111,41 @@ export const BaseMap = () => {
       <FullscreenControl position="bottom-left" />
       <NavigationControl position="bottom-left" showCompass />
 
-      {/* show layers based on props in future */}
+      {validatedLayerUrlState.layer === "gridscope" && (
+        <GridScopeLayer
+          key="gridscope"
+          data={dataWithLagBuffer}
+          isLoading={isError}
+          isError={isLoading}
+        />
+      )}
 
-      {/*<GridScopeLayer />*/}
+      {validatedLayerUrlState.layer === "heatmap" && (
+        <HeatMapLayer
+          key="heatmap"
+          data={dataWithLagBuffer}
+          isLoading={isError}
+          isError={isLoading}
+        />
+      )}
 
-      {/*<EquipmentLayer*/}
-      {/*  data={dataWithLagBuffer}*/}
-      {/*  isError={isError}*/}
-      {/*  isLoading={isLoading}*/}
-      {/*/>*/}
+      {validatedLayerUrlState.layer === "equipment" && (
+        <EquipmentLayer
+          key="equipment"
+          data={dataWithLagBuffer}
+          isLoading={isError}
+          isError={isLoading}
+        />
+      )}
 
-      <GridScopeLayer
-        data={dataWithLagBuffer}
-        isLoading={isError}
-        isError={isLoading}
-      />
+      {validatedLayerUrlState.layer === "network" && (
+        <NetworkLayer
+          key="network"
+          data={dataWithLagBuffer}
+          isLoading={isError}
+          isError={isLoading}
+        />
+      )}
     </Map>
   );
 };
