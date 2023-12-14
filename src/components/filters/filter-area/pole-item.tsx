@@ -1,8 +1,15 @@
 import { useState } from "react";
 import { PoleViewButton } from "./pole-view-button";
+import { Device } from "@/api/types/types";
 
-export const PoleItem = () => {
+type Props = {
+  device: Device;
+};
+
+export const PoleItem: React.FC<Props> = ({ device }) => {
   const [selected, setSelected] = useState<boolean>(false);
+
+  const { device_sn } = device;
 
   return (
     <div
@@ -11,8 +18,9 @@ export const PoleItem = () => {
       }`}
       onClick={() => setSelected(!selected)}
     >
-      <p className="text-xs font-semibold text-primary">1535142 • GS1245</p>
-      <PoleViewButton />
+      <p className="text-xs font-semibold text-primary">{device_sn}</p>
+
+      <PoleViewButton onClick={(e) => e.stopPropagation()} />
     </div>
   );
 };
