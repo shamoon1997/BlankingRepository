@@ -23,9 +23,11 @@ const OperatorOptions: FilterSelectItemProps[] = [
 export const FilterControls = () => {
   const [filterActive, setFilterActive] = useState(false);
 
-  const [, setFilterValue] = useState(FilterOptions?.[0].value);
-  const [, setOperatorValue] = useState(OperatorOptions?.[0].value);
-  const [, setInputValue] = useState(OperatorOptions?.[0].value);
+  const [filterValue, setFilterValue] = useState(FilterOptions?.[0].value);
+  const [operatorValue, setOperatorValue] = useState(
+    OperatorOptions?.[0].value,
+  );
+  const [inputValue, setInputValue] = useState(OperatorOptions?.[0].value);
 
   const toggleFilterActive = () => setFilterActive(!filterActive);
   return (
@@ -52,7 +54,12 @@ export const FilterControls = () => {
             />
             <FilterInputControl setValue={setInputValue} />
           </div>
-          <button className="mb-4 flex h-7 w-full items-center justify-center rounded bg-btn-primary text-xs font-semibold text-white">
+          <button
+            onClick={() => {
+              console.log(filterValue, operatorValue, inputValue);
+            }}
+            className="mb-4 flex h-7 w-full items-center justify-center rounded bg-btn-primary text-xs font-semibold text-white"
+          >
             Add Filter
           </button>
         </>

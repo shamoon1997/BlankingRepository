@@ -17,7 +17,6 @@ export const FilterSelectControl = ({
       <Select.Root
         defaultValue={selectItems.length > 0 ? selectItems[0].value : undefined}
         onValueChange={(val) => {
-          console.log(val);
           setOption && setOption(val);
         }}
       >
