@@ -6,7 +6,7 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { Auth0ProviderWithNavigate } from "./state/providers";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MapBboxProvider } from "@/state/providers/map/bbox-provider.tsx";
+import { MapBboxProvider, PoleContextProvider } from "@/state/providers";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,7 +27,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <Auth0ProviderWithNavigate>
         <QueryClientProvider client={queryClient}>
           <MapBboxProvider>
-            <App />
+            <PoleContextProvider>
+              <App />
+            </PoleContextProvider>
           </MapBboxProvider>
         </QueryClientProvider>
       </Auth0ProviderWithNavigate>

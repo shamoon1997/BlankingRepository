@@ -1,15 +1,21 @@
 import { PoleViewButton } from "./pole-view-button";
-import { useMyContext } from "@/context/pole/pole-context";
+import { Device } from "@/api/types/types.ts";
+import { usePoleContext } from "@/state/providers";
 
 type poleItemProps = {
-  device: any;
+  device: Device;
 };
 
 export const PoleItem = ({ device }: poleItemProps) => {
-  const { myArray } = useMyContext();
+  const { poleIds, setPoleIds } = usePoleContext();
 
   const checkPoleClicked = (hardwareId: string) => {
-    return myArray.find((hardware_id) => hardware_id === hardwareId);
+    return poleIds.find((poleId) => poleId === hardwareId);
+  };
+
+  const handlePoleClicked = (hardwareId: string) => {
+    const filteredPole = poleIds.filter((poleId) => poleId !== hardwareId);
+    setPoleIds([...filteredPole]);
   };
 
   return (
@@ -19,6 +25,7 @@ export const PoleItem = ({ device }: poleItemProps) => {
           ? "border-[0.3px] border-y-[#DFDFDF] bg-[#F2F2F2]"
           : ""
       }`}
+      onClick={() => handlePoleClicked(device?.hardware_id)}
     >
       <p className="text-xs font-semibold text-primary">
         {device?.hardware_id?.slice(0, 6)} • {device?.device_sn}
