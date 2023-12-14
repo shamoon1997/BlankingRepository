@@ -2,11 +2,9 @@ import { ChevronIcon } from "@/assets";
 import * as Select from "@radix-ui/react-select";
 import React, { ReactNode } from "react";
 import SelectItem from "./select-item";
-import {
-  useLayerOptions,
-  LayerOptionsSchemaType,
-} from "@/hooks/layer-options/use-get-layer-options";
+import { useLayerControlUrlState } from "@/hooks/layer-options/use-layer-control-url-state.tsx";
 import { TextLimiter } from "..";
+import { LayerControlsSchemaType } from "@/utils/validation-schemas";
 
 type Props = {
   placeholder?: string;
@@ -16,7 +14,7 @@ type Props = {
     child: string | React.JSX.Element;
     icon?: React.JSX.Element;
   }[];
-  searchParamKey: keyof LayerOptionsSchemaType;
+  searchParamKey: keyof LayerControlsSchemaType;
 };
 
 const SelectDropdown: React.FC<Props> = ({
@@ -26,7 +24,7 @@ const SelectDropdown: React.FC<Props> = ({
   searchParamKey,
 }) => {
   const { setSearchParams, validatedLayerUrlState, searchParams } =
-    useLayerOptions();
+    useLayerControlUrlState();
 
   if (options.length === 0) {
     console.error(
@@ -35,13 +33,19 @@ const SelectDropdown: React.FC<Props> = ({
     return null;
   }
 
+  console.log(validatedLayerUrlState);
+  console.log(validatedLayerUrlState[searchParamKey], "hmmm");
+
   return (
     <Select.Root
       onValueChange={(value: string) => {
-        if (value === "gridscope") searchParams.delete("poleOptions");
         if (!searchParamKey?.length) return;
         searchParams.set(searchParamKey, value);
-        setSearchParams(searchParams);
+        console.log(value);
+
+        setSearchParams(searchParams, {
+          replace: true,
+        });
       }}
       value={validatedLayerUrlState[searchParamKey]}
     >

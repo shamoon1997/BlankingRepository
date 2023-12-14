@@ -2,11 +2,14 @@ import { useMapUrlState } from "@/hooks";
 import { Feature, Point, Position } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
-import GridscopeDropdownLayer from "./dropdown-layers";
-import { BaseLayerResponse, Device } from "@/api/types/types.ts";
+import { Device } from "@/api/types/types.ts";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { MapZoomedBoxContainer } from "@/components/map/map-zoomed-box";
+import { EquipmentControlLayer } from "@/components/map/dropdown-layers/equipment-control-layer.tsx";
+import { MapBboxContext } from "@/state/providers/map/bbox-provider.tsx";
+import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
+import { useGetEquipmentLayer } from "@/api/hooks/maps/use-get-equipment-layer.ts";
 
 const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -15,13 +18,17 @@ const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-dasharray": [0.22, 0.24],
 };
 
-type EquipmentLayerProps = {
-  data: BaseLayerResponse | undefined;
-  isLoading: boolean;
-  isError: boolean;
-};
-export const EquipmentLayer = ({ data }: EquipmentLayerProps) => {
+export const EquipmentLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
+  const { bbox } = useContext(MapBboxContext);
+
+  const {
+    dataWithLagBuffer: data,
+    isError,
+    isLoading,
+    isRefetching,
+    isSuccess,
+  } = useGetEquipmentLayer(bbox);
 
   const points: Feature<Point, Device>[] = useMemo(() => {
     if (data?.devices && data.devices.length > 0) {
@@ -101,11 +108,26 @@ export const EquipmentLayer = ({ data }: EquipmentLayerProps) => {
         );
       })}
 
-      <GridscopeDropdownLayer />
+      <EquipmentControlLayer />
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={EquipmentLayerLineStyles} />
       </Source>
+
+      {(isLoading || isRefetching) && (
+        <MapNetworkStatus>Loading...</MapNetworkStatus>
+      )}
+      {!isLoading &&
+        !isRefetching &&
+        isSuccess &&
+        data?.devices.length === 0 && (
+          <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
+        )}
+      {isError && (
+        <MapNetworkStatus>
+          An Error Occurred. Please share logs with the developer team.
+        </MapNetworkStatus>
+      )}
     </>
   );
 };
