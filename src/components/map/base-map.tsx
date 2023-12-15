@@ -12,12 +12,6 @@ import { NetworkLayer } from "@/components/map/map-layers/network-layer.tsx";
 import { MapBboxContext } from "@/state/providers/map/bbox-provider.tsx";
 import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
 
-// import { useGetEquipmentLayer } from "@/api/hooks/maps/user-get-equipment-layer.ts";
-// import { CommonLayerPostBody } from "@/api/types/types.ts";
-// import debounce from "lodash/debounce";
-// import mapboxgl from "mapbox-gl";
-// import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
-
 const MapBoxGL = import("mapbox-gl");
 
 export const BaseMap = () => {
@@ -25,14 +19,7 @@ export const BaseMap = () => {
     useMapUrlState();
   const { validatedLayerUrlState } = useLayerControlUrlState();
   const ref = useRef<MapRef | null>(null);
-
-  // const [, setBbox] = useState<CommonLayerPostBody | null>(null);
-
-  // network calls for all the layers
-  // const { dataWithLagBuffer, isError, isLoading, isRefetching, isSuccess } =
-  //   useGetNetworkLayer(bbox);
   const { bbox, setDebouncedBbox } = useContext(MapBboxContext);
-  // network calls for all the layers in parallel
   useGetNetworkLayer(bbox);
   useGetGridScopeLayer(bbox);
 
