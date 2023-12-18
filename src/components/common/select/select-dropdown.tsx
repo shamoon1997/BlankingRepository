@@ -33,15 +33,11 @@ const SelectDropdown: React.FC<Props> = ({
     return null;
   }
 
-  console.log(validatedLayerUrlState);
-  console.log(validatedLayerUrlState[searchParamKey], "hmmm");
-
   return (
     <Select.Root
       onValueChange={(value: string) => {
         if (!searchParamKey?.length) return;
         searchParams.set(searchParamKey, value);
-        console.log(value);
 
         setSearchParams(searchParams, {
           replace: true,

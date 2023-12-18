@@ -5,28 +5,62 @@ import { usePoleContext } from "@/state/providers";
 
 type PoleListProps = {
   data: BaseLayerResponse | undefined;
+  sortBy: string;
 };
 
-export const PolesList = ({ data }: PoleListProps) => {
+export const PolesList = ({ data, sortBy }: PoleListProps) => {
   const { poleIds } = usePoleContext();
 
   const checkPoleClicked = (hardwareId: string) => {
     return poleIds.find((hardware_id) => hardware_id === hardwareId);
   };
-  const clickedPoles = data?.devices?.filter((device: Device) =>
-    checkPoleClicked(device.hardware_id),
+
+  const sortDevices = (devices: Device[] | undefined) => {
+    if (!devices) return [];
+
+    // Use sort based on the sortBy prop
+    switch (sortBy) {
+      case "sr-no":
+        return devices
+          .slice()
+          .sort((a, b) => a.device_sn.localeCompare(b.device_sn));
+      case "last-seen":
+        return devices
+          .slice()
+          .sort(
+            (a, b) =>
+              new Date(a.last_health_report).getTime() -
+              new Date(b.last_health_report).getTime(),
+          );
+      case "connectivity":
+        return devices.slice().sort((a, b) => a.online - b.online);
+      case "lifecycle":
+        return devices.slice().sort((a, b) => a.network_mode - b.network_mode);
+
+      default:
+        return devices;
+    }
+  };
+
+  const clickedPoles = sortDevices(
+    data?.devices?.filter((device: Device) =>
+      checkPoleClicked(device.hardware_id),
+    ),
   );
-  const nonClickedPoles = data?.devices?.filter(
-    (device: Device) => !checkPoleClicked(device.hardware_id),
+
+  const nonClickedPoles = sortDevices(
+    data?.devices?.filter(
+      (device: Device) => !checkPoleClicked(device.hardware_id),
+    ),
   );
 
   return (
     <ScrollArea.Root className="h-full w-full overflow-hidden">
       <ScrollArea.Viewport className="h-full w-full pb-3">
-        {clickedPoles?.map((device: Device, index: number) => (
+        {clickedPoles.map((device: Device, index: number) => (
           <PoleItem key={index} device={device} />
         ))}
-        {nonClickedPoles?.map((device: Device, index: number) => (
+        {nonClickedPoles.map((device: Device, index: number) => (
           <PoleItem key={index} device={device} />
         ))}
       </ScrollArea.Viewport>

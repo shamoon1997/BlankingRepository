@@ -4,9 +4,13 @@ import * as RadioGroup from "@radix-ui/react-radio-group";
 import { useState } from "react";
 import { PoleSorterItem } from "./pole-sorter-radio-item";
 
-export const ListSorter = () => {
+type ListSorterProps = {
+  sortBy: string;
+  setSortBy: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export const ListSorter = ({ sortBy, setSortBy }: ListSorterProps) => {
   const [showSortBy, setShowSortBy] = useState(false);
-  const [sortBy, setSortBy] = useState<string>("sr-no");
 
   const ref = useClickAway<HTMLDivElement>((e) => {
     const target = e.target as HTMLDivElement;
@@ -15,6 +19,19 @@ export const ListSorter = () => {
     }
     setShowSortBy(false);
   });
+
+  const getValueOnWhichSorted = (sortBy: string) => {
+    switch (sortBy) {
+      case "sr-no":
+        return "Serial Number";
+      case "last-seen":
+        return "Last Seen";
+      case "connectivity":
+        return "Connectivity";
+      case "lifecycle":
+        return "Lifecycle";
+    }
+  };
 
   return (
     <div className="relative flex cursor-pointer items-center gap-2  p-4 pt-3 text-xs text-primary">
@@ -28,7 +45,7 @@ export const ListSorter = () => {
           Sort by{" "}
         </span>
         <span id="sort-sr-no" className="font-bold">
-          Serial No.
+          {getValueOnWhichSorted(sortBy)}
         </span>
 
         {showSortBy && (
@@ -45,7 +62,8 @@ export const ListSorter = () => {
             <PoleSorterItem value="connectivity" label="Connectivity" />
             <PoleSorterItem value="last-seen" label="Last Seen" />
             <PoleSorterItem value="lifecycle" label="Lifecycle" />
-            <PoleSorterItem value="circuit" label="Circuit" />
+            {/*TODO Maybe uncomment in future*/}
+            {/* <PoleSorterItem value="circuit" label="Circuit" /> */}
           </RadioGroup.Root>
         )}
       </div>
