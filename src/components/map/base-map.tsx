@@ -72,10 +72,10 @@ export const BaseMap = () => {
       minZoom={12}
       onMoveEnd={(e) => {
         setDebouncedBbox(e);
-        searchParams.set("lat", String(e.viewState.latitude));
-        searchParams.set("lng", String(e.viewState.longitude));
+        searchParams.set("lat", String(e.viewState.latitude.toPrecision(8)));
+        searchParams.set("lng", String(e.viewState.longitude.toPrecision(8)));
         searchParams.set("bearing", String(e.viewState.bearing));
-        searchParams.set("zoom", String(e.viewState.zoom));
+        searchParams.set("zoom", String(e.viewState.zoom.toPrecision(4)));
         setSearchParams(searchParams, {
           replace: true,
           preventScrollReset: true,
