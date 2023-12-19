@@ -58,10 +58,10 @@ export const PolesList = ({ data, sortBy }: PoleListProps) => {
     <ScrollArea.Root className="h-full w-full overflow-hidden">
       <ScrollArea.Viewport className="h-full w-full pb-3">
         {clickedPoles.map((device: Device, index: number) => (
-          <PoleItem key={index} device={device} />
+          <PoleItem key={index} device={device} devices={data?.devices} />
         ))}
         {nonClickedPoles.map((device: Device, index: number) => (
-          <PoleItem key={index} device={device} />
+          <PoleItem key={index} device={device} devices={data?.devices} />
         ))}
       </ScrollArea.Viewport>
       <ScrollArea.Scrollbar className="mr-1 w-1 pb-3" orientation="vertical">

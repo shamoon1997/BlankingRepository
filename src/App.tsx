@@ -1,5 +1,11 @@
 import { Route, Routes, useLocation } from "react-router-dom";
-import { CallbackPage, DeploymentPage, HomePage, NotFoundPage } from "./pages";
+import {
+  CallbackPage,
+  DeploymentPage,
+  HomePage,
+  NotFoundPage,
+  PoleViewPage,
+} from "./pages";
 import { useAuth0 } from "@auth0/auth0-react";
 import { ErrorBoundary } from "react-error-boundary";
 import { FallBackPage } from "./pages/fall-back-page.tsx";
@@ -19,6 +25,10 @@ const RouteMappings = [
   {
     path: AppRoutes.deployments,
     element: <DeploymentPage />,
+  },
+  {
+    path: AppRoutes.poleView,
+    element: <PoleViewPage />,
   },
   {
     path: AppRoutes.notFound,

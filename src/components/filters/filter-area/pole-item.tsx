@@ -1,13 +1,16 @@
 import { PoleViewButton } from "./pole-view-button";
 import { Device } from "@/api/types/types.ts";
 import { usePoleContext } from "@/state/providers";
+import { useNavigate } from "react-router-dom";
 
 type poleItemProps = {
   device: Device;
+  devices: Device[] | undefined;
 };
 
-export const PoleItem = ({ device }: poleItemProps) => {
+export const PoleItem = ({ device, devices }: poleItemProps) => {
   const { poleIds, setPoleIds } = usePoleContext();
+  const navigate = useNavigate();
 
   const checkPoleClicked = (hardwareId: string) => {
     return poleIds.find((poleId) => poleId === hardwareId);
@@ -25,12 +28,27 @@ export const PoleItem = ({ device }: poleItemProps) => {
           ? "border-[0.3px] border-y-[#DFDFDF] bg-[#F2F2F2]"
           : ""
       }`}
-      onClick={() => handlePoleClicked(device?.hardware_id)}
     >
-      <p className="text-xs font-semibold text-primary">
-        {device?.hardware_id?.slice(0, 6)} • {device?.device_sn}
-      </p>
-      <PoleViewButton />
+      <div onClick={() => handlePoleClicked(device?.hardware_id)}>
+        <p className="text-xs font-semibold text-primary">
+          {device?.hardware_id?.slice(0, 6)} • {device?.device_sn}
+        </p>
+      </div>
+      <PoleViewButton
+        onClick={() => {
+          if (checkPoleClicked(device?.hardware_id)) {
+            console.log("poleIds", poleIds);
+
+            if (poleIds.length > 0) {
+              const queryParams = poleIds
+                .map((poleId) => `deviceId=${poleId}`)
+                .join("&");
+              navigate(`/dashboard/poleView?${queryParams}`);
+            }
+          }
+          console.log("onClicked");
+        }}
+      />
     </div>
   );
 };
