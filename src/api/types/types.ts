@@ -17,6 +17,33 @@ export interface BaseLayerResponse {
   devices: Device[];
 }
 
+export interface HeatmapLayerResponse extends BaseLayerResponse {
+  devices: HeatmapDevice[];
+  heatmap_metrics_min_max: HeatmapMetricsMinMax;
+}
+
+export interface HeatmapDevice extends Device {
+  heatmap_metrics: HeatmapMetrics;
+}
+
+export interface HeatmapMetrics {
+  vibrometer?: number;
+  temperature?: number;
+  electrometer?: number;
+  network?: number;
+}
+
+export interface HeatmapMetricsMinMax {
+  min_vibrometer: number;
+  max_vibrometer: number;
+  min_temperature: number;
+  max_temperature: number;
+  min_electrometer: number;
+  max_electrometer: number;
+  min_network: number;
+  max_network: number;
+}
+
 export interface Summary {
   total: number;
   offline: number;

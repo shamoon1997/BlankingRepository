@@ -56,6 +56,14 @@ export default {
         poleViewGreed: "#2CB369",
         poleViewBlue: "#3569E7",
         poleViewTextLight: "#16161680",
+
+        // heatmap
+        "heatmap-range-1": "#5C88FF",
+        "heatmap-range-2": "#5546FF",
+        "heatmap-range-3": "#A974FF",
+        "heatmap-range-4": "#D92AF6",
+        "heatmap-range-5": "#FF238D",
+        "heatmap-range-6": "#FF0000",
       },
       backgroundColor: {
         "map-zoomed-box": "rgba(22, 22, 22, 0.70)",

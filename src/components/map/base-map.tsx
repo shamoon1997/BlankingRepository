@@ -16,6 +16,8 @@ import {
   useMapboxBbox,
   useMapboxBboxActions,
 } from "@/state/map/bbox-store.tsx";
+import { HeatMapLayer } from "@/components/map/map-layers/heat-map-layer.tsx";
+import { useGetHeatMapLayer } from "@/api/hooks/maps/user-get-heat-map-layer.ts";
 
 const MapBoxGL = import("mapbox-gl");
 
@@ -31,6 +33,15 @@ export const BaseMap = () => {
   useGetNetworkLayer(bbox);
   useGetGridScopeLayer(bbox);
   useGetEquipmentLayer(bbox);
+  useGetHeatMapLayer(
+    bbox
+      ? {
+          ...bbox,
+          t1: "2023-11-24 21:00:00",
+          t2: "2023-11-24 21:30:00",
+        }
+      : null,
+  );
 
   useEffect(() => {
     const zoom = ref.current?.getZoom();
@@ -95,11 +106,7 @@ export const BaseMap = () => {
       <FullscreenControl position="bottom-left" />
       <NavigationControl position="bottom-left" showCompass />
       {validatedLayerUrlState.layer === "gridscope" && <GridScopeLayer />}
-      {/*//TODO: re-enable when calendar is done this week*/}
-      {/*{validatedLayerUrlState.layer === "heatmap" && (*/}
-      {/*  <HeatMapLayer key="heatmap" />*/}
-      {/*)}*/}
-      {/*  // TODO: re-enable when multi select drop down is done this week */}
+      {validatedLayerUrlState.layer === "heatmap" && <HeatMapLayer />}
       {validatedLayerUrlState.layer === "equipment" && <EquipmentLayer />}
       {validatedLayerUrlState.layer === "network" && <NetworkLayer />}
     </Map>
