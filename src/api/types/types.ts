@@ -38,3 +38,5 @@ export interface Device {
   neighbors: string[];
   equipment: string[];
 }
+
+export type EquipmentsListResponse = string[];

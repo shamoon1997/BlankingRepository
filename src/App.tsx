@@ -40,7 +40,7 @@ function App() {
   }
 
   return (
-    <div className={`${showSideBar ? "flex" : ""}`}>
+    <div className={`${showSideBar ? "flex" : null}`}>
       {showSideBar && <SideNavigation />}
       <ErrorBoundary FallbackComponent={FallBackPage}>
         <Routes>

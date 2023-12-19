@@ -5,7 +5,7 @@ import { Layer, Marker, Source } from "react-map-gl";
 import { GridscopeControlLayer } from "../dropdown-layers/gridscope-control-layer.tsx";
 import { Device } from "@/api/types/types.ts";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { MapZoomedBoxContainer } from "@/components/map/map-zoomed-box";
 import {
   HoverPinIcon,
@@ -17,7 +17,7 @@ import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 import { LegendRange } from "@/components";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
-import { MapBboxContext } from "@/state/providers/map/bbox-provider.tsx";
+import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 
 const GridScopeLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -29,7 +29,7 @@ const GridScopeLayerLineStyles: mapboxgl.LinePaint = {
 export const GridScopeLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const { validatedLayerUrlState } = useLayerControlUrlState();
-  const { bbox } = useContext(MapBboxContext);
+  const bbox = useMapboxBbox();
 
   const {
     dataWithLagBuffer: data,

@@ -4,7 +4,7 @@ import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
 import { Device } from "@/api/types/types";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { MapZoomedBoxContainer } from "@/components/map/map-zoomed-box";
 import {
   HoverPinIcon,
@@ -16,7 +16,7 @@ import { LegendContainer } from "@/components";
 import { LegendItem } from "@/components/legend/legend-item/legend-item";
 import { stripZeros } from "@/utils/strings/strip-zeros";
 import { NetworkControlLayer } from "@/components/map/dropdown-layers/network-control-layer";
-import { MapBboxContext } from "@/state/providers/map/bbox-provider.tsx";
+import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
 
@@ -29,7 +29,7 @@ const NetworkLayerLineStyles: mapboxgl.LinePaint = {
 
 export const NetworkLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
-  const { bbox } = useContext(MapBboxContext);
+  const bbox = useMapboxBbox();
   const {
     dataWithLagBuffer: data,
     isError,

@@ -5,9 +5,9 @@ import { Layer, Marker, Source } from "react-map-gl";
 import { MapZoomedBoxContainer } from "../map-zoomed-box";
 import { Device } from "@/api/types/types.ts";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { HeatMapControlLayer } from "@/components/map/dropdown-layers/heatmap-control-layer";
-import { MapBboxContext } from "@/state/providers/map/bbox-provider.tsx";
+import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetHeatMapLayer } from "@/api/hooks/maps/user-get-heat-map-layer.ts";
 
@@ -20,7 +20,7 @@ const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
 
 export const HeatMapLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
-  const { bbox } = useContext(MapBboxContext);
+  const bbox = useMapboxBbox();
 
   const {
     dataWithLagBuffer: data,

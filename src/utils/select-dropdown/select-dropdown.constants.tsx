@@ -53,14 +53,14 @@ export const layerOptions: SelectDropdownType<LayerPickerOptionsType>[] = [
   //     </TextLimiter>
   //   ),
   // },
-  // {
-  //   value: "equipment",
-  //   child: (
-  //     <TextLimiter>
-  //       <Select.ItemText>Equipment</Select.ItemText>
-  //     </TextLimiter>
-  //   ),
-  // },
+  {
+    value: "equipment",
+    child: (
+      <TextLimiter>
+        <Select.ItemText>Equipment</Select.ItemText>
+      </TextLimiter>
+    ),
+  },
 ];
 export const gridScopeOptions: SelectDropdownType<GridscopeOptionsType>[] = [
   {
