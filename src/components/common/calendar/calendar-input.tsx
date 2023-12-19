@@ -1,162 +1,118 @@
-import { CalendarIcon, ChevronIcon } from "@/assets";
-import { dateFormats, defaultDateDropdownOptions } from "@/utils/date";
-import { formateDate, subtractFromCurrentDate } from "@/utils/date";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { ChevronIcon, ThickCalendarIcon, TimeIcon } from "@/assets";
 import * as Tabs from "@radix-ui/react-tabs";
-import React, { useEffect, useState } from "react";
-import { DateRange } from "react-day-picker";
-import { useSearchParams } from "react-router-dom";
-import { DateRangeCalendar } from "..";
-
-enum RangeParams {
-  from = "from",
-  to = "to",
-  custom = "custom",
-  type = "type",
-}
+import React, { useState } from "react";
+import { FilterCalendar } from "@/components/filters/calendar/filter-calendar.tsx";
+import { format, fromUnixTime } from "date-fns";
+import { useCalendarUrlState } from "@/hooks/calendar";
+import { toSentenceCase } from "js-convert-case";
+import { CustomTimeRanges } from "@/components/filters/calendar/custom-time-ranges.tsx";
 
 const CalendarInput: React.FC = () => {
-  const [range, setRange] = useState<DateRange | undefined>(undefined);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { validatedCalendarUrlState } = useCalendarUrlState();
+  const [currentTab, setCurrentTab] = useState<"custom" | "default">("default");
+  const [open, setOpen] = useState(false);
 
-  const defaultFilter = searchParams.get(RangeParams.type);
+  let from;
+  if (typeof validatedCalendarUrlState.from === "number") {
+    from = format(
+      fromUnixTime(validatedCalendarUrlState.from),
+      "MM/dd/yyyy hh:mm a",
+    );
+  } else {
+    from = toSentenceCase(validatedCalendarUrlState.from);
+  }
 
-  useEffect(() => {
-    const fromDate = Number(searchParams.get(RangeParams.from));
-    const toDate = Number(searchParams.get(RangeParams.to));
-    const isCustom = searchParams.get(RangeParams.custom) === "true";
+  let to;
+  if (typeof validatedCalendarUrlState.to === "number") {
+    to = format(
+      fromUnixTime(validatedCalendarUrlState.to),
+      "MM/dd/yyyy hh:mm a",
+    );
+  } else {
+    to = toSentenceCase(validatedCalendarUrlState.to);
+  }
 
-    if (fromDate && toDate && isCustom)
-      return setRange({ from: new Date(+fromDate), to: new Date(+toDate) });
-
-    if (!isCustom) setRange(undefined);
-  }, [searchParams]);
-
-  const fromDate = range?.from && formateDate(range.from, dateFormats.ddmmyyyy);
-  const toDate = range?.to && formateDate(range.to, dateFormats.ddmmyyyy);
   return (
     <>
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger>
-          <div className="inline-flex max-h-[35px] min-h-[35px] w-full min-w-[200px] cursor-pointer items-center rounded-lg border border-slate-300 bg-white py-1">
-            <div className="flex w-full items-center px-0">
-              <div className="px-2 [&_svg]:h-[15px] [&_svg]:w-[15px]">
-                <CalendarIcon />
-              </div>
+      {/*trigger*/}
+      <div
+        onClick={() => setOpen(!open)}
+        className={`flex  shrink-0 flex-col rounded border-[0.5px] border-default   bg-white font-mont tracking-[-0.5px]  shadow-dropdown `}
+      >
+        <div className="flex h-[38px] min-h-[38px] flex-1 cursor-pointer items-center pl-2 pr-2">
+          <div className="mr-[11px] [&_svg]:h-[15px] [&_svg]:w-[15px]">
+            <TimeIcon />
+          </div>
 
-              {defaultFilter?.length && (
-                <div>
-                  <p className="h-[12px] text-left text-[8px] font-semibold text-blue-400">
-                    {
-                      defaultDateDropdownOptions?.find(
-                        (item) => item?.type === defaultFilter,
-                      )?.title
-                    }
-                  </p>
-                  <p className="text-left text-[10px]">
-                    {formateDate(new Date(), dateFormats.ddmmyyyy)}
-                  </p>
-                </div>
-              )}
-
-              {!defaultFilter?.length && (
-                <div>
-                  <p className="h-[12px] text-left text-[8px] font-semibold text-blue-400">
-                    From
-                  </p>
-                  <p className="min-w-[64px] text-[10px]">
-                    {fromDate ?? "DD/MM/YYYY"}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {!defaultFilter?.length && (
-              <div className="px-4">
-                <p className="h-[12px] text-left text-[8px] font-semibold text-blue-400">
-                  To
-                </p>
-                <p className="min-w-[64px] text-[10px]">
-                  {toDate ?? "DD/MM/YYYY"}
-                </p>
-              </div>
-            )}
-            <div className="px-2 [&_svg]:rotate-180">
-              <ChevronIcon />
+          <div className="flex flex-col self-start">
+            <p className="tracking-[-0.4px]; h-[12px] text-left text-[10px] font-semibold text-primary-blue">
+              From
+            </p>
+            <div className="flex items-center gap-1 font-normal text-primary-hard">
+              <p className="w-[130px] text-[12px]">{from ?? "DD/MM/YYYY"}</p>
+              <ThickCalendarIcon className="mb-[1px]  w-[9px]" />
             </div>
           </div>
-        </DropdownMenu.Trigger>
 
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content className="z-[2] w-full min-w-[--radix-dropdown-menu-trigger-width] border border-slate-200 border-t-transparent bg-white shadow-xl">
-            <Tabs.Root defaultValue="1">
-              <Tabs.List className="flex justify-center gap-4 border-b-2 border-slate-200 pt-2">
+          <div className="ml-[17px] flex flex-col self-start">
+            <p className="tracking-[-0.4px]; h-[12px] text-left text-[10px] font-semibold text-primary-blue">
+              To
+            </p>
+            <div className="flex items-center gap-1 font-normal  text-primary-hard">
+              <p className="w-[130px] text-[12px]">{to ?? "DD/MM/YYYY"}</p>
+              <ThickCalendarIcon className="mb-[1px]  w-[9px]" />
+            </div>
+          </div>
+
+          <div className="self-start">
+            <div className="h-[14px]" />
+            <div className="ml-3 mr-2 h-4 w-4 shrink-0">
+              <ChevronIcon className={`${open ? "rotate-0" : "rotate-180"}`} />
+            </div>
+          </div>
+        </div>
+        {open && (
+          <div className="w-full rounded bg-white">
+            <Tabs.Root
+              onValueChange={(e) => {
+                setCurrentTab(e as "default" | "custom");
+              }}
+              value={currentTab}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Tabs.List className="flex border-b-[0.5px] border-slate-200 pt-2">
                 <Tabs.Trigger
-                  className="text-[8px] data-[state=active]:border-b-2 data-[state=active]:border-blue-400 data-[state=active]:text-blue-400"
-                  value="1"
+                  className="group flex-1 justify-center"
+                  value="default"
                 >
-                  Default
+                  <span className="inline-block h-[22px] min-w-min border-b-[2px] border-transparent text-[11px] font-semibold group-data-[state=active]:border-b-[1.5px] group-data-[state=active]:border-primary-blue group-data-[state=active]:text-primary-blue">
+                    Default
+                  </span>
                 </Tabs.Trigger>
                 <Tabs.Trigger
-                  className="text-[8px] data-[state=active]:border-b-2 data-[state=active]:border-blue-400 data-[state=active]:text-blue-400"
-                  value="2"
+                  className="group flex-1 justify-center"
+                  value="custom"
                 >
-                  Custom
+                  <span className="inline-block h-[22px] min-w-min border-b-[2px] border-transparent text-[11px] font-semibold  group-data-[state=active]:border-b-[1.5px] group-data-[state=active]:border-primary-blue group-data-[state=active]:text-primary-blue">
+                    Custom
+                  </span>
                 </Tabs.Trigger>
               </Tabs.List>
-              <Tabs.Content className="mb-0 px-[8px] py-[7px] pb-0" value="1">
-                <ul>
-                  <form
-                    onChange={(e) => {
-                      const target = e.target as HTMLInputElement;
-                      const label = target.ariaLabel;
-
-                      const value: Duration = JSON.parse(
-                        target.value,
-                      ) as Duration;
-
-                      subtractFromCurrentDate(value);
-
-                      searchParams.delete(RangeParams.from);
-                      searchParams.delete(RangeParams.to);
-                      searchParams.delete(RangeParams.custom);
-
-                      searchParams.set(RangeParams.type, `${label}`);
-                      setSearchParams(searchParams);
-                    }}
-                  >
-                    {defaultDateDropdownOptions.map((option) => {
-                      return (
-                        <li
-                          className="flex items-center gap-2 py-[5px] text-[10px]"
-                          key={option.title}
-                        >
-                          <input
-                            type="radio"
-                            value={JSON.stringify(option.duration)}
-                            name="custom-time"
-                            defaultChecked={
-                              searchParams.get("type") === option.type
-                            }
-                            aria-label={option.type}
-                          />
-                          <p>{option.title}</p>
-                        </li>
-                      );
-                    })}
-                  </form>
-                </ul>
+              <Tabs.Content value="default">
+                <CustomTimeRanges onApply={() => setOpen(false)} />
               </Tabs.Content>
-              <Tabs.Content
-                className="grid place-content-center px-[8px] py-[7px]"
-                value="2"
-              >
-                <DateRangeCalendar range={range} setRange={setRange} />
+              <Tabs.Content value="custom">
+                <div className="px-[8px] py-[7px]">
+                  <FilterCalendar onApply={() => setOpen(false)} />
+                </div>
               </Tabs.Content>
             </Tabs.Root>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
+          </div>
+        )}
+      </div>
+
+      {/*content*/}
+      {}
     </>
   );
 };

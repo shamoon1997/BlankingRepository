@@ -53,7 +53,7 @@ const SelectDropdown: React.FC<Props> = ({
         className="inline-flex h-[38px] w-full cursor-pointer items-center justify-between rounded-md border-[0.5px] border-default bg-white px-2 pl-3 font-mont text-sm leading-none text-primary-hard shadow-dropdown outline-none data-[placeholder]:text-primary-hard"
         aria-label="dropdown"
       >
-        <div className="flex min-w-0 items-center font-semibold">
+        <div className="flex min-w-0 items-center text-xs font-semibold">
           {triggerIcon}
           <TextLimiter>
             <Select.Value className="flex-1" placeholder={placeholder} />
@@ -76,7 +76,7 @@ const SelectDropdown: React.FC<Props> = ({
               {options?.map((item) => {
                 return (
                   <SelectItem
-                    className="flex cursor-pointer rounded-[5px] border-none p-2 text-xs outline-none hover:bg-[#F2F2F2] data-[state=checked]:bg-[#F7F7F7]"
+                    className="flex cursor-pointer rounded-[5px] border-none p-2 text-[11px] outline-none hover:bg-[#F2F2F2] data-[state=checked]:bg-[#F7F7F7]"
                     key={item.value}
                     value={item.value}
                   >

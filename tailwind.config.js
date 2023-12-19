@@ -3,6 +3,12 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontWeight: {
+        normal: "600",
+        semibold: "700",
+        bold: "800",
+        black: "950",
+      },
       fontFamily: {
         mont: ["Mont", "serif"],
       },
@@ -29,6 +35,8 @@ export default {
         sidebar: "#3B3C4F",
         "btn-primary": "#FF176B",
         "btn-secondary": "#89E3B4",
+
+        "primary-blue": "#628FEE",
 
         // POLE STATUS COLORS
         offline: "#DF4C2B",
