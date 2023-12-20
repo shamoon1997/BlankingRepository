@@ -8,7 +8,7 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 
 export const FallBackPage: React.FC<FallBackPageProps> = ({ error }) => {
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center">
+    <div className="flex flex-1 flex-col items-center justify-center">
       <div className="mb-6 font-mont text-2xl font-bold">
         Sorry Application Error!
       </div>

@@ -1,14 +1,100 @@
-export const dateFormats = {
-  weekMini: "EEEEE", // S, M, T, W .....
-  ddmmyyyy: "dd/MM/yyyy", // Day / Month / Year
-};
+import { sub } from "date-fns";
 
 export const defaultDateDropdownOptions = [
-  { title: "Last 30 minutes", duration: { minutes: 30 }, type: "last_30_mins" },
-  { title: "Last hour", duration: { hours: 1 }, type: "last_hour" },
-  { title: "Last 3 hours", duration: { hours: 3 }, type: "last_3_hours" },
-  { title: "Last 6 hours", duration: { hours: 6 }, type: "last_6_hours" },
-  { title: "Last 12 hours", duration: { hours: 12 }, type: "last_12_hours" },
-  { title: "Today", duration: { hours: 24 }, type: "today" },
-  { title: "Last 7 days", duration: { days: 7 }, type: "last_7_days" },
+  {
+    title: "Last 5m",
+    type: "last-5m",
+    getDates: () => {
+      return {
+        from: sub(Date.now(), {
+          minutes: 5,
+        }),
+        to: Date.now(),
+      };
+    },
+  },
+  {
+    title: "Last 15m",
+    getDates: () => {
+      return {
+        from: sub(Date.now(), {
+          minutes: 15,
+        }),
+        to: Date.now(),
+      };
+    },
+    type: "last-15m",
+  },
+  {
+    title: "Last 30m",
+    getDates: () => {
+      return {
+        from: sub(Date.now(), {
+          minutes: 30,
+        }),
+        to: Date.now(),
+      };
+    },
+    type: "last-30m",
+  },
+  {
+    title: "Last 1hr",
+    getDates: () => {
+      return {
+        from: sub(Date.now(), {
+          hours: 1,
+        }),
+        to: Date.now(),
+      };
+    },
+    type: "last-1hr",
+  },
+  {
+    title: "Last 3hrs",
+    getDates: () => {
+      return {
+        from: sub(Date.now(), {
+          hours: 3,
+        }),
+        to: Date.now(),
+      };
+    },
+    type: "last-3hrs",
+  },
+  {
+    title: "Last 6hrs",
+    getDates: () => {
+      return {
+        from: sub(Date.now(), {
+          hours: 6,
+        }),
+        to: Date.now(),
+      };
+    },
+    type: "last-6hrs",
+  },
+  {
+    title: "Last 12hrs",
+    getDates: () => {
+      return {
+        from: sub(Date.now(), {
+          hours: 12,
+        }),
+        to: Date.now(),
+      };
+    },
+    type: "last-12hrs",
+  },
+  {
+    title: "Last 24hrs",
+    getDates: () => {
+      return {
+        from: sub(Date.now(), {
+          hours: 24,
+        }),
+        to: Date.now(),
+      };
+    },
+    type: "last-24hrs",
+  },
 ];

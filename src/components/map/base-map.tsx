@@ -5,12 +5,19 @@ import Map, {
   NavigationControl,
 } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
 import { GridScopeLayer } from "@/components";
 import { NetworkLayer } from "@/components/map/map-layers/network-layer.tsx";
-import { MapBboxContext } from "@/state/providers/map/bbox-provider.tsx";
 import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
+import { EquipmentLayer } from "@/components/map/map-layers/equipment-layer.tsx";
+import { useGetEquipmentLayer } from "@/api/hooks/maps/use-get-equipment-layer.ts";
+import {
+  useMapboxBbox,
+  useMapboxBboxActions,
+} from "@/state/map/bbox-store.tsx";
+import { HeatMapLayer } from "@/components/map/map-layers/heat-map-layer.tsx";
+import { useGetHeatMapLayer } from "@/api/hooks/maps/user-get-heat-map-layer.ts";
 
 const MapBoxGL = import("mapbox-gl");
 
@@ -20,12 +27,37 @@ export const BaseMap = () => {
   const { validatedLayerUrlState } = useLayerControlUrlState();
   const ref = useRef<MapRef | null>(null);
 
-  const { bbox, setDebouncedBbox } = useContext(MapBboxContext);
+  const bbox = useMapboxBbox();
+  const { setDebouncedBbox } = useMapboxBboxActions();
   // network calls for all the layers in parallel
   useGetNetworkLayer(bbox);
   useGetGridScopeLayer(bbox);
+  useGetEquipmentLayer(bbox);
+  useGetHeatMapLayer(
+    bbox
+      ? {
+          ...bbox,
+          t1: "2023-11-24 21:00:00",
+          t2: "2023-11-24 21:30:00",
+        }
+      : null,
+  );
 
   useEffect(() => {
+    const zoom = ref.current?.getZoom();
+    const bearing = ref.current?.getBearing();
+    const lat = ref.current?.getCenter().lat;
+    const lng = ref.current?.getCenter().lng;
+
+    // flyTo disable drag interaction, so we want only run if flyTo values are different
+    if (
+      zoom === validatedMapUrlState.zoom &&
+      bearing === validatedMapUrlState.bearing &&
+      lat === validatedMapUrlState.lat &&
+      lng === validatedMapUrlState.lng
+    ) {
+      return;
+    }
     ref.current?.flyTo({
       bearing: validatedMapUrlState.bearing,
       center: {
@@ -51,10 +83,10 @@ export const BaseMap = () => {
       minZoom={12}
       onMoveEnd={(e) => {
         setDebouncedBbox(e);
-        searchParams.set("lat", String(e.viewState.latitude));
-        searchParams.set("lng", String(e.viewState.longitude));
+        searchParams.set("lat", String(e.viewState.latitude.toPrecision(8)));
+        searchParams.set("lng", String(e.viewState.longitude.toPrecision(8)));
         searchParams.set("bearing", String(e.viewState.bearing));
-        searchParams.set("zoom", String(e.viewState.zoom));
+        searchParams.set("zoom", String(e.viewState.zoom.toPrecision(4)));
         setSearchParams(searchParams, {
           replace: true,
           preventScrollReset: true,
@@ -73,20 +105,10 @@ export const BaseMap = () => {
     >
       <FullscreenControl position="bottom-left" />
       <NavigationControl position="bottom-left" showCompass />
-      {validatedLayerUrlState.layer === "gridscope" && (
-        <GridScopeLayer key="gridscope" />
-      )}
-      {/*//TODO: re-enable when calendar is done this week*/}
-      {/*{validatedLayerUrlState.layer === "heatmap" && (*/}
-      {/*  <HeatMapLayer key="heatmap" />*/}
-      {/*)}*/}
-      {/*  // TODO: re-enable when multi select drop down is done this week */}
-      {/*{validatedLayerUrlState.layer === "equipment" && (*/}
-      {/*  <EquipmentLayer key="equipment" />*/}
-      {/*)}*/}
-      {validatedLayerUrlState.layer === "network" && (
-        <NetworkLayer key="network" />
-      )}
+      {validatedLayerUrlState.layer === "gridscope" && <GridScopeLayer />}
+      {validatedLayerUrlState.layer === "heatmap" && <HeatMapLayer />}
+      {validatedLayerUrlState.layer === "equipment" && <EquipmentLayer />}
+      {validatedLayerUrlState.layer === "network" && <NetworkLayer />}
     </Map>
   );
 };

@@ -5,7 +5,7 @@ import { Layer, Marker, Source } from "react-map-gl";
 import { GridscopeControlLayer } from "../dropdown-layers/gridscope-control-layer.tsx";
 import { Device } from "@/api/types/types.ts";
 import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { MapZoomedBoxContainer } from "@/components/map/map-zoomed-box";
 import {
   HoverPinIcon,
@@ -13,12 +13,12 @@ import {
   OnlineIcon,
   SpottyIcon,
 } from "@/assets/pole-hover";
-import { MapsIcon } from "@/assets/pole-view";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
-import { LegendRange } from "@/components";
+import { LegendRange, MapStatusContainer } from "@/components";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
-import { MapBboxContext, usePoleContext } from "@/state/providers";
+import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
+import { MapsIcon } from "@/assets/pole-view";
 
 const GridScopeLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -30,8 +30,7 @@ const GridScopeLayerLineStyles: mapboxgl.LinePaint = {
 export const GridScopeLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const { validatedLayerUrlState } = useLayerControlUrlState();
-  const { bbox } = useContext(MapBboxContext);
-  const { poleIds, setPoleIds } = usePoleContext();
+  const bbox = useMapboxBbox();
 
   const {
     dataWithLagBuffer: data,
@@ -106,15 +105,16 @@ export const GridScopeLayer = () => {
     };
   }, [filteredData]);
 
-  const checkPoleClicked = (hardwareId: string) => {
-    return poleIds.find((hardware_id: string) => hardware_id === hardwareId);
-  };
-  const handlePoleClicked = (hardwareId: string) => {
-    if (poleIds.length < 3) {
-      // allowing only three poles to be clicked
-      setPoleIds([...poleIds, hardwareId]);
-    }
-  };
+
+    const checkPoleClicked = (hardwareId: string) => {
+        return poleIds.find((hardware_id: string) => hardware_id === hardwareId);
+    };
+    const handlePoleClicked = (hardwareId: string) => {
+        if (poleIds.length < 3) {
+            // allowing only three poles to be clicked
+            setPoleIds([...poleIds, hardwareId]);
+        }
+    };
 
   return (
     <>
@@ -147,25 +147,20 @@ export const GridScopeLayer = () => {
         }
 
         return (
-          <Marker
-            key={id}
-            latitude={lat}
-            longitude={lng}
-            onClick={() => handlePoleClicked(i.properties.hardware_id)}
-          >
+          <Marker key={id} latitude={lat} longitude={lng}  onClick={() => handlePoleClicked(i.properties.hardware_id)}>
             <div className="relative">
-              {checkPoleClicked(i.properties.hardware_id) && (
-                <div className="absolute z-10">
-                  <MapsIcon className="text-blue-400" />
-                </div>
-              )}
+                {checkPoleClicked(i.properties.hardware_id) && (
+                    <div className="absolute z-10">
+                        <MapsIcon className="text-blue-400" />
+                    </div>
+                )}
               <div
                 className={`drop-shadow-map-dot ${color} z-0 h-6 w-6 rounded-full border-2 border-solid border-white`}
               />
             </div>
 
             {(validatedMapUrlState.zoom > 16 ||
-              checkPoleClicked(i.properties.hardware_id)) && (
+                checkPoleClicked(i.properties.hardware_id)) && (
               <MapZoomedBoxContainer>
                 <div className="flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
                   <div className="flex items-center gap-[7px] font-medium">
@@ -192,25 +187,27 @@ export const GridScopeLayer = () => {
         <Layer id="line-layer" type="line" paint={GridScopeLayerLineStyles} />
       </Source>
 
-      <LegendRange
-        colors={["bg-online", "bg-offline", "bg-spotty"]}
-        labels={["Online", "Offline", "Spotty"]}
-      />
-
-      {(isLoading || isRefetching) && (
-        <MapNetworkStatus>Loading...</MapNetworkStatus>
-      )}
-      {!isLoading &&
-        !isRefetching &&
-        isSuccess &&
-        data?.devices.length === 0 && (
-          <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
+      <MapStatusContainer>
+        {(isLoading || isRefetching) && (
+          <MapNetworkStatus>Loading...</MapNetworkStatus>
         )}
-      {isError && (
-        <MapNetworkStatus>
-          An Error Occurred. Please share logs with the developer team.
-        </MapNetworkStatus>
-      )}
+        {!isLoading &&
+          !isRefetching &&
+          isSuccess &&
+          data?.devices.length === 0 && (
+            <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
+          )}
+        {isError && (
+          <MapNetworkStatus>
+            An Error Occurred. Please share logs with the developer team.
+          </MapNetworkStatus>
+        )}
+        <LegendRange
+          width={270}
+          colors={["bg-online", "bg-offline", "bg-spotty"]}
+          labels={["Online", "Offline", "Spotty"]}
+        />
+      </MapStatusContainer>
     </>
   );
 };
