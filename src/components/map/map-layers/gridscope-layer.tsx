@@ -110,7 +110,10 @@ export const GridScopeLayer = () => {
     return poleIds.find((hardware_id: string) => hardware_id === hardwareId);
   };
   const handlePoleClicked = (hardwareId: string) => {
-    setPoleIds([...poleIds, hardwareId]);
+    if (poleIds.length < 3) {
+      // allowing only three poles to be clicked
+      setPoleIds([...poleIds, hardwareId]);
+    }
   };
 
   return (

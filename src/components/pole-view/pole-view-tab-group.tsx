@@ -5,6 +5,7 @@ import PoleViewTabGroupContent from "./pole-view-tab-group-content";
 import { useGetPoleView } from "@/api/hooks/poles/use-get-pole-view";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 import { PoleViewResponse } from "@/api/types/types";
+import { usePoleContext } from "@/state/providers";
 
 const PoleViewTabGroup: React.FC = () => {
   const [deviceIds, setDeviceIds] = useState<string[]>();
@@ -12,12 +13,14 @@ const PoleViewTabGroup: React.FC = () => {
   const [poleDevices, setPoleDevices] = useState<
     PoleViewResponse | undefined
   >();
+  const { poleIds } = usePoleContext();
 
   console.log("data", data);
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
     // Get all values for the 'deviceId' key using getAll
+
     const deviceIdFromSearchParams = searchParams.getAll("deviceId");
 
     if (deviceIdFromSearchParams.length > 0) {
@@ -36,12 +39,13 @@ const PoleViewTabGroup: React.FC = () => {
     }
   }, [data, isLoading, error]);
 
+  useEffect(() => {
+    console.log("poleIds:", poleIds);
+  }, [poleIds]);
+
   return (
-    <>
-      <Tabs.Root
-        className="flex w-[300px] flex-col font-mont"
-        defaultValue={poleDevices && poleDevices[0]?.device_sn}
-      >
+    <div>
+      <Tabs.Root className="flex w-[300px] flex-col font-mont">
         <Tabs.List
           className="flex shrink-0 gap-[7px] border-b"
           aria-label="Manage your account"
@@ -62,24 +66,6 @@ const PoleViewTabGroup: React.FC = () => {
               </Tabs.Trigger>
             );
           })}
-
-          {/* <Tabs.Trigger
-            className="group relative flex h-[31px] flex-1 select-none flex-col justify-center rounded-t-md bg-poleViewRed px-[15px] text-[12px] leading-none text-white outline-none"
-            value="tab2"
-          >
-            <p className="mb-[1px] font-semibold">GS1245</p>
-            <p className="text-[6px]">15351421535142</p>
-            <div className="absolute left-0 h-[17px] w-[2px] rounded-r-lg bg-white group-data-[state=inactive]:hidden" />
-          </Tabs.Trigger> */}
-
-          {/* <Tabs.Trigger
-            className="group relative flex h-[31px] flex-1 select-none flex-col justify-center rounded-t-md bg-poleViewGreed px-[15px] text-[12px] leading-none text-white outline-none"
-            value="tab3"
-          >
-            <p className="mb-[1px] font-semibold">GS1245</p>
-            <p className="text-[6px]">15351421535142</p>
-            <div className="absolute left-0 h-[17px] w-[2px] rounded-r-lg bg-white group-data-[state=inactive]:hidden" />
-          </Tabs.Trigger> */}
         </Tabs.List>
         {poleDevices?.map((poleDevice) => {
           return (
@@ -91,21 +77,8 @@ const PoleViewTabGroup: React.FC = () => {
             </Tabs.Content>
           );
         })}
-
-        {/* <Tabs.Content
-          className="min-h-[613px] w-[958px] grow gap-x-[31px] rounded-md rounded-tl-none bg-white px-[26px] py-[22px] shadow-md"
-          value="tab2"
-        >
-          <PoleViewTabGroupContent />
-        </Tabs.Content> */}
-        {/* <Tabs.Content
-          className="min-h-[613px] w-[958px] grow gap-x-[31px] rounded-md rounded-tl-none bg-white px-[26px] py-[22px] shadow-md"
-          value="tab3"
-        >
-          <PoleViewTabGroupContent />
-        </Tabs.Content> */}
       </Tabs.Root>
-    </>
+    </div>
   );
 };
 

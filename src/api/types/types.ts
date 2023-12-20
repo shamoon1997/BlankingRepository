@@ -47,10 +47,6 @@ interface Neighbor {
   hardware_id: string;
 }
 
-interface InstallationPhoto {
-  url: string;
-}
-
 interface PoleView {
   online: number;
   hardware_id: string;
@@ -77,7 +73,7 @@ interface PoleView {
   temperature: number;
   electrometer: number;
   neighbors: Neighbor[];
-  installation_photos: InstallationPhoto[];
+  installation_photos: string[];
 }
 export type poleView = PoleView;
 

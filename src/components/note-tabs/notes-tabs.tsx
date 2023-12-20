@@ -2,10 +2,15 @@ import React from "react";
 import { HistoryIcon, EditIcon, AddIcon } from "@/assets";
 import * as Tabs from "@radix-ui/react-tabs";
 
-const NoteTabs: React.FC = () => {
+type NotesTabProps = {
+  vegetationNotes: string;
+  installationNotes: string;
+};
+
+const NoteTabs = ({ vegetationNotes, installationNotes }: NotesTabProps) => {
   const tabs = ["Recent Notes", "Vegetation Notes", "Installation Notes"];
   return (
-    <div className="w-full pl-[26px] pr-5">
+    <div className="mt-[10px] w-full">
       <div className="relative flex">
         <Tabs.Root defaultValue="Recent Notes" className="w-full">
           <div className="overflow-x-auto overflow-y-hidden">
@@ -31,13 +36,13 @@ const NoteTabs: React.FC = () => {
 
           <Tabs.Content value="Vegetation Notes" className="py-5">
             <div className="font-mont text-xs font-semibold leading-[normal] tracking-[-0.6px] text-[#161616]">
-              Vegetation Notes
+              {vegetationNotes}
             </div>
           </Tabs.Content>
 
           <Tabs.Content value="Installation Notes" className="py-5">
             <div className="font-mont text-xs font-semibold leading-[normal] tracking-[-0.6px] text-[#161616]">
-              Installation Notes
+              {installationNotes}
             </div>
           </Tabs.Content>
         </Tabs.Root>
