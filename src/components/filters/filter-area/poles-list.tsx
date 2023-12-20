@@ -1,7 +1,7 @@
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { BaseLayerResponse, Device } from "@/api/types/types.ts";
 import { PoleItem } from "./pole-item";
-import { usePoleContext } from "@/state/providers";
+import { useSelectedPoles } from "@/state";
 
 type PoleListProps = {
   data: BaseLayerResponse | undefined;
@@ -9,7 +9,7 @@ type PoleListProps = {
 };
 
 export const PolesList = ({ data, sortBy }: PoleListProps) => {
-  const { poleIds } = usePoleContext();
+  const poleIds = useSelectedPoles();
 
   const checkPoleClicked = (hardwareId: string) => {
     return poleIds.find((hardware_id) => hardware_id === hardwareId);

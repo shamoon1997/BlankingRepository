@@ -1,5 +1,4 @@
-import { useContext, useState } from "react";
-import { MapBboxContext } from "@/state/providers";
+import { useState } from "react";
 import { useLayerControlUrlState } from "@/hooks";
 import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
 import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
@@ -7,16 +6,17 @@ import { AreaSummary } from "./area-summary";
 import { FilterControls } from "./filter-controls";
 import { ListSorter } from "./list-sorter";
 import { PolesList } from "./poles-list";
+import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 
 export const FilterArea = () => {
-  const { bbox } = useContext(MapBboxContext);
+  const bbox = useMapboxBbox();
   const { validatedLayerUrlState } = useLayerControlUrlState();
   const [sortBy, setSortBy] = useState<string>("sr-no");
   let data; // will contain all the layers data
 
   // network calls for all the layers in parallel
-  let { dataWithLagBuffer: dataN } = useGetNetworkLayer(bbox);
-  let { dataWithLagBuffer: dataG } = useGetGridScopeLayer(bbox);
+  const { dataWithLagBuffer: dataN } = useGetNetworkLayer(bbox);
+  const { dataWithLagBuffer: dataG } = useGetGridScopeLayer(bbox);
 
   switch (validatedLayerUrlState.layer) {
     case "gridscope":

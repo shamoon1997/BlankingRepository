@@ -19,6 +19,7 @@ import { MapNetworkStatus } from "@/components/map/map-network-status/map-networ
 import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { MapsIcon } from "@/assets/pole-view";
+import { useSelectedPoles, useSelectedPolesActions } from "@/state";
 
 const GridScopeLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -31,6 +32,8 @@ export const GridScopeLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const { validatedLayerUrlState } = useLayerControlUrlState();
   const bbox = useMapboxBbox();
+  const poleIds = useSelectedPoles();
+  const { setPoleIds } = useSelectedPolesActions();
 
   const {
     dataWithLagBuffer: data,
@@ -105,16 +108,15 @@ export const GridScopeLayer = () => {
     };
   }, [filteredData]);
 
-
-    const checkPoleClicked = (hardwareId: string) => {
-        return poleIds.find((hardware_id: string) => hardware_id === hardwareId);
-    };
-    const handlePoleClicked = (hardwareId: string) => {
-        if (poleIds.length < 3) {
-            // allowing only three poles to be clicked
-            setPoleIds([...poleIds, hardwareId]);
-        }
-    };
+  const checkPoleClicked = (hardwareId: string) => {
+    return poleIds.find((hardware_id: string) => hardware_id === hardwareId);
+  };
+  const handlePoleClicked = (hardwareId: string) => {
+    if (poleIds.length < 3) {
+      // allowing only three poles to be clicked
+      setPoleIds([...poleIds, hardwareId]);
+    }
+  };
 
   return (
     <>
@@ -147,20 +149,25 @@ export const GridScopeLayer = () => {
         }
 
         return (
-          <Marker key={id} latitude={lat} longitude={lng}  onClick={() => handlePoleClicked(i.properties.hardware_id)}>
+          <Marker
+            key={id}
+            latitude={lat}
+            longitude={lng}
+            onClick={() => handlePoleClicked(i.properties.hardware_id)}
+          >
             <div className="relative">
-                {checkPoleClicked(i.properties.hardware_id) && (
-                    <div className="absolute z-10">
-                        <MapsIcon className="text-blue-400" />
-                    </div>
-                )}
+              {checkPoleClicked(i.properties.hardware_id) && (
+                <div className="absolute z-10">
+                  <MapsIcon className="text-blue-400" />
+                </div>
+              )}
               <div
                 className={`drop-shadow-map-dot ${color} z-0 h-6 w-6 rounded-full border-2 border-solid border-white`}
               />
             </div>
 
             {(validatedMapUrlState.zoom > 16 ||
-                checkPoleClicked(i.properties.hardware_id)) && (
+              checkPoleClicked(i.properties.hardware_id)) && (
               <MapZoomedBoxContainer>
                 <div className="flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
                   <div className="flex items-center gap-[7px] font-medium">

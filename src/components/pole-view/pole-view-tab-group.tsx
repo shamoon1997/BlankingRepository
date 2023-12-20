@@ -5,7 +5,7 @@ import PoleViewTabGroupContent from "./pole-view-tab-group-content";
 import { useGetPoleView } from "@/api/hooks/poles/use-get-pole-view";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 import { PoleViewResponse } from "@/api/types/types";
-import { usePoleContext } from "@/state/providers";
+import { useSelectedPoles } from "@/state";
 
 const PoleViewTabGroup: React.FC = () => {
   const [deviceIds, setDeviceIds] = useState<string[]>();
@@ -13,7 +13,7 @@ const PoleViewTabGroup: React.FC = () => {
   const [poleDevices, setPoleDevices] = useState<
     PoleViewResponse | undefined
   >();
-  const { poleIds } = usePoleContext();
+  const poleIds = useSelectedPoles();
 
   console.log("data", data);
   const [searchParams] = useSearchParams();

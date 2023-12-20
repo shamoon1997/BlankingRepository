@@ -68,10 +68,6 @@ export interface Device {
 
 export type EquipmentsListResponse = string[];
 
-export interface PoleViewBody {
-  poleIds: string[];
-}
-
 interface Neighbor {
   hardware_id: string;
 }

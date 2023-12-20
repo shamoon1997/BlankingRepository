@@ -1,5 +1,5 @@
 import { API, ApiResources } from "@/api/config/api-config";
-import { PoleViewResponse, PoleViewBody } from "@/api/types/types.ts";
+import { PoleViewResponse } from "@/api/types/types.ts";
 
 export const getPoleView = (
   args: string[],

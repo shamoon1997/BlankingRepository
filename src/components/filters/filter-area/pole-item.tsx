@@ -1,15 +1,17 @@
 import { PoleViewButton } from "./pole-view-button";
 import { Device } from "@/api/types/types.ts";
-import { usePoleContext } from "@/state/providers";
+
 import { useNavigate } from "react-router-dom";
+import { useSelectedPoles, useSelectedPolesActions } from "@/state";
 
 type poleItemProps = {
   device: Device;
   devices: Device[] | undefined;
 };
 
-export const PoleItem = ({ device, devices }: poleItemProps) => {
-  const { poleIds, setPoleIds } = usePoleContext();
+export const PoleItem = ({ device }: poleItemProps) => {
+  const poleIds = useSelectedPoles();
+  const { setPoleIds } = useSelectedPolesActions();
   const navigate = useNavigate();
 
   const checkPoleClicked = (hardwareId: string) => {

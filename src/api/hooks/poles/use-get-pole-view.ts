@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ApiResources } from "@/api/config/api-config.ts";
-import { PoleViewResponse, PoleViewBody } from "@/api/types/types.ts";
+import { PoleViewResponse } from "@/api/types/types.ts";
 import { getPoleView } from "@/api/api-calls/get-pole-view";
 
 export const useGetPoleView = (args: string[] | undefined) => {

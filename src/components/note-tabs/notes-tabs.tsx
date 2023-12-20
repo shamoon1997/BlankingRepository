@@ -1,4 +1,3 @@
-import React from "react";
 import { HistoryIcon, EditIcon, AddIcon } from "@/assets";
 import * as Tabs from "@radix-ui/react-tabs";
 
