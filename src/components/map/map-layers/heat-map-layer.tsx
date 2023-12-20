@@ -10,7 +10,7 @@ import { HeatMapControlLayer } from "@/components/map/dropdown-layers/heatmap-co
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetHeatMapLayer } from "@/api/hooks/maps/user-get-heat-map-layer.ts";
-import { LegendRange } from "@/components";
+import { LegendRange, MapStatusContainer } from "@/components";
 import {
   generateIntervals,
   generateLabels,
@@ -222,32 +222,34 @@ export const HeatMapLayer = () => {
 
       <HeatMapControlLayer />
 
-      {!isLoading && (
-        <LegendRange
-          key={legendLabels.join(",")}
-          colors={labelColors}
-          labels={legendLabels}
-        />
-      )}
+      <MapStatusContainer>
+        {(isLoading || isRefetching) && (
+          <MapNetworkStatus>Loading...</MapNetworkStatus>
+        )}
+        {!isLoading &&
+          !isRefetching &&
+          isSuccess &&
+          data?.devices.length === 0 && (
+            <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
+          )}
+        {isError && (
+          <MapNetworkStatus>
+            An Error Occurred. Please share logs with the developer team.
+          </MapNetworkStatus>
+        )}
+
+        {!isLoading && (
+          <LegendRange
+            key={legendLabels.join(",")}
+            colors={labelColors}
+            labels={legendLabels}
+          />
+        )}
+      </MapStatusContainer>
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={EquipmentLayerLineStyles} />
       </Source>
-
-      {(isLoading || isRefetching) && (
-        <MapNetworkStatus>Loading...</MapNetworkStatus>
-      )}
-      {!isLoading &&
-        !isRefetching &&
-        isSuccess &&
-        data?.devices.length === 0 && (
-          <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
-        )}
-      {isError && (
-        <MapNetworkStatus>
-          An Error Occurred. Please share logs with the developer team.
-        </MapNetworkStatus>
-      )}
     </>
   );
 };

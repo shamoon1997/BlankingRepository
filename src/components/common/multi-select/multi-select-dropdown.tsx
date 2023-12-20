@@ -45,7 +45,7 @@ export const MultiSelectDropdown = <T extends DropDownListItemOption>({
       multiple
     >
       <Listbox.Button className="inline-flex h-[38px] w-full cursor-pointer items-center justify-between rounded-md border-[0.5px] border-default bg-white px-2 pl-3 font-mont text-sm font-semibold leading-none text-primary-hard shadow-dropdown outline-none data-[placeholder]:text-primary-hard">
-        <div className="flex min-w-0 items-center">
+        <div className="flex min-w-0 items-center text-xs">
           <div className="mb-[1.5px] mr-3 flex shrink-0 items-center justify-center [&_svg]:h-4 [&_svg]:w-4">
             <FilterIcon />
           </div>
@@ -62,7 +62,7 @@ export const MultiSelectDropdown = <T extends DropDownListItemOption>({
           <ScrollArea.Viewport className="h-full w-full">
             {data?.map((item) => (
               <Listbox.Option
-                className="flex cursor-pointer items-center gap-2 rounded-[5px] border-none p-2 text-xs outline-none hover:bg-[#F2F2F2]"
+                className="flex cursor-pointer items-center gap-2 rounded-[5px] border-none p-2 text-[11px] outline-none hover:bg-[#F2F2F2]"
                 key={item.id}
                 value={item}
               >

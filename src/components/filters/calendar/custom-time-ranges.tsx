@@ -41,7 +41,7 @@ export const CustomTimeRanges = ({ onApply }: CustomTimeRangesProps) => {
           });
           onApply();
         }
-        // setOpen(false);
+
       }}
     >
       <ul className="grid w-[95%] grid-cols-2 gap-x-4 gap-y-1">
@@ -91,9 +91,11 @@ export const CustomTimeRanges = ({ onApply }: CustomTimeRangesProps) => {
             return (
               <div
                 onClick={() => {
-                  const from = getUnixTime(date.from);
-                  const to = getUnixTime(date.to);
+                  // https://stackoverflow.com/questions/73698467/why-getunixtime-fuction-from-date-fns-returns-1970
+                  const from = getUnixTime(date.from) * 1000;
+                  const to = getUnixTime(date.to) * 1000;
                   saveDate((prev) => {
+                    // limit to three entries
                     if (prev.length === 3) {
                       return [
                         {

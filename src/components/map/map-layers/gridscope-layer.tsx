@@ -14,7 +14,7 @@ import {
   SpottyIcon,
 } from "@/assets/pole-hover";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
-import { LegendRange } from "@/components";
+import { LegendRange, MapStatusContainer } from "@/components";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
@@ -169,25 +169,27 @@ export const GridScopeLayer = () => {
         <Layer id="line-layer" type="line" paint={GridScopeLayerLineStyles} />
       </Source>
 
-      <LegendRange
-        colors={["bg-online", "bg-offline", "bg-spotty"]}
-        labels={["Online", "Offline", "Spotty"]}
-      />
-
-      {(isLoading || isRefetching) && (
-        <MapNetworkStatus>Loading...</MapNetworkStatus>
-      )}
-      {!isLoading &&
-        !isRefetching &&
-        isSuccess &&
-        data?.devices.length === 0 && (
-          <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
+      <MapStatusContainer>
+        {(isLoading || isRefetching) && (
+          <MapNetworkStatus>Loading...</MapNetworkStatus>
         )}
-      {isError && (
-        <MapNetworkStatus>
-          An Error Occurred. Please share logs with the developer team.
-        </MapNetworkStatus>
-      )}
+        {!isLoading &&
+          !isRefetching &&
+          isSuccess &&
+          data?.devices.length === 0 && (
+            <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
+          )}
+        {isError && (
+          <MapNetworkStatus>
+            An Error Occurred. Please share logs with the developer team.
+          </MapNetworkStatus>
+        )}
+        <LegendRange
+          width={270}
+          colors={["bg-online", "bg-offline", "bg-spotty"]}
+          labels={["Online", "Offline", "Spotty"]}
+        />
+      </MapStatusContainer>
     </>
   );
 };

@@ -55,9 +55,9 @@ export default {
         // map zoomed tooltip bg
 
         // SIDEBAR COLORS
-        customSideColor: "#3B3C4F",
+        "custom-side-color": "#3B3C4F",
 
-        popUpHoverColor: "#D9D9D9",
+        "pop-up-hover-color": "#D9D9D9",
 
         // POLEVIEW COLORS
         poleViewRed: "#C93B54",

@@ -1,4 +1,4 @@
-import { ChevronIcon, ThickCalendarIcon, TimeIcon } from "@/assets";
+import {  ThickCalendarIcon, TimeIcon } from "@/assets";
 import * as Tabs from "@radix-ui/react-tabs";
 import React, { useState } from "react";
 import { FilterCalendar } from "@/components/filters/calendar/filter-calendar.tsx";
@@ -37,7 +37,7 @@ const CalendarInput: React.FC = () => {
       {/*trigger*/}
       <div
         onClick={() => setOpen(!open)}
-        className={`flex  shrink-0 flex-col rounded border-[0.5px] border-default   bg-white font-mont tracking-[-0.5px]  shadow-dropdown `}
+        className={`flex pointer-events-auto  shrink-0 flex-col rounded border-[0.5px] border-default   bg-white font-mont tracking-[-0.5px]  shadow-dropdown `}
       >
         <div className="flex h-[38px] min-h-[38px] flex-1 cursor-pointer items-center pl-2 pr-2">
           <div className="mr-[11px] [&_svg]:h-[15px] [&_svg]:w-[15px]">
@@ -63,13 +63,13 @@ const CalendarInput: React.FC = () => {
               <ThickCalendarIcon className="mb-[1px]  w-[9px]" />
             </div>
           </div>
-
-          <div className="self-start">
-            <div className="h-[14px]" />
-            <div className="ml-3 mr-2 h-4 w-4 shrink-0">
-              <ChevronIcon className={`${open ? "rotate-0" : "rotate-180"}`} />
-            </div>
-          </div>
+          {/*TODO: maybe put back*/}
+          {/*<div className="self-start">*/}
+          {/*  <div className="h-[14px]" />*/}
+          {/*  <div className="ml-3 mr-2 h-4 w-4 shrink-0">*/}
+          {/*    <ChevronIcon className={`${open ? "rotate-0" : "rotate-180"}`} />*/}
+          {/*  </div>*/}
+          {/*</div>*/}
         </div>
         {open && (
           <div className="w-full rounded bg-white">

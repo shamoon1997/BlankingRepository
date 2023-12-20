@@ -71,6 +71,13 @@ export const FilterCalendar = ({ onApply }: FilterCalendarProps) => {
     setCurrentMonth(format(prevMonth, "MMMM-yyyy"));
   };
 
+  const jumpToToday = () => {
+    const today = new Date()
+    setCurrentMonth(format(today, "MMMM-yyyy"));
+    setSelectedTo(endOfDay(today));
+    setSelectedFrom(startOfDay(today));
+  };
+
   const daysOfThisMonth = eachDayOfInterval({
     start: startOfWeek(firstDayOfCurrentMonth),
     end: endOfWeek(endOfMonth(firstDayOfCurrentMonth)),
@@ -78,27 +85,29 @@ export const FilterCalendar = ({ onApply }: FilterCalendarProps) => {
 
   return (
     <>
-      <div className="flex justify-between">
-        <div className="flex gap-2">
+
+        <div className="flex gap-2 justify-between">
           <p className="font-semibold text-[#5B5B5B]">
             {format(firstDayOfCurrentMonth, "MMMM yyyy")}
           </p>
           <div className="flex items-center gap-[5px] text-[10px]">
+            <button className="rounded-[2px] bg-[#F3F3F3] pl-1 pr-1" onClick={jumpToToday}>Jump to Today</button>
+
             <button
-              onClick={prevMonth}
-              className="h-[16px] w-[16px] rounded-[2px] bg-[#F3F3F3]"
+                onClick={prevMonth}
+                className="h-[16px] w-[16px] rounded-[2px] bg-[#F3F3F3]"
             >
-              <ChevronIcon className={"-rotate-90"} />
+              <ChevronIcon className={"-rotate-90"}/>
             </button>
             <button
-              onClick={nextMonth}
-              className="h-[16px] w-[16px] rounded-[2px] bg-[#F3F3F3]"
+                onClick={nextMonth}
+                className="h-[16px] w-[16px] rounded-[2px] bg-[#F3F3F3]"
             >
-              <ChevronIcon className={"rotate-90"} />
+              <ChevronIcon className={"rotate-90"}/>
             </button>
           </div>
         </div>
-      </div>
+
       <div className="mt-[11px] grid grid-cols-7 text-center text-[10px] font-semibold">
         <div>S</div>
         <div>M</div>

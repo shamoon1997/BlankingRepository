@@ -19,7 +19,7 @@ import {
 } from "@/assets/pole-hover";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 import { SettingsIcon } from "@/assets";
-import { MapToolTipContainer } from "@/components";
+import { MapStatusContainer, MapToolTipContainer } from "@/components";
 import { SettingIcon } from "@/assets/pole-view";
 import { Button } from "@/components/common";
 import { capitalize, intersection } from "lodash";
@@ -244,20 +244,22 @@ export const EquipmentLayer = () => {
         <Layer id="line-layer" type="line" paint={EquipmentLayerLineStyles} />
       </Source>
 
-      {(isLoading || isRefetching) && (
-        <MapNetworkStatus>Loading...</MapNetworkStatus>
-      )}
-      {!isLoading &&
-        !isRefetching &&
-        isSuccess &&
-        data?.devices.length === 0 && (
-          <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
+      <MapStatusContainer>
+        {(isLoading || isRefetching) && (
+          <MapNetworkStatus>Loading...</MapNetworkStatus>
         )}
-      {isError && (
-        <MapNetworkStatus>
-          An Error Occurred. Please share logs with the developer team.
-        </MapNetworkStatus>
-      )}
+        {!isLoading &&
+          !isRefetching &&
+          isSuccess &&
+          data?.devices.length === 0 && (
+            <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
+          )}
+        {isError && (
+          <MapNetworkStatus>
+            An Error Occurred. Please share logs with the developer team.
+          </MapNetworkStatus>
+        )}
+      </MapStatusContainer>
     </>
   );
 };
