@@ -13,7 +13,7 @@ import {
   SpottyIcon,
 } from "@/assets/pole-hover";
 import { MapStatusContainer } from "@/components";
-import { LegendItem } from "@/components/legend/legend-item/legend-item";
+import { LegendItem } from "@/components/Legend/legend-item/legend-item";
 import { stripZeros } from "@/utils/strings/strip-zeros";
 import { NetworkControlLayer } from "@/components/map/dropdown-layers/network-control-layer";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
