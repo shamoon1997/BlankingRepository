@@ -7,10 +7,10 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 export const PoleViewPage = withAuthenticationRequired(
   () => {
     return (
-      <div className="flex h-screen w-full flex-1 flex-col">
+      <div className="flex h-screen w-full flex-1 flex-col gap-x-2 bg-[#EDEDED]">
         <Header heading="Deployment" />
 
-        <div className="flex ">
+        <div className="flex flex-1 gap-x-2  p-2">
           <FilterArea />
           <PoleViewTabGroup />
         </div>

@@ -1,6 +1,5 @@
 import { PoleViewButton } from "./pole-view-button";
 import { Device } from "@/api/types/types.ts";
-
 import { useNavigate } from "react-router-dom";
 import { useSelectedPoles, useSelectedPolesActions } from "@/state";
 
@@ -39,16 +38,13 @@ export const PoleItem = ({ device }: poleItemProps) => {
       <PoleViewButton
         onClick={() => {
           if (checkPoleClicked(device?.hardware_id)) {
-            console.log("poleIds", poleIds);
-
             if (poleIds.length > 0) {
               const queryParams = poleIds
                 .map((poleId) => `deviceId=${poleId}`)
                 .join("&");
-              navigate(`/dashboard/poleView?${queryParams}`);
+              navigate(`/dashboard/poleView?${queryParams}`, { replace: true });
             }
           }
-          console.log("onClicked");
         }}
       />
     </div>
