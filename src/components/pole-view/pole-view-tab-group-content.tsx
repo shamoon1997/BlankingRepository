@@ -194,7 +194,7 @@ const PoleViewTabGroupContent = ({ poleDevice }: PoleViewTabProps) => {
                   Vibrometer
                 </p>
                 <p className="text-[12px] font-semibold">
-                  {poleDevice.vibrometer}
+                  {poleDevice.heatmap_metrics.vibrometer}
                 </p>
               </div>
 
@@ -203,7 +203,7 @@ const PoleViewTabGroupContent = ({ poleDevice }: PoleViewTabProps) => {
                   Temperature
                 </p>
                 <p className="text-[12px] font-semibold">
-                  {poleDevice.temperature}
+                  {poleDevice.heatmap_metrics.temperature}
                 </p>
               </div>
 
@@ -212,7 +212,7 @@ const PoleViewTabGroupContent = ({ poleDevice }: PoleViewTabProps) => {
                   Electrometer
                 </p>
                 <p className="text-[12px] font-semibold">
-                  {poleDevice.electrometer}
+                  {poleDevice.heatmap_metrics.electrometer}
                 </p>
               </div>
 

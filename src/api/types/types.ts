@@ -94,9 +94,7 @@ interface PoleView {
   pcb_sn: string;
   fw_version: string;
   fw_hash: string;
-  vibrometer: number;
-  temperature: number;
-  electrometer: number;
+  heatmap_metrics: HeatmapMetrics;
   neighbors: Neighbor[];
   installation_photos: string[];
 }
