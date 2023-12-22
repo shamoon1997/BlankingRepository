@@ -22,6 +22,8 @@ export const useGetHeatMapLayer = (args: HeatMapLayerPostBody | null) => {
       args?.lat2,
       args?.lon1,
       args?.lon2,
+      args?.t1,
+      args?.t2,
     ],
     queryFn: ({ signal }) => {
       return getHeatMapLayer(args!, signal);

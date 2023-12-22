@@ -25,6 +25,7 @@ import {
 } from "@/assets/pole-hover";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 import { ElectrometerIcon, VibrationIcon } from "@/assets";
+import { useReadToFrom } from "@/hooks/calendar";
 
 const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -48,6 +49,8 @@ export const HeatMapLayer = () => {
 
   const bbox = useMapboxBbox();
 
+  const fromTo = useReadToFrom();
+
   const {
     dataWithLagBuffer: data,
     isError,
@@ -58,8 +61,8 @@ export const HeatMapLayer = () => {
     bbox
       ? {
           ...bbox,
-          t1: "2023-11-24 21:00:00",
-          t2: "2023-11-24 21:30:00",
+          t1: fromTo.from,
+          t2: fromTo.to,
         }
       : null,
   );

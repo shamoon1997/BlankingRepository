@@ -1,9 +1,22 @@
 import { sub } from "date-fns";
+import { ValidStringTimes } from "@/utils/validation-schemas";
 
-export const defaultDateDropdownOptions = [
+type DateDropDownOptions = {
+  title: string;
+  /*
+    When you use the typeof operator with an array,
+    you get the type of the array itself.
+    If you want to represent the union type of all the values in the array,
+    you use the [number] index type to index into the array.
+   */
+  type: ValidStringTimes;
+  getDates: () => { from: number | Date; to: number | Date };
+};
+export const defaultDateDropdownOptions: DateDropDownOptions[] = [
   {
     title: "Last 5m",
     type: "last-5m",
+    // function to generate the actual date we will use in the frontend
     getDates: () => {
       return {
         from: sub(Date.now(), {
