@@ -23,7 +23,7 @@ import { useCalendarUrlState } from "@/hooks/calendar";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Time } from "@/components/filters/calendar/time.tsx";
 import {
-  maxRange,
+  MAX_RANGE,
   TimeSlider,
 } from "@/components/filters/calendar/time-slider.tsx";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -347,7 +347,7 @@ export const FilterCalendar = ({ onApply }: FilterCalendarProps) => {
         <Tooltip.Root>
           <Tooltip.Trigger asChild>
             <button
-              disabled={currentRange > maxRange}
+              disabled={currentRange > MAX_RANGE}
               onClick={() => {
                 saveDate((prev) => {
                   if (prev.length === 3) {
@@ -383,7 +383,7 @@ export const FilterCalendar = ({ onApply }: FilterCalendarProps) => {
           </Tooltip.Trigger>
 
           <Tooltip.Portal>
-            {currentRange > maxRange && (
+            {currentRange > MAX_RANGE && (
               <Tooltip.Content
                 className="z-50 rounded border-[0.5px] border-default bg-white p-2 text-xs shadow-tooltip"
                 sideOffset={5}
