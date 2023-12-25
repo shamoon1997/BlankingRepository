@@ -21,7 +21,7 @@ export const defaultDateDropdownOptions: DateDropDownOptions[] = [
       return {
         from: sub(Date.now(), {
           minutes: 5,
-        }),
+        }).getTime(),
         to: Date.now(),
       };
     },
@@ -32,7 +32,7 @@ export const defaultDateDropdownOptions: DateDropDownOptions[] = [
       return {
         from: sub(Date.now(), {
           minutes: 15,
-        }),
+        }).getTime(),
         to: Date.now(),
       };
     },
@@ -44,7 +44,7 @@ export const defaultDateDropdownOptions: DateDropDownOptions[] = [
       return {
         from: sub(Date.now(), {
           minutes: 30,
-        }),
+        }).getTime(),
         to: Date.now(),
       };
     },
@@ -56,7 +56,7 @@ export const defaultDateDropdownOptions: DateDropDownOptions[] = [
       return {
         from: sub(Date.now(), {
           hours: 1,
-        }),
+        }).getTime(),
         to: Date.now(),
       };
     },
@@ -68,7 +68,7 @@ export const defaultDateDropdownOptions: DateDropDownOptions[] = [
       return {
         from: sub(Date.now(), {
           hours: 3,
-        }),
+        }).getTime(),
         to: Date.now(),
       };
     },
@@ -80,7 +80,7 @@ export const defaultDateDropdownOptions: DateDropDownOptions[] = [
       return {
         from: sub(Date.now(), {
           hours: 6,
-        }),
+        }).getTime(),
         to: Date.now(),
       };
     },
@@ -92,7 +92,7 @@ export const defaultDateDropdownOptions: DateDropDownOptions[] = [
       return {
         from: sub(Date.now(), {
           hours: 12,
-        }),
+        }).getTime(),
         to: Date.now(),
       };
     },
@@ -104,7 +104,7 @@ export const defaultDateDropdownOptions: DateDropDownOptions[] = [
       return {
         from: sub(Date.now(), {
           hours: 24,
-        }),
+        }).getTime(),
         to: Date.now(),
       };
     },

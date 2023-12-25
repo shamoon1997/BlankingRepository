@@ -2,7 +2,10 @@ import * as Slider from "@radix-ui/react-slider";
 
 import format from "date-fns/format";
 
-export const maxRange = 24 * 60 * 60;
+// in seconds
+export const MAX_RANGE = 24 * 60 * 60;
+const MIN_STEPS_BETWEEN_THUMBS = 60 * 5; // minutes
+const STEP = 60;
 
 type TimeSliderProps = {
   min: number;
@@ -37,16 +40,18 @@ export const TimeSlider = ({
         min={min}
         max={max}
         value={values}
-        step={60}
-        minStepsBetweenThumbs={60 * 2}
+        step={STEP}
+        minStepsBetweenThumbs={MIN_STEPS_BETWEEN_THUMBS}
         className="relative flex h-[28px] w-full touch-none select-none items-center rounded border-[0.5px] border-solid border-[#D9D9D9] bg-white"
       >
         <Slider.Track>
           <Slider.Range
             className={`absolute  top-0  h-[27px]  rounded-[3px] border-b-[1px] border-t-[1px] ${
-              currentRange > maxRange ? "border-gray-600" : "border-btn-primary"
+              currentRange > MAX_RANGE
+                ? "border-gray-600"
+                : "border-btn-primary"
             }  ${
-              currentRange > maxRange
+              currentRange > MAX_RANGE
                 ? "bg-gray-500 bg-opacity-50"
                 : "bg-[#F11F1F80]"
             }`}
@@ -54,7 +59,7 @@ export const TimeSlider = ({
         </Slider.Track>
         <Slider.Thumb
           className={`flex h-[27px] w-3 cursor-grab items-center justify-center gap-[2px] rounded-bl-[3px] rounded-tl-[3px]  ${
-            currentRange > maxRange ? "bg-gray-600" : "bg-btn-primary"
+            currentRange > MAX_RANGE ? "bg-gray-600" : "bg-btn-primary"
           }`}
         >
           <div className="h-[10px] w-[1px] bg-white" />
@@ -62,7 +67,7 @@ export const TimeSlider = ({
         </Slider.Thumb>
         <Slider.Thumb
           className={`flex h-[27px] w-3  cursor-grab items-center justify-center gap-[2px] rounded-br-[3px] rounded-tr-[3px]  ${
-            currentRange > maxRange ? "bg-gray-600" : "bg-btn-primary"
+            currentRange > MAX_RANGE ? "bg-gray-600" : "bg-btn-primary"
           }`}
         >
           <div className="h-[10px] w-[1px] bg-white" />

@@ -4,10 +4,10 @@ import {
   eachDayOfInterval,
   endOfDay,
   endOfMonth,
-  endOfToday,
   endOfWeek,
   format,
   getUnixTime,
+  fromUnixTime,
   isSameDay,
   isSameMonth,
   isToday,
@@ -27,6 +27,8 @@ import {
   TimeSlider,
 } from "@/components/filters/calendar/time-slider.tsx";
 import * as Tooltip from "@radix-ui/react-tooltip";
+import { getDay } from "date-fns/fp";
+import { defaultDateDropdownOptions } from "@/utils/date";
 
 type FilterCalendarProps = {
   onApply: () => void;
@@ -41,14 +43,12 @@ all times are read and converted to milliseconds where needed
 const generatePrevDays = (selectedDayRange: number[]): number[] => {
   // go back  by one day from 'from' date
   // convert unix seconds to milliseconds
-  let prevDay = sub(selectedDayRange[0] * 1000, { days: 1 });
+  let prevDay = sub(selectedDayRange[0] * 1000, { hours: 24 });
   const monthDay = new Date(selectedDayRange[0] * 1000);
 
   // If prev day is not part of this month it must mean that prev day is the last day of the prev month
   // If I select 1st jan, then prev day must be 31st december
   const isMonthSame = isSameMonth(prevDay, monthDay);
-
-  console.log(isMonthSame);
 
   if (!isMonthSame) {
     prevDay = lastDayOfMonth(prevDay);
@@ -58,6 +58,7 @@ const generatePrevDays = (selectedDayRange: number[]): number[] => {
   const prevDayStartUnix = getUnixTime(startOfDay(prevDay));
   const prevDayEndUnix = getUnixTime(endOfDay(prevDay));
 
+  console.log(prevDay, prevDayEndUnix);
   return [prevDayStartUnix, prevDayEndUnix];
 };
 
@@ -74,21 +75,64 @@ export const FilterCalendar = ({ onApply }: FilterCalendarProps) => {
       // already in unix time seconds from 1970
       from = validatedCalendarUrlState.from;
     } else {
-      // TODO: convert from to strings to their corresponding date objects
-      from = getUnixTime(startOfToday());
+      const option = defaultDateDropdownOptions.find(
+        (i) => i.type === validatedCalendarUrlState.from,
+      );
+      if (option) {
+        const fromToDate = option.getDates();
+        from = getUnixTime(fromToDate.from);
+      } else {
+        from = getUnixTime(startOfToday());
+      }
     }
 
     if (typeof validatedCalendarUrlState.to === "number") {
       to = validatedCalendarUrlState.to;
     } else {
       // TODO: convert from to strings to their corresponding date objects
-      to = getUnixTime(endOfToday());
+      const option = defaultDateDropdownOptions.find(
+        (i) => i.type === validatedCalendarUrlState.from,
+      );
+      if (option) {
+        const fromToDate = option.getDates();
+        to = getUnixTime(fromToDate.to);
+      } else {
+        to = getUnixTime(startOfToday());
+      }
     }
 
-    return {
-      currentDay: [from, to],
-      prevDay: generatePrevDays([from, to]),
-    };
+    const startDay = getDay(fromUnixTime(from));
+    const endDay = getDay(fromUnixTime(to));
+
+    const spansTwoDays = startDay !== endDay;
+
+    if (spansTwoDays) {
+      // 18 and 19 are the 'from' and 'to' dates, so I'm spanning two days and the current day should be 'to' and the previous day should be
+      // generated from 'to' day i.e. 19 becomes the current day and 18 becomes the previous day as 'from' and 'to' dates lie in those days
+      return {
+        // the current day should be to i.e. the ending day
+        currentDay: [
+          getUnixTime(startOfDay(fromUnixTime(to))),
+          getUnixTime(endOfDay(fromUnixTime(to))),
+        ],
+        // and the previous day should be generated from the to day as well
+        prevDay: generatePrevDays([
+          getUnixTime(startOfDay(fromUnixTime(to))),
+          getUnixTime(endOfDay(fromUnixTime(to))),
+        ]),
+      };
+    } else {
+      return {
+        currentDay: [
+          getUnixTime(startOfDay(fromUnixTime(from))),
+          getUnixTime(endOfDay(fromUnixTime(to))),
+        ],
+        prevDay: generatePrevDays([
+          getUnixTime(startOfDay(fromUnixTime(from))),
+          getUnixTime(endOfDay(fromUnixTime(to))),
+        ]),
+      };
+    }
   });
 
   const [currentMonth, setCurrentMonth] = useState(
@@ -98,7 +142,38 @@ export const FilterCalendar = ({ onApply }: FilterCalendarProps) => {
   const firstDayOfCurrentMonth = parse(currentMonth, "MMMM-yyyy", new Date());
 
   const [timeRange, setTimeRange] = useState<number[]>(() => {
-    return [selectedDayRange.currentDay[0], selectedDayRange.currentDay[1]];
+    let from;
+    let to;
+    if (typeof validatedCalendarUrlState.from === "number") {
+      // already in unix time seconds from 1970
+      from = validatedCalendarUrlState.from;
+    } else {
+      const option = defaultDateDropdownOptions.find(
+        (i) => i.type === validatedCalendarUrlState.from,
+      );
+      if (option) {
+        const fromToDate = option.getDates();
+        from = getUnixTime(fromToDate.from);
+      } else {
+        from = getUnixTime(startOfToday());
+      }
+    }
+
+    if (typeof validatedCalendarUrlState.to === "number") {
+      to = validatedCalendarUrlState.to;
+    } else {
+      const option = defaultDateDropdownOptions.find(
+        (i) => i.type === validatedCalendarUrlState.from,
+      );
+      if (option) {
+        const fromToDate = option.getDates();
+        to = getUnixTime(fromToDate.to);
+      } else {
+        to = getUnixTime(startOfToday());
+      }
+    }
+
+    return [from, to];
   });
 
   const [, saveDate] = useLocalStorage<
