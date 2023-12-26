@@ -1,39 +1,9 @@
 import { useState } from "react";
 import { FilterInputControl } from "./filter-input-control";
 import { FilterSelectControl } from "./filter-select-control";
-import { FilterSelectItemProps } from "./filter-select-item";
 import { SearchBar } from "./filter-search-bar";
 import { useApplyFilter } from "@/stores/map-filter.store";
-
-const filtersList: FilterSelectItemProps[] = [
-  { label: "Pole", value: "pole" },
-  { label: "Serial No.", value: "sr-no" },
-  { label: "Hardware ID", value: "hid" },
-  { label: "PCB Rev", value: "pcb-rev" },
-  { label: "Deployment", value: "deployment" },
-  { label: "Firmware", value: "firmware" },
-  { label: "Network", value: "network" },
-];
-
-const operatorsList: Record<string, FilterSelectItemProps[]> = {
-  ["pole"]: [{ label: "Contain", value: "contains" }],
-  ["sr-no"]: [{ label: "Contain", value: "contains" }],
-  ["hid"]: [{ label: "Contain", value: "contains" }],
-  ["pcb-rev"]: [
-    { label: "Contain", value: "contains" },
-    { label: "Equals", value: "equals" },
-    { label: "Is Greater than", value: "greater-than" },
-    { label: "Is Less than", value: "less-than" },
-  ],
-  ["deployment"]: [{ label: "Contain", value: "contains" }],
-  ["firmware"]: [
-    { label: "Contain", value: "contains" },
-    { label: "Equals", value: "equals" },
-    { label: "Is Greater than", value: "greater-than" },
-    { label: "Is Less than", value: "less-than" },
-  ],
-  ["network"]: [{ label: "Contain", value: "contains" }],
-};
+import { filtersList, operatorsList } from "@/utils/filters";
 
 export const FilterControls = () => {
   const [filterActive, setFilterActive] = useState(false);

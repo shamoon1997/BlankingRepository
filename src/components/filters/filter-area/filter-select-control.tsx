@@ -1,6 +1,7 @@
 import * as Select from "@radix-ui/react-select";
 import { ChevronIcon } from "@/assets";
-import { FilterSelectItem, FilterSelectItemProps } from "./filter-select-item";
+import { FilterSelectItem } from "./filter-select-item";
+import { FilterSelectItemProps } from "@/utils/filters";
 
 type FilterSelectControlProps = {
   selectItems: FilterSelectItemProps[];

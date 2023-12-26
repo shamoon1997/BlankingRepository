@@ -1,9 +1,6 @@
+import { FilterSelectItemProps } from "@/utils/filters";
 import { ItemText, SelectItem } from "@radix-ui/react-select";
 
-export type FilterSelectItemProps = {
-  value: string;
-  label: string;
-};
 export const FilterSelectItem = ({ value, label }: FilterSelectItemProps) => {
   return (
     <SelectItem
