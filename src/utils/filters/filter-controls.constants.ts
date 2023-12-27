@@ -3,7 +3,7 @@ export type FilterSelectItemProps = {
   label: string;
 };
 
-enum FilterEnum {
+export enum FilterEnum {
   pole = "pole",
   sr_no = "sr-no",
   hid = "hid",
@@ -13,11 +13,11 @@ enum FilterEnum {
   network = "network",
 }
 
-enum OperatorValueEnum {
+export enum OperatorValueEnum {
   contains = "contains",
-  equals = "equals",
-  greater_than = "greater-than",
-  less_than = "less-than",
+  equals = "=",
+  greater_than = ">",
+  less_than = "<",
 }
 
 export const filtersList: FilterSelectItemProps[] = [

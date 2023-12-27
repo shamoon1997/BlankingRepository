@@ -1,27 +1,22 @@
 import { create } from "zustand";
 
-type AppliedFilterType = {
-  filter: string | null;
-  operator: string | null;
-  value: string | null;
+export type AppliedFilterType = {
+  filter: string;
+  operator: string;
+  value: string | number;
 };
 
 type FilterStoreType = {
   applied: AppliedFilterType[];
-
   applyFilter: (filterToApply: AppliedFilterType) => void;
+  removeFilter: (index: number) => void;
 };
 
 const useFilterStore = create<FilterStoreType>((set) => ({
   applied: [],
 
   applyFilter: (payload) => {
-    // For safe keeping
-    console.log(payload);
-    if (payload?.value?.length < 1) {
-      console.log("YO DUDE");
-      return;
-    }
+    if (payload?.value?.toString().length < 1) return;
 
     set((state) => {
       if (state.applied.length < 1) return { applied: [payload] };
@@ -43,8 +38,19 @@ const useFilterStore = create<FilterStoreType>((set) => ({
       return { applied: finalList };
     });
   },
+
+  removeFilter: (payload) => {
+    set((state) => {
+      const softCopy = [...state.applied];
+      softCopy.splice(payload, 1);
+      return { applied: softCopy };
+    });
+  },
 }));
 
 export const useActiveFilter = () => useFilterStore((state) => state.applied);
 export const useApplyFilter = () =>
   useFilterStore((state) => state.applyFilter);
+
+export const useRemoveFilter = () =>
+  useFilterStore((state) => state.removeFilter);

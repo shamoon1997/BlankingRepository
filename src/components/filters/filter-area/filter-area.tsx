@@ -7,7 +7,7 @@ import { FilterControls } from "./filter-controls";
 import { ListSorter } from "./list-sorter";
 import { PolesList } from "./poles-list";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
-import { useActiveFilter } from "@/stores/map-filter.store";
+import { useActiveFilter, useRemoveFilter } from "@/stores/map-filter.store";
 
 export const FilterArea = () => {
   const bbox = useMapboxBbox();
@@ -16,6 +16,7 @@ export const FilterArea = () => {
   let data; // will contain all the layers data
 
   const searchFilter = useActiveFilter();
+  const remove = useRemoveFilter();
 
   // network calls for all the layers in parallel
   const { dataWithLagBuffer: dataN } = useGetNetworkLayer(bbox);
@@ -40,13 +41,18 @@ export const FilterArea = () => {
           return (
             <div
               key={`${item.value}-${i}`}
-              className="flex justify-between rounded-lg bg-green-100 px-2 py-1 text-[8px]"
+              className="flex justify-between rounded-lg bg-[#EEEEEE] px-2 py-1 text-[8px] font-semibold text-primary"
             >
               <div>
                 {item.filter} {item.operator} {item.value}
               </div>
 
-              <div className="ml-2 cursor-pointer rounded-full">x</div>
+              <div
+                className="ml-2 cursor-pointer rounded-full"
+                onClick={() => remove(i)}
+              >
+                x
+              </div>
             </div>
           );
         })}
