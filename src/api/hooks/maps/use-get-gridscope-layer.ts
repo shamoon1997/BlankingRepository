@@ -5,12 +5,18 @@ import {
   Device,
   EquipmentLayerPostBody,
 } from "@/api/types/types.ts";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { uniqBy } from "lodash";
 import { getGridScopeLayer } from "@/api/api-calls/get-gridscope-layer.ts";
+import { useActiveFilter } from "@/stores/map-filter.store";
+import { applyFilterFunc } from "@/utils/map";
 
 export const useGetGridScopeLayer = (args: EquipmentLayerPostBody | null) => {
   const lagBuffer = useRef<Device[] | undefined>([]);
+
+  // From filter store
+  const filters = useActiveFilter();
+
   const { data, ...rest } = useQuery({
     queryKey: [
       // IMPORTANT
@@ -63,6 +69,24 @@ export const useGetGridScopeLayer = (args: EquipmentLayerPostBody | null) => {
       devices: deduplicatedDevices,
     };
   }, [data]);
+
+  const dataWithFilterApplied = () => {
+    if (!data?.data?.devices?.length && filters?.length < 1) return;
+
+    for (let i = 0; i < filters?.length; i++) {
+      const lala = applyFilterFunc(
+        data?.data?.devices as unknown as Device[],
+        filters[i],
+      );
+      console.log(lala);
+    }
+  };
+
+  useEffect(() => {
+    console.clear();
+    console.log("IN USE EFFECT");
+    dataWithFilterApplied();
+  }, [data, filters]);
 
   return {
     dataWithLagBuffer,

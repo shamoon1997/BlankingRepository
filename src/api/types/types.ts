@@ -57,6 +57,7 @@ export interface Device {
   hardware_id: string;
   device_sn: string;
   pole_id: string;
+  deployment: string;
   longitude: number;
   latitude: number;
   last_health_report: string;
