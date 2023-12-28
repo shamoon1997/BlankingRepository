@@ -70,7 +70,8 @@ export const useGetGridScopeLayer = (args: EquipmentLayerPostBody | null) => {
     };
   }, [data]);
 
-  const dataWithFilterApplied = useMemo(() => {
+  const dataWithFilterApplied: BaseLayerResponse | undefined = useMemo(() => {
+    if (!data) return;
     if (!data?.data?.devices?.length && filters?.length < 1) return;
 
     let filtList: Device[] = [];
@@ -82,7 +83,7 @@ export const useGetGridScopeLayer = (args: EquipmentLayerPostBody | null) => {
       );
     }
 
-    return { summary: data?.data?.summary, devices: filtList };
+    return { summary: data.data.summary, devices: filtList };
   }, [data, filters]);
 
   return {
