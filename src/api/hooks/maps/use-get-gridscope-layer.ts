@@ -71,10 +71,10 @@ export const useGetGridScopeLayer = (args: EquipmentLayerPostBody | null) => {
   }, [data]);
 
   const dataWithFilterApplied: BaseLayerResponse | undefined = useMemo(() => {
-    if (!data) return;
+    if (!data) return undefined;
     if (!data?.data?.devices?.length && filters?.length < 1) return data.data;
 
-    let filtList: Device[] = [];
+    let filtList: Device[] = data?.data?.devices;
 
     for (let i = 0; i < filters?.length; i++) {
       filtList = applyFilterFunc(
