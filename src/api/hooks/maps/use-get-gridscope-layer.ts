@@ -5,7 +5,7 @@ import {
   Device,
   EquipmentLayerPostBody,
 } from "@/api/types/types.ts";
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { uniqBy } from "lodash";
 import { getGridScopeLayer } from "@/api/api-calls/get-gridscope-layer.ts";
 import { useActiveFilter } from "@/stores/map-filter.store";
@@ -70,26 +70,24 @@ export const useGetGridScopeLayer = (args: EquipmentLayerPostBody | null) => {
     };
   }, [data]);
 
-  const dataWithFilterApplied = () => {
+  const dataWithFilterApplied = useMemo(() => {
     if (!data?.data?.devices?.length && filters?.length < 1) return;
 
+    let filtList: Device[] = [];
+
     for (let i = 0; i < filters?.length; i++) {
-      const lala = applyFilterFunc(
+      filtList = applyFilterFunc(
         data?.data?.devices as unknown as Device[],
         filters[i],
       );
-      console.log(lala);
     }
-  };
 
-  useEffect(() => {
-    console.clear();
-    console.log("IN USE EFFECT");
-    dataWithFilterApplied();
+    return { summary: data?.data?.summary, devices: filtList };
   }, [data, filters]);
 
   return {
     dataWithLagBuffer,
+    dataWithFilterApplied,
     data,
     ...rest,
   };
