@@ -27,6 +27,10 @@ export const applyFilterFunc = (
       keyToFilter = "deployment";
       break;
 
+    case FilterEnum.network:
+      keyToFilter = "network_mode";
+      break;
+
     default:
       break;
   }

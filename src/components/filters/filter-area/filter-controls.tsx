@@ -3,7 +3,12 @@ import { FilterInputControl } from "./filter-input-control";
 import { FilterSelectControl } from "./filter-select-control";
 import { SearchBar } from "./filter-search-bar";
 import { useApplyFilter } from "@/stores/map-filter.store";
-import { filtersList, operatorsList } from "@/utils/filters";
+import {
+  FilterEnum,
+  filtersList,
+  filtersListNetworkOptions,
+  operatorsList,
+} from "@/utils/filters";
 
 export const FilterControls = () => {
   const [filterActive, setFilterActive] = useState(false);
@@ -14,6 +19,9 @@ export const FilterControls = () => {
   const [inputValue, setInputValue] = useState("");
 
   const apply = useApplyFilter();
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+  const isNetwork: boolean = filterValue === FilterEnum.network;
 
   const toggleFilterActive = () => setFilterActive(!filterActive);
   return (
@@ -32,12 +40,21 @@ export const FilterControls = () => {
           <FilterSelectControl
             selectItems={filtersList}
             setOption={setFilterValue}
+            title="Filter"
           />
           <FilterSelectControl
             selectItems={operatorsList[filterValue]}
             setOption={setOperatorValue}
+            title="Operator"
           />
-          <FilterInputControl setValue={setInputValue} />
+          {isNetwork && (
+            <FilterSelectControl
+              selectItems={filtersListNetworkOptions}
+              setOption={setInputValue}
+              title="Network"
+            />
+          )}
+          {!isNetwork && <FilterInputControl setValue={setInputValue} />}
         </div>
       )}
 

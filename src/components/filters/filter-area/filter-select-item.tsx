@@ -5,7 +5,7 @@ export const FilterSelectItem = ({ value, label }: FilterSelectItemProps) => {
   return (
     <SelectItem
       value={value}
-      className="w-[var(--radix-select-trigger-width)] cursor-pointer rounded p-[6px] hover:bg-[#F2F2F2]"
+      className="w-[var(--radix-select-trigger-width)] cursor-pointer rounded p-[6px] capitalize hover:bg-[#F2F2F2]"
     >
       <ItemText>{label}</ItemText>
     </SelectItem>

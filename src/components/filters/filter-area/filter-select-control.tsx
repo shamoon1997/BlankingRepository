@@ -4,16 +4,18 @@ import { FilterSelectItem } from "./filter-select-item";
 import { FilterSelectItemProps } from "@/utils/filters";
 
 type FilterSelectControlProps = {
+  title?: string;
   selectItems: FilterSelectItemProps[];
   setOption?: React.Dispatch<React.SetStateAction<string>>;
 };
 export const FilterSelectControl = ({
+  title = "Filter",
   selectItems,
   setOption,
 }: FilterSelectControlProps) => {
   return (
     <div className="flex justify-between text-xs font-semibold">
-      <p className="w-1/2 text-primary-hard">Filter</p>
+      <p className="w-1/2 capitalize text-primary-hard">{title}</p>
 
       <Select.Root
         defaultValue={selectItems.length > 0 ? selectItems[0].value : undefined}
@@ -22,7 +24,7 @@ export const FilterSelectControl = ({
         }}
       >
         <Select.Trigger
-          className="flex w-1/2 cursor-pointer items-center justify-between text-left text-primary"
+          className="flex w-1/2 cursor-pointer items-center justify-between text-left capitalize text-primary"
           aria-label="Filter"
         >
           <Select.Value placeholder="" />

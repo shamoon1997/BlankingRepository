@@ -74,3 +74,9 @@ export const operatorsList: Record<string, FilterSelectItemProps[]> = {
     { label: "Contain", value: OperatorValueEnum.contains },
   ],
 };
+
+export const filtersListNetworkOptions = [
+  { label: "cellular", value: "1" },
+  { label: "lora", value: "2" },
+  { label: "unknown", value: "0" },
+];
