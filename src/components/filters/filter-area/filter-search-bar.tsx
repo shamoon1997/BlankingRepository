@@ -102,7 +102,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       <div>
         {searchSuggestions?.length > 0 && (
           <ScrollArea.Root className="overflow-hidden">
-            <ScrollArea.Viewport className="z-10 mt-[6px] max-h-[100px]">
+            <ScrollArea.Viewport className="z-10 mt-[6px] h-[100px]">
               <ul>
                 {searchSuggestions?.map((item) => {
                   const { latitude, longitude } = item;
