@@ -97,3 +97,13 @@ export const applyFilterFunc = (
 
   return devices;
 };
+
+// Can be used on any dropdown menu
+export const getSelectDefaultVal = (
+  currentVal: string,
+  list: { label: string; value: string }[],
+) => {
+  const valExists = list.find((item) => item.value === currentVal);
+  if (!valExists) return list[0].value;
+  else return currentVal;
+};

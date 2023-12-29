@@ -9,14 +9,16 @@ import {
   filtersListNetworkOptions,
   operatorsList,
 } from "@/utils/filters";
+import { getSelectDefaultVal } from "@/utils/map";
+
+const filterInitial = filtersList?.[0].value;
+const operatorInitial = operatorsList[filterInitial]?.[0].value;
 
 export const FilterControls = () => {
   const [filterActive, setFilterActive] = useState(false);
-  const [filterValue, setFilterValue] = useState(filtersList?.[0].value);
-  const [operatorValue, setOperatorValue] = useState(
-    operatorsList[filterValue]?.[0].value,
-  );
-  const [inputValue, setInputValue] = useState("");
+  const [filterValue, setFilterValue] = useState<string>(filterInitial);
+  const [operatorValue, setOperatorValue] = useState<string>(operatorInitial);
+  const [inputValue, setInputValue] = useState<string>("");
 
   const apply = useApplyFilter();
 
@@ -24,6 +26,7 @@ export const FilterControls = () => {
   const isNetwork: boolean = filterValue === FilterEnum.network;
 
   const toggleFilterActive = () => setFilterActive(!filterActive);
+
   return (
     <div
       className={`mb-5 ml-2 mr-2 mt-3 flex flex-col justify-start rounded-md border-[0.5px] border-solid border-[#D9D9D9] px-2.5 pt-2 ${
@@ -42,6 +45,7 @@ export const FilterControls = () => {
             onChange={(val) => {
               setFilterValue(val);
               setOperatorValue(operatorsList[val]?.[0].value);
+              setInputValue("");
             }}
             valToPass={filterValue}
             title="Filter"
@@ -59,7 +63,10 @@ export const FilterControls = () => {
             <FilterSelectControl
               selectItems={filtersListNetworkOptions}
               onChange={(val) => setInputValue(val)}
-              valToPass={inputValue}
+              valToPass={getSelectDefaultVal(
+                inputValue,
+                filtersListNetworkOptions,
+              )}
               title="Network"
             />
           )}
