@@ -16,14 +16,14 @@ const operatorInitial = operatorsList[filterInitial]?.[0].value;
 
 export const FilterControls = () => {
   const [filterActive, setFilterActive] = useState(false);
-  const [filterValue, setFilterValue] = useState<string>(filterInitial);
-  const [operatorValue, setOperatorValue] = useState<string>(operatorInitial);
-  const [inputValue, setInputValue] = useState<string>("");
+  const [filter, setFilter] = useState<string>(filterInitial);
+  const [operator, setOperator] = useState<string>(operatorInitial);
+  const [valueForFilter, setValueForFilter] = useState<string>("");
 
   const apply = useApplyFilter();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-  const isNetwork: boolean = filterValue === FilterEnum.network;
+  const isNetwork: boolean = filter === FilterEnum.network;
 
   const toggleFilterActive = () => setFilterActive(!filterActive);
 
@@ -43,50 +43,46 @@ export const FilterControls = () => {
           <FilterSelectControl
             selectItems={filtersList}
             onChange={(val) => {
-              setFilterValue(val);
-              setOperatorValue(operatorsList[val]?.[0].value);
-              setInputValue("");
+              setFilter(val);
+              setOperator(operatorsList[val]?.[0].value);
+              setValueForFilter("");
 
               // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
               if (val === FilterEnum.network) {
-                setInputValue(filtersListNetworkOptions[0].value);
+                setValueForFilter(filtersListNetworkOptions[0].value);
               }
             }}
-            valToPass={filterValue}
+            valToPass={filter}
             title="Filter"
           />
 
           <FilterSelectControl
-            selectItems={operatorsList[filterValue]}
+            selectItems={operatorsList[filter]}
             title="Operator"
-            valToPass={operatorValue}
-            onChange={(val) => setOperatorValue(val)}
+            valToPass={operator}
+            onChange={(val) => setOperator(val)}
           />
 
           {/* CUSTOM DROPDOWN WHEN NETWORK OPTION IS SELECTED */}
           {isNetwork && (
             <FilterSelectControl
               selectItems={filtersListNetworkOptions}
-              onChange={(val) => setInputValue(val)}
+              onChange={(val) => setValueForFilter(val)}
               valToPass={getSelectDefaultVal(
-                inputValue,
+                valueForFilter,
                 filtersListNetworkOptions,
               )}
               title="Network"
             />
           )}
-          {!isNetwork && <FilterInputControl setValue={setInputValue} />}
+          {!isNetwork && <FilterInputControl setValue={setValueForFilter} />}
         </div>
       )}
 
       {filterActive && (
         <button
           onClick={() =>
-            apply({
-              filter: filterValue,
-              operator: operatorValue,
-              value: inputValue,
-            })
+            apply({ filter: filter, operator: operator, value: valueForFilter })
           }
           className="mb-4 flex h-7 w-full items-center justify-center rounded bg-btn-primary text-xs font-semibold text-white"
         >
