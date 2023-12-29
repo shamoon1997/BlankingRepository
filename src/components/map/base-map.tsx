@@ -14,7 +14,7 @@ import {
 } from "@/state/map/bbox-store.tsx";
 import { HeatMapLayer } from "@/components/map/map-layers/heat-map-layer.tsx";
 import { useReadToFrom } from "@/hooks/calendar";
-import {useGetHeatMapLayer} from "@/api/hooks/maps/user-get-heat-map-layer.ts";
+import { useGetHeatMapLayer } from "@/api/hooks/maps/user-get-heat-map-layer.ts";
 
 const MapBoxGL = import("mapbox-gl");
 
@@ -59,6 +59,7 @@ export const BaseMap = () => {
     }
     ref.current?.flyTo({
       animate: false,
+      zoom: validatedMapUrlState.zoom,
       bearing: validatedMapUrlState.bearing,
       center: {
         lat: validatedMapUrlState.lat,

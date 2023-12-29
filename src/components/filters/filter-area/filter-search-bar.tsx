@@ -1,11 +1,10 @@
-import React, { useState, ChangeEvent, useRef } from "react";
+import React, { useState, ChangeEvent } from "react";
 import { FilterIcon, SearchIcon, CrossIcon } from "@/assets";
-import * as Portal from "@radix-ui/react-portal";
 import { DeploymentResponse } from "@/api/types/types";
 import { useFetchDeployments } from "@/api/hooks/deployments/use-fetch-deployments";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import Fuse from "fuse.js";
-import { mapUrlStateKeys, useMapUrlState } from "@/hooks";
+import { useMapUrlState } from "@/hooks";
 
 interface SearchBarProps {
   toggleFilterActive: () => void;
@@ -20,7 +19,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const [chips, setChips] = useState<string[]>([]);
 
   // FOR SEARCH FILTERING
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const [searchSuggestions, setSearchSuggestions] = useState<
     DeploymentResponse[]
   >([]);
@@ -61,7 +59,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-[2px]" ref={dropdownRef}>
+    <div className="flex flex-col gap-[2px]">
       <div className="flex items-center">
         <SearchIcon className="mt-[5.4px] h-[18px] w-[18px] shrink-0 self-start" />
         <div className="ml-1 mr-1 flex min-w-0  flex-1 flex-wrap gap-1 ">
@@ -101,49 +99,44 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           <FilterIcon className="h-4 w-4" />
         </button>
       </div>
-
-      {/* DROPDOWN TO SHOW SEARCH SUGGESTIONS */}
-      {searchSuggestions?.length > 0 && (
-        <Portal.Root container={dropdownRef?.current} asChild={true}>
-          <ScrollArea.Root>
-            <ScrollArea.Viewport asChild={true}>
-              <div className="z-10 mt-[6px] max-h-[80px] overflow-y-auto">
-                <ul>
-                  {searchSuggestions?.map((item) => {
-                    const { latitude, longitude } = item;
-                    return (
-                      <li
-                        key={item?.name}
-                        className="cursor-pointer rounded-md px-[4px] py-[6px] text-[12px] text-primary hover:bg-selected"
-                        onClick={() => {
-                          setChips([item?.name]);
-                          setSearchTerm("");
-                          setSearchSuggestions([]);
-                          setSearchParams((searchParams) => {
-                            const { lat, lng } = mapUrlStateKeys;
-                            searchParams.set(lat, `${latitude}`);
-                            searchParams.set(lng, `${longitude}`);
-                            return searchParams;
-                          });
-                        }}
-                      >
-                        {item.name}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
+      <div>
+        {searchSuggestions?.length > 0 && (
+          <ScrollArea.Root className="overflow-hidden">
+            <ScrollArea.Viewport className="z-10 mt-[6px] max-h-[100px]">
+              <ul>
+                {searchSuggestions?.map((item) => {
+                  const { latitude, longitude } = item;
+                  return (
+                    <li
+                      key={item?.name}
+                      className="cursor-pointer rounded-md px-[4px] py-[6px] text-[12px] text-primary hover:bg-selected"
+                      onClick={() => {
+                        setChips([item?.name]);
+                        setSearchTerm("");
+                        setSearchSuggestions([]);
+                        setSearchParams((searchParams) => {
+                          searchParams.set("lat", `${latitude}`);
+                          searchParams.set("lng", `${longitude}`);
+                          return searchParams;
+                        });
+                      }}
+                    >
+                      {item.name}
+                    </li>
+                  );
+                })}
+              </ul>
             </ScrollArea.Viewport>
 
             <ScrollArea.Scrollbar
-              className="mr-1 w-1 pb-3"
+              className="mt-[6px] w-1"
               orientation="vertical"
             >
               <ScrollArea.Thumb className="rounded bg-[#1616164D]" />
             </ScrollArea.Scrollbar>
           </ScrollArea.Root>
-        </Portal.Root>
-      )}
+        )}
+      </div>
     </div>
   );
 };
