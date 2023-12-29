@@ -74,16 +74,16 @@ export const useGetGridScopeLayer = (args: EquipmentLayerPostBody | null) => {
     if (!data) return undefined;
     if (!data?.data?.devices?.length && filters?.length < 1) return data.data;
 
-    let filtList: Device[] = data?.data?.devices;
+    let filteredList: Device[] = data?.data?.devices;
 
     for (let i = 0; i < filters?.length; i++) {
-      filtList = applyFilterFunc(
+      filteredList = applyFilterFunc(
         data?.data?.devices as unknown as Device[],
         filters[i],
       );
     }
 
-    return { summary: data.data.summary, devices: filtList };
+    return { summary: data.data.summary, devices: filteredList };
   }, [data, filters]);
 
   return {
