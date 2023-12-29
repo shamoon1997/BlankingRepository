@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 import { Device } from "@/api/types/types";
-import { AppliedFilterType } from "@/stores/map-filter.store";
+import { AppliedFilterType } from "@/state/map";
 import { FilterEnum, OperatorValueEnum } from "../filters";
 
 export const getFilterBadgeText = (

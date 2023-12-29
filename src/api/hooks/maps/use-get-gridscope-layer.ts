@@ -8,7 +8,7 @@ import {
 import { useMemo, useRef } from "react";
 import { uniqBy } from "lodash";
 import { getGridScopeLayer } from "@/api/api-calls/get-gridscope-layer.ts";
-import { useActiveFilter } from "@/stores/map-filter.store";
+import { useActiveFilter } from "@/state/map";
 import { applyFilterFunc } from "@/utils/map";
 
 export const useGetGridScopeLayer = (args: EquipmentLayerPostBody | null) => {

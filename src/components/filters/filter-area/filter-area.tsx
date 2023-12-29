@@ -7,7 +7,7 @@ import { FilterControls } from "./filter-controls";
 import { ListSorter } from "./list-sorter";
 import { PolesList } from "./poles-list";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
-import { useActiveFilter, useRemoveFilter } from "@/stores/map-filter.store";
+import { useActiveFilter, useRemoveFilter } from "@/state/map";
 import { getFilterBadgeText } from "@/utils/map";
 
 export const FilterArea = () => {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FilterInputControl } from "./filter-input-control";
 import { FilterSelectControl } from "./filter-select-control";
 import { SearchBar } from "./filter-search-bar";
-import { useApplyFilter } from "@/stores/map-filter.store";
+import { useApplyFilter } from "@/state/map";
 import {
   FilterEnum,
   filtersList,

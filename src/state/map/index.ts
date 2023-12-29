@@ -11,6 +11,8 @@ import {
   useSelectedPolesActions,
 } from "@/state/map/selected-poles-store.tsx";
 
+export * from "./map-filter.store";
+
 export {
   useMapboxBboxActions,
   useMapboxBbox,
