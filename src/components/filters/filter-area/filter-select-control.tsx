@@ -7,7 +7,7 @@ type FilterSelectControlProps = {
   title?: string;
   valToPass?: string;
   selectItems: FilterSelectItemProps[];
-  onChange?: (val: string) => void;
+  onChange: (val: string) => void;
 };
 export const FilterSelectControl = ({
   title = "Filter",
@@ -21,9 +21,7 @@ export const FilterSelectControl = ({
 
       <Select.Root
         value={selectItems.length > 0 ? valToPass : undefined}
-        onValueChange={(val) => {
-          onChange && onChange(val);
-        }}
+        onValueChange={(val) => onChange(val)}
       >
         <Select.Trigger
           className="flex w-1/2 cursor-pointer items-center justify-between text-left capitalize text-primary"
