@@ -25,6 +25,7 @@ export const BaseMap = () => {
 
   useEffect(() => {
     ref.current?.flyTo({
+      animate: false,
       bearing: validatedMapUrlState.bearing,
       center: {
         lat: validatedMapUrlState.lat,
