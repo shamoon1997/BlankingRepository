@@ -3,7 +3,7 @@ import { BaseMap } from "./map";
 import { MapToolTipContainer } from "./map/map-tooltip";
 import { PageLoader } from "./page-loaders/page-loader";
 import { HomeLoader } from "./page-loaders/home-loader";
-import LegendContainer from "@/components/legend/legend-container/legend-container";
+import MapStatusContainer from "@/components/legend/legend-container/map-status-container.tsx";
 import LegendRange from "@/components/legend/legend-range/legend-range.tsx";
 import MapHoverMenu from "./map/map-hover-menu/map-hover-menu";
 import SideNavigation from "./side-navigation";
@@ -16,7 +16,7 @@ export {
   PageLoader,
   HomeLoader,
   SideNavigation,
-  LegendContainer,
+  MapStatusContainer,
   MapHoverMenu,
   LegendRange,
   PoleViewTabGroup,

@@ -1,16 +1,16 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ApiResources, MAX_LAG_BUFFER_LIMIT } from "@/api/config/api-config.ts";
 import {
-  BaseLayerResponse,
-  Device,
+  HeatmapDevice,
   HeatMapLayerPostBody,
+  HeatmapLayerResponse,
 } from "@/api/types/types.ts";
 import { useMemo, useRef } from "react";
 import { uniqBy } from "lodash";
 import { getHeatMapLayer } from "@/api/api-calls/get-heatmap-layer";
 
 export const useGetHeatMapLayer = (args: HeatMapLayerPostBody | null) => {
-  const lagBuffer = useRef<Device[] | undefined>([]);
+  const lagBuffer = useRef<HeatmapDevice[] | undefined>([]);
   const { data, ...rest } = useQuery({
     queryKey: [
       // IMPORTANT
@@ -22,6 +22,8 @@ export const useGetHeatMapLayer = (args: HeatMapLayerPostBody | null) => {
       args?.lat2,
       args?.lon1,
       args?.lon2,
+      args?.t1,
+      args?.t2,
     ],
     queryFn: ({ signal }) => {
       return getHeatMapLayer(args!, signal);
@@ -33,7 +35,7 @@ export const useGetHeatMapLayer = (args: HeatMapLayerPostBody | null) => {
     // retry only one don't bombard the server
   });
 
-  const dataWithLagBuffer: BaseLayerResponse | undefined = useMemo(() => {
+  const dataWithLagBuffer: HeatmapLayerResponse | undefined = useMemo(() => {
     if (!data) return undefined;
 
     // LOGIC for the lag buffer if max lag buffer size is 3 for example.
@@ -74,6 +76,7 @@ export const useGetHeatMapLayer = (args: HeatMapLayerPostBody | null) => {
     return {
       summary: data.data.summary,
       devices: deduplicatedDevices,
+      heatmap_metrics_min_max: data.data.heatmap_metrics_min_max,
     };
   }, [data]);
 

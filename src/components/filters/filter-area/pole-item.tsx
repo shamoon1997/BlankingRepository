@@ -1,26 +1,56 @@
-import { useState } from "react";
 import { PoleViewButton } from "./pole-view-button";
-import { Device } from "@/api/types/types";
+import { Device } from "@/api/types/types.ts";
 
-type Props = {
+import { useNavigate } from "react-router-dom";
+import { useSelectedPoles, useSelectedPolesActions } from "@/state";
+
+type poleItemProps = {
   device: Device;
+  devices: Device[] | undefined;
 };
 
-export const PoleItem: React.FC<Props> = ({ device }) => {
-  const [selected, setSelected] = useState<boolean>(false);
+export const PoleItem = ({ device }: poleItemProps) => {
+  const poleIds = useSelectedPoles();
+  const { setPoleIds } = useSelectedPolesActions();
+  const navigate = useNavigate();
 
-  const { device_sn } = device;
+  const checkPoleClicked = (hardwareId: string) => {
+    return poleIds.find((poleId) => poleId === hardwareId);
+  };
+
+  const handlePoleClicked = (hardwareId: string) => {
+    const filteredPole = poleIds.filter((poleId) => poleId !== hardwareId);
+    setPoleIds([...filteredPole]);
+  };
 
   return (
     <div
       className={`flex h-10 cursor-pointer items-center justify-between pl-4 pr-4 ${
-        selected ? "border-[0.3px] border-y-[#DFDFDF] bg-[#F2F2F2]" : ""
+        checkPoleClicked(device?.hardware_id)
+          ? "border-[0.3px] border-y-[#DFDFDF] bg-[#F2F2F2]"
+          : ""
       }`}
-      onClick={() => setSelected(!selected)}
     >
-      <p className="text-xs font-semibold text-primary">{device_sn}</p>
+      <div onClick={() => handlePoleClicked(device?.hardware_id)}>
+        <p className="text-xs font-semibold text-primary">
+          {device?.hardware_id?.slice(0, 6)} • {device?.device_sn}
+        </p>
+      </div>
+      <PoleViewButton
+        onClick={() => {
+          if (checkPoleClicked(device?.hardware_id)) {
+            console.log("poleIds", poleIds);
 
-      <PoleViewButton onClick={(e) => e.stopPropagation()} />
+            if (poleIds.length > 0) {
+              const queryParams = poleIds
+                .map((poleId) => `deviceId=${poleId}`)
+                .join("&");
+              navigate(`/dashboard/poleView?${queryParams}`);
+            }
+          }
+          console.log("onClicked");
+        }}
+      />
     </div>
   );
 };

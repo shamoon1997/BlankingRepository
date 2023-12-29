@@ -6,18 +6,18 @@ import CalendarInput from "@/components/common/calendar/calendar-input.tsx";
 
 export const HeatMapControlLayer: React.FC = () => {
   return (
-    <div className="absolute z-[2] flex w-full justify-between gap-2 p-2 pr-4 pt-4">
-      <div className="flex gap-2">
-        <div className="w-[240px]">
+    <div className="pointer-events-none absolute z-[2] flex w-full justify-between gap-2 p-2 pr-4 pt-4">
+      <div className="pointer-events-none flex gap-2">
+        <div className="pointer-events-none">
           <CalendarInput />
         </div>
       </div>
 
-      <div className="flex gap-2">
-        <div className="w-[170px]">
+      <div className="pointer-events-none flex gap-2">
+        <div className="pointer-events-auto w-[170px]">
           <SelectDropdown options={heatMapOptions} searchParamKey={"heatmap"} />
         </div>
-        <div className="w-[170px]">
+        <div className="pointer-events-auto w-[170px]">
           <SelectDropdown
             triggerIcon={
               <div className="mr-3 flex items-center justify-center [&_svg]:h-4 [&_svg]:w-4">

@@ -45,22 +45,22 @@ export const layerOptions: SelectDropdownType<LayerPickerOptionsType>[] = [
       </TextLimiter>
     ),
   },
-  // {
-  //   value: "heatmap",
-  //   child: (
-  //     <TextLimiter>
-  //       <Select.ItemText>Heat Map</Select.ItemText>
-  //     </TextLimiter>
-  //   ),
-  // },
-  // {
-  //   value: "equipment",
-  //   child: (
-  //     <TextLimiter>
-  //       <Select.ItemText>Equipment</Select.ItemText>
-  //     </TextLimiter>
-  //   ),
-  // },
+  {
+    value: "heatmap",
+    child: (
+      <TextLimiter>
+        <Select.ItemText>Heat Map</Select.ItemText>
+      </TextLimiter>
+    ),
+  },
+  {
+    value: "equipment",
+    child: (
+      <TextLimiter>
+        <Select.ItemText>Equipment</Select.ItemText>
+      </TextLimiter>
+    ),
+  },
 ];
 export const gridScopeOptions: SelectDropdownType<GridscopeOptionsType>[] = [
   {

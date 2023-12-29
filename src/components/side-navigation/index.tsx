@@ -7,9 +7,9 @@ const SideNavigation: React.FC = () => {
 
   return (
     <div>
-      <div className="h-screen w-56 bg-customSideColor p-4 text-white">
-        <h3 className="mb-4 text-left font-mont text-xl font-extrabold">
-          ADMIN
+      <div className="h-screen w-56 bg-custom-side-color p-4 text-white">
+        <h3 className="mb-4 text-left font-mont text-xl font-black">
+          SHERLOCK
         </h3>
 
         <ul>
@@ -29,7 +29,9 @@ const SideNavigation: React.FC = () => {
                     <tab.icon />
                   </div>
 
-                  <span className="text-8 font-600 font-mont">{tab.name}</span>
+                  <span className="text-8 font-mont font-normal">
+                    {tab.name}
+                  </span>
                 </Link>
               </li>
             );
