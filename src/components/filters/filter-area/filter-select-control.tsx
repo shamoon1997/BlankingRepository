@@ -5,22 +5,24 @@ import { FilterSelectItemProps } from "@/utils/filters";
 
 type FilterSelectControlProps = {
   title?: string;
+  valToPass?: string;
   selectItems: FilterSelectItemProps[];
-  setOption?: React.Dispatch<React.SetStateAction<string>>;
+  onChange?: (val: string) => void;
 };
 export const FilterSelectControl = ({
   title = "Filter",
   selectItems,
-  setOption,
+  onChange,
+  valToPass,
 }: FilterSelectControlProps) => {
   return (
     <div className="flex justify-between text-xs font-semibold">
       <p className="w-1/2 capitalize text-primary-hard">{title}</p>
 
       <Select.Root
-        defaultValue={selectItems.length > 0 ? selectItems[0].value : undefined}
+        value={selectItems.length > 0 ? valToPass : undefined}
         onValueChange={(val) => {
-          setOption && setOption(val);
+          onChange && onChange(val);
         }}
       >
         <Select.Trigger

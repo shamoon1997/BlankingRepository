@@ -43,7 +43,7 @@ export const FilterArea = () => {
               key={`${item.value}-${i}`}
               className="flex justify-between rounded-lg bg-[#EEEEEE] px-2 py-1 text-[8px] font-semibold text-primary"
             >
-              <div>
+              <div className="capitalize">
                 {item.filter} {item.operator} {item.value}
               </div>
 

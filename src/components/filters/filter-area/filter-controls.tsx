@@ -39,18 +39,31 @@ export const FilterControls = () => {
         <div className="mb-4 ml-1 mr-1 mt-5 flex flex-col gap-4">
           <FilterSelectControl
             selectItems={filtersList}
-            setOption={setFilterValue}
+            onChange={(val) => {
+              setFilterValue(val);
+              setOperatorValue(operatorsList[val]?.[0].value);
+            }}
+            valToPass={filterValue}
             title="Filter"
           />
+
           <FilterSelectControl
             selectItems={operatorsList[filterValue]}
-            setOption={setOperatorValue}
             title="Operator"
+            valToPass={operatorValue}
+            onChange={(val) => setOperatorValue(val)}
           />
+
+          {/* CUSTOM DROPDOWN WHEN NETWORK OPTION IS SELECTED */}
           {isNetwork && (
             <FilterSelectControl
               selectItems={filtersListNetworkOptions}
-              setOption={setInputValue}
+              onChange={(val) => setInputValue(val)}
+              valToPass={
+                inputValue.length
+                  ? inputValue
+                  : filtersListNetworkOptions[0].value
+              }
               title="Network"
             />
           )}
