@@ -46,6 +46,11 @@ export const FilterControls = () => {
               setFilterValue(val);
               setOperatorValue(operatorsList[val]?.[0].value);
               setInputValue("");
+
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+              if (val === FilterEnum.network) {
+                setInputValue(filtersListNetworkOptions[0].value);
+              }
             }}
             valToPass={filterValue}
             title="Filter"
