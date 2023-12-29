@@ -32,10 +32,10 @@ export const getFilterBadgeText = (
   return `${filter} ${operator} ${newVal}`;
 };
 
-export const applyFilterFunc = (
-  devices: Device[],
+export const applyFilterFunc = <T extends Device>(
+  devices: T[],
   filterObj: AppliedFilterType,
-): Device[] => {
+): T[] => {
   if (!filterObj?.value || !filterObj.filter) return devices;
   let keyToFilter: keyof Device;
 
@@ -98,7 +98,7 @@ export const applyFilterFunc = (
   return devices;
 };
 
-// Can be used on any dropdown menu
+// Can be used on any dropdown menu not restricted to the Filter controls
 export const getSelectDefaultVal = (
   currentVal: string,
   list: { label: string; value: string }[],
