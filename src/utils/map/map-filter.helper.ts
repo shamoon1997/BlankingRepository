@@ -3,6 +3,35 @@ import { Device } from "@/api/types/types";
 import { AppliedFilterType } from "@/stores/map-filter.store";
 import { FilterEnum, OperatorValueEnum } from "../filters";
 
+export const getFilterBadgeText = (
+  filter: string,
+  operator: string,
+  value: string | number,
+): string => {
+  let newVal: string = value.toString();
+
+  if (filter === FilterEnum.network) {
+    switch (newVal) {
+      case "0":
+        newVal = "unknown";
+        break;
+
+      case "1":
+        newVal = "cellular";
+        break;
+
+      case "2":
+        newVal = "lora";
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  return `${filter} ${operator} ${newVal}`;
+};
+
 export const applyFilterFunc = (
   devices: Device[],
   filterObj: AppliedFilterType,

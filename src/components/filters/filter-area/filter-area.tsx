@@ -8,6 +8,7 @@ import { ListSorter } from "./list-sorter";
 import { PolesList } from "./poles-list";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { useActiveFilter, useRemoveFilter } from "@/stores/map-filter.store";
+import { getFilterBadgeText } from "@/utils/map";
 
 export const FilterArea = () => {
   const bbox = useMapboxBbox();
@@ -38,13 +39,14 @@ export const FilterArea = () => {
       <FilterControls />
       <div className="mb-[8px] flex gap-2 px-[16px]">
         {searchFilter.map((item, i) => {
+          const { filter, operator, value } = item;
           return (
             <div
               key={`${item.value}-${i}`}
               className="flex justify-between rounded-lg bg-[#EEEEEE] px-2 py-1 text-[8px] font-semibold text-primary"
             >
               <div className="capitalize">
-                {item.filter} {item.operator} {item.value}
+                {getFilterBadgeText(filter, operator, value)}
               </div>
 
               <div

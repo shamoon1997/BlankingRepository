@@ -59,11 +59,7 @@ export const FilterControls = () => {
             <FilterSelectControl
               selectItems={filtersListNetworkOptions}
               onChange={(val) => setInputValue(val)}
-              valToPass={
-                inputValue.length
-                  ? inputValue
-                  : filtersListNetworkOptions[0].value
-              }
+              valToPass={inputValue}
               title="Network"
             />
           )}
