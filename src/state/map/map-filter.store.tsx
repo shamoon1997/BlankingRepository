@@ -7,7 +7,7 @@ export type AppliedFilterType = {
 };
 
 type FilterStoreType = {
-  applied: AppliedFilterType[];
+  appliedFilters: AppliedFilterType[];
   actions: {
     applyFilter: (filterToApply: AppliedFilterType) => void;
     removeFilter: (index: number) => void;
@@ -15,16 +15,17 @@ type FilterStoreType = {
 };
 
 const useFilterStore = create<FilterStoreType>((set) => ({
-  applied: [],
+  appliedFilters: [],
   actions: {
     applyFilter: (payload) => {
       if (payload?.value?.toString().length < 1) return;
 
       set((state) => {
-        if (state.applied.length < 1) return { applied: [payload] };
+        if (state.appliedFilters.length < 1)
+          return { appliedFilters: [payload] };
 
         // Replaces operator if a filter exists
-        const finalList = state.applied.map((list) => {
+        const finalList = state.appliedFilters.map((list) => {
           if (list.filter === payload.filter) return payload;
           return list;
         });
@@ -37,23 +38,20 @@ const useFilterStore = create<FilterStoreType>((set) => ({
         // If no filter then we add to the final list
         if (!filterExists) finalList.push(payload);
 
-        return { applied: finalList };
+        return { appliedFilters: finalList };
       });
     },
 
     removeFilter: (payload) => {
       set((state) => {
-        const softCopy = [...state.applied];
+        const softCopy = [...state.appliedFilters];
         softCopy.splice(payload, 1);
-        return { applied: softCopy };
+        return { appliedFilters: softCopy };
       });
     },
   },
 }));
 
-export const useActiveFilter = () => useFilterStore((state) => state.applied);
-export const useApplyFilter = () =>
-  useFilterStore((state) => state.actions.applyFilter);
-
-export const useRemoveFilter = () =>
-  useFilterStore((state) => state.actions.removeFilter);
+export const useActiveFilter = () =>
+  useFilterStore((state) => state.appliedFilters);
+export const useFilterActions = () => useFilterStore((state) => state.actions);

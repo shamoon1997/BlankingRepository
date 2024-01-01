@@ -31,7 +31,7 @@ export const NetworkLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const bbox = useMapboxBbox();
   const {
-    dataWithLagBuffer: data,
+    dataWithFilterApplied: data,
     isError,
     isLoading,
     isRefetching,

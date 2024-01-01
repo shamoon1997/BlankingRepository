@@ -36,7 +36,7 @@ export const GridScopeLayer = () => {
   const { setPoleIds } = useSelectedPolesActions();
 
   const {
-    dataWithLagBuffer: data,
+    dataWithFilterApplied: data,
     isError,
     isLoading,
     isRefetching,

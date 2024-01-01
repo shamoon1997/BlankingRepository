@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FilterInputControl } from "./filter-input-control";
 import { FilterSelectControl } from "./filter-select-control";
 import { SearchBar } from "./filter-search-bar";
-import { useApplyFilter } from "@/state/map";
+import { useFilterActions } from "@/state/map";
 import {
   FilterEnum,
   filtersList,
@@ -20,7 +20,7 @@ export const FilterControls = () => {
   const [operator, setOperator] = useState<string>(operatorInitial);
   const [valueForFilter, setValueForFilter] = useState<string>("");
 
-  const apply = useApplyFilter();
+  const { applyFilter } = useFilterActions();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
   const isNetwork: boolean = filter === FilterEnum.network;
@@ -82,7 +82,7 @@ export const FilterControls = () => {
       {filterActive && (
         <button
           onClick={() => {
-            apply({
+            applyFilter({
               filter: filter,
               operator: operator,
               value: valueForFilter,

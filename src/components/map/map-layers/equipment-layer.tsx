@@ -40,7 +40,7 @@ export const EquipmentLayer = () => {
   const selectedEquipments = useSelectedEquipments();
 
   const {
-    dataWithLagBuffer: data,
+    dataWithFilterApplied: data,
     isError,
     isLoading,
     isRefetching,

@@ -52,7 +52,7 @@ export const HeatMapLayer = () => {
   const fromTo = useReadToFrom();
 
   const {
-    dataWithLagBuffer: data,
+    dataWithFilterApplied: data,
     isError,
     isLoading,
     isRefetching,

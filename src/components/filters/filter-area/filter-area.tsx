@@ -7,9 +7,12 @@ import { FilterControls } from "./filter-controls";
 import { ListSorter } from "./list-sorter";
 import { PolesList } from "./poles-list";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
-import { useActiveFilter, useRemoveFilter } from "@/state/map";
+import { useActiveFilter, useFilterActions } from "@/state/map";
 import { getFilterBadgeText } from "@/utils/map";
 import { CloseIcon } from "@/assets";
+import { useGetEquipmentLayer } from "@/api/hooks/maps/use-get-equipment-layer.ts";
+import { useGetHeatMapLayer } from "@/api/hooks/maps/user-get-heat-map-layer.ts";
+import { useReadToFrom } from "@/hooks/calendar";
 
 export const FilterArea = () => {
   const bbox = useMapboxBbox();
@@ -18,18 +21,35 @@ export const FilterArea = () => {
   let data; // will contain all the layers data
 
   const searchFilter = useActiveFilter();
-  const remove = useRemoveFilter();
+  const { removeFilter } = useFilterActions();
+  const fromTo = useReadToFrom();
 
   // network calls for all the layers in parallel
-  const { dataWithLagBuffer: dataN } = useGetNetworkLayer(bbox);
-  const { dataWithLagBuffer: dataG } = useGetGridScopeLayer(bbox);
+  const { dataWithFilterApplied: networkData } = useGetNetworkLayer(bbox);
+  const { dataWithFilterApplied: gridScopeData } = useGetGridScopeLayer(bbox);
+  const { dataWithFilterApplied: equipmentData } = useGetEquipmentLayer(bbox);
+  const { dataWithFilterApplied: heatMapData } = useGetHeatMapLayer(
+    bbox
+      ? {
+          ...bbox,
+          t1: fromTo.from,
+          t2: fromTo.to,
+        }
+      : null,
+  );
 
   switch (validatedLayerUrlState.layer) {
     case "gridscope":
-      data = dataG;
+      data = gridScopeData;
       break;
     case "network":
-      data = dataN;
+      data = networkData;
+      break;
+    case "heatmap":
+      data = heatMapData;
+      break;
+    case "equipment":
+      data = equipmentData;
       break;
     default:
       return;
@@ -52,7 +72,8 @@ export const FilterArea = () => {
 
               <CloseIcon
                 className="ml-2 h-2 w-2 cursor-pointer rounded-full text-black"
-                onClick={() => remove(i)}
+                /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
+                onClick={() => removeFilter(i)}
               />
             </div>
           );
