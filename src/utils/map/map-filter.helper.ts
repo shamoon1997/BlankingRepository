@@ -60,6 +60,14 @@ export const applyFilterFunc = <T extends Device>(
       keyToFilter = "network_mode";
       break;
 
+    case FilterEnum.firmware:
+      keyToFilter = "fw_version";
+      break;
+
+    case FilterEnum.pcb_rev:
+      keyToFilter = "pcb_rev";
+      break;
+
     default:
       break;
   }

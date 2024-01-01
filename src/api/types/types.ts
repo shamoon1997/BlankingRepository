@@ -61,6 +61,8 @@ export interface Device {
   longitude: number;
   latitude: number;
   last_health_report: string;
+  fw_version: string;
+  pcb_rev: string;
   network_mode: number;
   online: number;
   neighbors: string[];
