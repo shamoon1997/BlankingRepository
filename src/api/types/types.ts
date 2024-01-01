@@ -57,9 +57,12 @@ export interface Device {
   hardware_id: string;
   device_sn: string;
   pole_id: string;
+  deployment: string;
   longitude: number;
   latitude: number;
   last_health_report: string;
+  fw_version: string;
+  pcb_rev: string;
   network_mode: number;
   online: number;
   neighbors: string[];

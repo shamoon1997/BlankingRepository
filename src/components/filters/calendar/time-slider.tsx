@@ -5,7 +5,7 @@ import format from "date-fns/format";
 // in seconds
 export const MAX_RANGE = 24 * 60 * 60;
 const MIN_STEPS_BETWEEN_THUMBS = 60 * 5; // minutes
-const STEP = 60;
+const STEP = 1;
 
 type TimeSliderProps = {
   min: number;

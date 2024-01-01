@@ -6,6 +6,7 @@ import TimeIcon from "./time.svg";
 import ThickCalendarIcon from "./thick-calendar.svg";
 import UncheckedIcon from "./unchecked.svg";
 import CheckedIcon from "./checked.svg";
+import CloseIcon from "./close.svg";
 
 export {
   CalendarIcon,
@@ -14,6 +15,7 @@ export {
   GridScopeIcon,
   TimeIcon,
   ThickCalendarIcon,
-    UncheckedIcon,
-    CheckedIcon,
+  UncheckedIcon,
+  CheckedIcon,
+  CloseIcon,
 };
