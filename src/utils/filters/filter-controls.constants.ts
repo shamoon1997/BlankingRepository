@@ -65,9 +65,6 @@ export const operatorsList: Record<string, FilterSelectItemProps[]> = {
 
   [FilterEnum.firmware]: [
     { label: "Contain", value: OperatorValueEnum.contains },
-    { label: "Equals", value: OperatorValueEnum.equals },
-    { label: "Is Greater than", value: OperatorValueEnum.greater_than },
-    { label: "Is Less than", value: OperatorValueEnum.less_than },
   ],
 
   [FilterEnum.network]: [

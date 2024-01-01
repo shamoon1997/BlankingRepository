@@ -43,7 +43,7 @@ export const FilterArea = () => {
           return (
             <div
               key={`${item.value}-${i}`}
-              className="flex justify-between rounded-lg bg-[#EEEEEE] px-2 py-1 text-[8px] font-semibold text-primary"
+              className="flex justify-between rounded-sm bg-[#EEEEEE] px-2 py-1 text-[8px] font-semibold text-primary"
             >
               <div className="capitalize">
                 {getFilterBadgeText(filter, operator, value)}
