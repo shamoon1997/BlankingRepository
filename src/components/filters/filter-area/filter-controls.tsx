@@ -22,6 +22,13 @@ const OperatorOptions: FilterSelectItemProps[] = [
 
 export const FilterControls = () => {
   const [filterActive, setFilterActive] = useState(false);
+
+  const [filterValue, setFilterValue] = useState(FilterOptions?.[0].value);
+  const [operatorValue, setOperatorValue] = useState(
+    OperatorOptions?.[0].value,
+  );
+  const [inputValue, setInputValue] = useState(OperatorOptions?.[0].value);
+
   const toggleFilterActive = () => setFilterActive(!filterActive);
   return (
     <div
@@ -35,17 +42,27 @@ export const FilterControls = () => {
       />
 
       {filterActive && (
-        <div className="mb-4 ml-1 mr-1 mt-5 flex flex-col gap-4">
-          <FilterSelectControl selectItems={FilterOptions} />
-          <FilterSelectControl selectItems={OperatorOptions} />
-          <FilterInputControl />
-        </div>
-      )}
-
-      {filterActive && (
-        <button className="mb-4 flex h-7 w-full items-center justify-center rounded bg-btn-primary text-xs font-semibold text-white">
-          Add Filter
-        </button>
+        <>
+          <div className="mb-4 ml-1 mr-1 mt-5 flex flex-col gap-4">
+            <FilterSelectControl
+              selectItems={FilterOptions}
+              setOption={setFilterValue}
+            />
+            <FilterSelectControl
+              selectItems={OperatorOptions}
+              setOption={setOperatorValue}
+            />
+            <FilterInputControl setValue={setInputValue} />
+          </div>
+          <button
+            onClick={() => {
+              console.log(filterValue, operatorValue, inputValue);
+            }}
+            className="mb-4 flex h-7 w-full items-center justify-center rounded bg-btn-primary text-xs font-semibold text-white"
+          >
+            Add Filter
+          </button>
+        </>
       )}
     </div>
   );

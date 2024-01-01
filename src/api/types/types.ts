@@ -103,3 +103,9 @@ interface PoleView {
 export type poleView = PoleView;
 
 export type PoleViewResponse = PoleView[];
+
+export interface DeploymentResponse {
+  name: string;
+  longitude: number;
+  latitude: number;
+}
