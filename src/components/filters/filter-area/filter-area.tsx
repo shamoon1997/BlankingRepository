@@ -9,6 +9,7 @@ import { PolesList } from "./poles-list";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { useActiveFilter, useRemoveFilter } from "@/state/map";
 import { getFilterBadgeText } from "@/utils/map";
+import { CloseIcon } from "@/assets";
 
 export const FilterArea = () => {
   const bbox = useMapboxBbox();
@@ -43,18 +44,16 @@ export const FilterArea = () => {
           return (
             <div
               key={`${item.value}-${i}`}
-              className="flex justify-between rounded-sm bg-[#EEEEEE] px-2 py-1 text-[8px] font-semibold text-primary"
+              className="flex items-center justify-between rounded-sm bg-[#EEEEEE] px-2 py-1  font-semibold text-primary"
             >
-              <div className="capitalize">
+              <div className="text-[11px] capitalize">
                 {getFilterBadgeText(filter, operator, value)}
               </div>
 
-              <div
-                className="ml-2 cursor-pointer rounded-full"
+              <CloseIcon
+                className="ml-2 h-2 w-2 cursor-pointer rounded-full text-black"
                 onClick={() => remove(i)}
-              >
-                x
-              </div>
+              />
             </div>
           );
         })}

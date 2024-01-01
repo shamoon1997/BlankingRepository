@@ -81,9 +81,13 @@ export const FilterControls = () => {
 
       {filterActive && (
         <button
-          onClick={() =>
-            apply({ filter: filter, operator: operator, value: valueForFilter })
-          }
+          onClick={() => {
+            apply({
+              filter: filter,
+              operator: operator,
+              value: valueForFilter,
+            });
+          }}
           className="mb-4 flex h-7 w-full items-center justify-center rounded bg-btn-primary text-xs font-semibold text-white"
         >
           Add Filter
