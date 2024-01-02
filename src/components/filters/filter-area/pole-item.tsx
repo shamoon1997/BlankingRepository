@@ -33,7 +33,8 @@ export const PoleItem = ({ device }: poleItemProps) => {
     >
       <div onClick={() => handlePoleClicked(device?.hardware_id)}>
         <p className="text-xs font-semibold text-primary">
-          {device?.hardware_id?.slice(0, 6)} • {device?.device_sn}
+          <span> {device?.hardware_id?.slice(0, 6)}</span> •{" "}
+          <span>{device?.device_sn}</span>
         </p>
       </div>
       <PoleViewButton

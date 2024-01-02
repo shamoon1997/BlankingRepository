@@ -6,9 +6,16 @@ import { useSelectedPoles } from "@/state";
 type PoleListProps = {
   data: BaseLayerResponse | undefined;
   sortBy: string;
+  isError: boolean;
+  isSuccess: boolean;
 };
 
-export const PolesList = ({ data, sortBy }: PoleListProps) => {
+export const PolesList = ({
+  data,
+  sortBy,
+  isError,
+  isSuccess,
+}: PoleListProps) => {
   const poleIds = useSelectedPoles();
 
   const checkPoleClicked = (hardwareId: string) => {
@@ -54,15 +61,58 @@ export const PolesList = ({ data, sortBy }: PoleListProps) => {
     ),
   );
 
+  if (nonClickedPoles.length === 0 && isSuccess) {
+    return (
+      <p className="pl-4 pr-4 text-[12px]">
+        No poles found in this area. Expanding your search may help.
+      </p>
+    );
+  }
+
+  // when our fetch is successful we render the list
+  if (isSuccess) {
+    return (
+      <ScrollArea.Root className="h-full w-full overflow-hidden">
+        <ScrollArea.Viewport className="h-full w-full pb-3">
+          {clickedPoles.map((device: Device, index: number) => (
+            <PoleItem key={index} device={device} devices={data?.devices} />
+          ))}
+          {nonClickedPoles.map((device: Device, index: number) => (
+            <PoleItem key={index} device={device} devices={data?.devices} />
+          ))}
+        </ScrollArea.Viewport>
+        <ScrollArea.Scrollbar className="mr-1 w-1 pb-3" orientation="vertical">
+          <ScrollArea.Thumb className="rounded bg-[#1616164D]" />
+        </ScrollArea.Scrollbar>
+      </ScrollArea.Root>
+    );
+  }
+
+  // otherwise return nothing
+  if (isError) {
+    return null;
+  }
+
+  // default is loading state as the map takes time to load, and we do not want to wait for it to reach the loading state, we just show it by default
   return (
     <ScrollArea.Root className="h-full w-full overflow-hidden">
       <ScrollArea.Viewport className="h-full w-full pb-3">
-        {clickedPoles.map((device: Device, index: number) => (
-          <PoleItem key={index} device={device} devices={data?.devices} />
-        ))}
-        {nonClickedPoles.map((device: Device, index: number) => (
-          <PoleItem key={index} device={device} devices={data?.devices} />
-        ))}
+        {[...Array(20)].map((_, i) => {
+          return (
+            <div
+              className="flex h-10 items-center justify-between pl-4 pr-4"
+              key={i}
+            >
+              <div className="flex items-center gap-1">
+                <p className="h-[16px] w-[38px] animate-pulse rounded-md bg-[#EEEEEE]" />
+                <span className="text-[#EEEEEE]">•</span>
+                <p className="h-[16px] w-[70px] animate-pulse rounded-md bg-[#EEEEEE]" />
+              </div>
+
+              <div className="h-[25px] w-[66px] animate-pulse rounded-md bg-[#EEEEEE]" />
+            </div>
+          );
+        })}
       </ScrollArea.Viewport>
       <ScrollArea.Scrollbar className="mr-1 w-1 pb-3" orientation="vertical">
         <ScrollArea.Thumb className="rounded bg-[#1616164D]" />

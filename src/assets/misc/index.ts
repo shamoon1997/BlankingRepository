@@ -10,6 +10,7 @@ import LayerStatusIcon from "./layer-status.svg";
 import HistoryIcon from "./history.svg";
 import EditIcon from "./edit.svg";
 import AddIcon from "./add.svg";
+import SelectedPole from "./selected-pole.svg";
 
 export {
   ChevronIcon,
@@ -24,4 +25,5 @@ export {
   HistoryIcon,
   EditIcon,
   AddIcon,
+  SelectedPole,
 };

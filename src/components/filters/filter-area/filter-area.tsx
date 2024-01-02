@@ -24,11 +24,29 @@ export const FilterArea = () => {
   const { removeFilter } = useFilterActions();
   const fromTo = useReadToFrom();
 
-  // network calls for all the layers in parallel
-  const { dataWithFilterApplied: networkData } = useGetNetworkLayer(bbox);
-  const { dataWithFilterApplied: gridScopeData } = useGetGridScopeLayer(bbox);
-  const { dataWithFilterApplied: equipmentData } = useGetEquipmentLayer(bbox);
-  const { dataWithFilterApplied: heatMapData } = useGetHeatMapLayer(
+  const {
+    dataWithFilterApplied: networkData,
+    isSuccess: isNetworkSuccess,
+    isError: isNetworkError,
+  } = useGetNetworkLayer(bbox);
+  const {
+    dataWithFilterApplied: gridScopeData,
+
+    isSuccess: isGridScopeSuccess,
+    isError: isGridScopeError,
+  } = useGetGridScopeLayer(bbox);
+  const {
+    dataWithFilterApplied: equipmentData,
+
+    isSuccess: isEquipmentSuccess,
+    isError: isEquipmentError,
+  } = useGetEquipmentLayer(bbox);
+  const {
+    dataWithFilterApplied: heatMapData,
+
+    isSuccess: isHeatmapSuccess,
+    isError: isHeatmapError,
+  } = useGetHeatMapLayer(
     bbox
       ? {
           ...bbox,
@@ -38,21 +56,34 @@ export const FilterArea = () => {
       : null,
   );
 
+  // default is loading is true
+  let isSuccess = false;
+  let isError = false;
   switch (validatedLayerUrlState.layer) {
     case "gridscope":
       data = gridScopeData;
+      isSuccess = isGridScopeSuccess;
+
+      isError = isGridScopeError;
       break;
     case "network":
       data = networkData;
+      isSuccess = isNetworkSuccess;
+
+      isError = isNetworkError;
       break;
     case "heatmap":
       data = heatMapData;
+      isSuccess = isHeatmapSuccess;
+      isError = isHeatmapError;
       break;
     case "equipment":
       data = equipmentData;
+      isSuccess = isEquipmentSuccess;
+      isError = isEquipmentError;
       break;
     default:
-      return;
+      break;
   }
 
   return (
@@ -81,7 +112,12 @@ export const FilterArea = () => {
       </div>
       <AreaSummary data={data} />
       <ListSorter sortBy={sortBy} setSortBy={setSortBy} />
-      <PolesList data={data} sortBy={sortBy} />
+      <PolesList
+        data={data}
+        sortBy={sortBy}
+        isSuccess={isSuccess}
+        isError={isError}
+      />
     </div>
   );
 };

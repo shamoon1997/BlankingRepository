@@ -18,8 +18,8 @@ import { LegendRange, MapStatusContainer } from "@/components";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
-import { MapsIcon } from "@/assets/pole-view";
 import { useSelectedPoles, useSelectedPolesActions } from "@/state";
+import { SelectedPole } from "@/assets";
 
 const GridScopeLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -157,8 +157,8 @@ export const GridScopeLayer = () => {
           >
             <div className="relative">
               {checkPoleClicked(i.properties.hardware_id) && (
-                <div className="absolute z-10">
-                  <MapsIcon className="text-blue-400" />
+                <div className="absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center">
+                  <SelectedPole className="h-[26px] w-[26px] text-blue-400" />
                 </div>
               )}
               <div
