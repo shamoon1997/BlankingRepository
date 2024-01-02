@@ -2,8 +2,15 @@ import { SearchIcon } from "@/assets";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState } from "react";
 
+const tabOptionsList: { title: string; key: string }[] = [
+  { title: "Metric Data", key: "metric" },
+  { title: "Per-Blob Data", key: "per-blob-data" },
+  { title: "High-res Data", key: "high-res-data" },
+  { title: "Photos", key: "photos" },
+];
+
 export const DeviceData = () => {
-  const [currentTab, setCurrentTab] = useState<"custom" | "default">("default");
+  const [currentTab, setCurrentTab] = useState<string>("");
 
   return (
     <div className="flex h-screen w-screen flex-col font-mont text-[#161616]">
@@ -15,43 +22,27 @@ export const DeviceData = () => {
       <div className="mt-2 h-[0.5px] w-screen bg-[#D9D9D9]" />
       <div className="flex px-4">
         <Tabs.Root
-          onValueChange={(e) => {
-            setCurrentTab(e as "default" | "custom");
-          }}
+          defaultValue="metric"
+          onValueChange={(e) => setCurrentTab(e)}
           value={currentTab}
-          onClick={(e) => e.stopPropagation()}
         >
           <Tabs.List className="flex gap-x-[30px] pt-2">
-            <Tabs.Trigger className="group flex justify-center" value="default">
-              <span className="text-primary-soft inline-block h-[22px] min-w-min border-b-[2px] border-transparent text-[12px] font-semibold  group-data-[state=active]:text-primary-blue">
-                Metric Data
-              </span>
-            </Tabs.Trigger>
-
-            <Tabs.Trigger
-              className="group flex justify-center"
-              value="per-blob-data"
-            >
-              <span className="text-primary-soft inline-block h-[22px] min-w-min border-b-[2px] border-transparent text-[12px] font-semibold  group-data-[state=active]:text-primary-blue">
-                Per-Blob Data
-              </span>
-            </Tabs.Trigger>
-
-            <Tabs.Trigger
-              className="group flex justify-center"
-              value="high-res-data"
-            >
-              <span className="text-primary-soft inline-block h-[22px] min-w-min border-b-[2px] border-transparent text-[12px] font-semibold  group-data-[state=active]:text-primary-blue">
-                High-res Data
-              </span>
-            </Tabs.Trigger>
-
-            <Tabs.Trigger className="group flex justify-center" value="photos">
-              <span className="text-primary-soft inline-block h-[22px] min-w-min border-b-[2px] border-transparent text-[12px] font-semibold  group-data-[state=active]:text-primary-blue">
-                Photos
-              </span>
-            </Tabs.Trigger>
+            {tabOptionsList.map((tab) => {
+              const { key, title } = tab;
+              return (
+                <Tabs.Trigger
+                  className="group flex justify-center"
+                  value={key}
+                  key={key}
+                >
+                  <span className="inline-block h-[22px] min-w-min border-b-[2px] border-transparent text-[12px] font-semibold text-primary-soft  group-data-[state=active]:text-primary-blue">
+                    {title}
+                  </span>
+                </Tabs.Trigger>
+              );
+            })}
           </Tabs.List>
+
           <div className="ml-[-16px] mt-2 h-[0.5px] w-screen bg-[#D9D9D9]" />
 
           <div className="flex gap-x-[30px]">
