@@ -41,7 +41,6 @@ export const CustomTimeRanges = ({ onApply }: CustomTimeRangesProps) => {
           });
           onApply();
         }
-
       }}
     >
       <ul className="grid w-[95%] grid-cols-2 gap-x-4 gap-y-1">
@@ -87,7 +86,6 @@ export const CustomTimeRanges = ({ onApply }: CustomTimeRangesProps) => {
             </p>
           )}
           {savedDates.map((date) => {
-            console.log(date);
             return (
               <div
                 onClick={() => {

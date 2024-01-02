@@ -7,6 +7,8 @@ import CrossIcon from "./cross.svg";
 import CalendarOpenIcon from "./calendar-opener.svg";
 import PoleStatusIcon from "./pole-status.svg";
 import LayerStatusIcon from "./layer-status.svg";
+import MinimizeIcon from "./minimize.svg";
+import CloseIcon from "./close.svg";
 
 export {
   ChevronIcon,
@@ -18,4 +20,6 @@ export {
   CalendarOpenIcon,
   PoleStatusIcon,
   LayerStatusIcon,
+  MinimizeIcon,
+  CloseIcon,
 };

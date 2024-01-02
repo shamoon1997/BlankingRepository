@@ -72,7 +72,7 @@ interface Neighbor {
   hardware_id: string;
 }
 
-interface PoleView {
+export interface PoleView {
   online: number;
   hardware_id: string;
   last_health_report: string;

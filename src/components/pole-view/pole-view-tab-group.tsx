@@ -7,7 +7,7 @@ import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 import { PoleViewResponse } from "@/api/types/types";
 
 const PoleViewTabGroup: React.FC = () => {
-  const [deviceIds, setDeviceIds] = useState<string[]>();
+  const [deviceIds, setDeviceIds] = useState<string[]>([]);
   const { data, error, isLoading } = useGetPoleView(deviceIds);
   const [poleDevices, setPoleDevices] = useState<
     PoleViewResponse | undefined
