@@ -1,6 +1,6 @@
-import { SearchIcon } from "@/assets";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState } from "react";
+import MetricsDataTab from "./metrics-data-tab";
 
 const tabOptionsList: { title: string; key: string }[] = [
   { title: "Metric Data", key: "metric" },
@@ -10,7 +10,7 @@ const tabOptionsList: { title: string; key: string }[] = [
 ];
 
 export const DeviceData = () => {
-  const [currentTab, setCurrentTab] = useState<string>("");
+  const [currentTab, setCurrentTab] = useState<string>("metric");
 
   return (
     <div className="flex h-screen w-screen flex-col font-mont text-[#161616]">
@@ -45,19 +45,8 @@ export const DeviceData = () => {
 
           <div className="ml-[-16px] mt-2 h-[0.5px] w-screen bg-[#D9D9D9]" />
 
-          <div className="flex gap-x-[30px]">
-            <div className="mt-1 w-[30px] rounded border-[2px] p-1">
-              <SearchIcon className="mt-[5.4px] h-[18px] w-[18px] shrink-0 self-start" />
-            </div>
-
-            <div className="mt-1 flex w-[120px] gap-x-[20px] rounded border-[2px] p-1">
-              <div className="text-[10px] text-[#8B8B8B]">Device</div>
-              <div className="text-[10px] text-[#8B8B8B]">Map(#)</div>
-            </div>
-          </div>
-
-          <Tabs.Content value="default">
-            <div>as</div>
+          <Tabs.Content value="metric">
+            <MetricsDataTab />
           </Tabs.Content>
 
           <Tabs.Content value="per-blob-data">
