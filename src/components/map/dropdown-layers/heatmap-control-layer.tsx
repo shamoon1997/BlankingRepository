@@ -13,7 +13,7 @@ export const HeatMapControlLayer: React.FC = () => {
         </div>
       </div>
 
-      <div className="pointer-events-none flex gap-2">
+      <div className="pointer-events-none flex gap-2 self-start">
         <div className="pointer-events-auto w-[170px]">
           <SelectDropdown options={heatMapOptions} searchParamKey={"heatmap"} />
         </div>
