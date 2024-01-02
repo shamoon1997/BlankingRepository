@@ -3,9 +3,12 @@ import { BaseLayerResponse, Device } from "@/api/types/types.ts";
 import { PoleItem } from "./pole-item";
 import { useSelectedPoles } from "@/state";
 
+export type SortingOrder = "asc" | "desc";
+
 type PoleListProps = {
   data: BaseLayerResponse | undefined;
   sortBy: string;
+  sortingOrder: SortingOrder;
   isError: boolean;
   isSuccess: boolean;
 };
@@ -15,6 +18,7 @@ export const PolesList = ({
   sortBy,
   isError,
   isSuccess,
+  sortingOrder,
 }: PoleListProps) => {
   const poleIds = useSelectedPoles();
 
@@ -28,21 +32,43 @@ export const PolesList = ({
     // Use sort based on the sortBy prop
     switch (sortBy) {
       case "sr-no":
-        return devices
-          .slice()
-          .sort((a, b) => a.device_sn.localeCompare(b.device_sn));
+        return devices.slice().sort((a, b) => {
+          if (sortingOrder === "asc") {
+            return a.device_sn.localeCompare(b.device_sn);
+          } else {
+            return b.device_sn.localeCompare(a.device_sn);
+          }
+        });
       case "last-seen":
-        return devices
-          .slice()
-          .sort(
-            (a, b) =>
+        return devices.slice().sort((a, b) => {
+          if (sortingOrder === "asc") {
+            return (
               new Date(a.last_health_report).getTime() -
-              new Date(b.last_health_report).getTime(),
-          );
+              new Date(b.last_health_report).getTime()
+            );
+          } else {
+            return (
+              new Date(b.last_health_report).getTime() -
+              new Date(a.last_health_report).getTime()
+            );
+          }
+        });
       case "connectivity":
-        return devices.slice().sort((a, b) => a.online - b.online);
+        return devices.slice().sort((a, b) => {
+          if (sortingOrder === "asc") {
+            return a.online - b.online;
+          } else {
+            return b.online - a.online;
+          }
+        });
       case "lifecycle":
-        return devices.slice().sort((a, b) => a.network_mode - b.network_mode);
+        return devices.slice().sort((a, b) => {
+          if (sortingOrder === "asc") {
+            return a.network_mode - b.network_mode;
+          } else {
+            return b.network_mode - a.network_mode;
+          }
+        });
 
       default:
         return devices;

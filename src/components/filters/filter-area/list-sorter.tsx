@@ -3,13 +3,21 @@ import { useClickAway } from "@uidotdev/usehooks";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import { useState } from "react";
 import { PoleSorterItem } from "./pole-sorter-radio-item";
+import { SortingOrder } from "@/components/filters/filter-area/poles-list.tsx";
 
 type ListSorterProps = {
   sortBy: string;
   setSortBy: React.Dispatch<React.SetStateAction<string>>;
+  setSortOrder: React.Dispatch<React.SetStateAction<SortingOrder>>;
+  sortingOrder: SortingOrder;
 };
 
-export const ListSorter = ({ sortBy, setSortBy }: ListSorterProps) => {
+export const ListSorter = ({
+  sortBy,
+  setSortBy,
+  setSortOrder,
+  sortingOrder,
+}: ListSorterProps) => {
   const [showSortBy, setShowSortBy] = useState(false);
 
   const ref = useClickAway<HTMLDivElement>((e) => {
@@ -50,14 +58,21 @@ export const ListSorter = ({ sortBy, setSortBy }: ListSorterProps) => {
         </span>
       </div>
       <div
-        id={"sort-icons"}
         onClick={() => {
-          setShowSortBy(!showSortBy);
+          setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
         }}
         className="flex cursor-pointer items-center gap-[2px]"
       >
-        <UpTriangleIcon />
-        <DownTriangleIcon />
+        <UpTriangleIcon
+          className={`${
+            sortingOrder === "asc" ? "text-[#5B5B5B]" : "text-[#C1C1C1]"
+          }`}
+        />
+        <DownTriangleIcon
+          className={`${
+            sortingOrder === "desc" ? "text-[#5B5B5B]" : "text-[#C1C1C1]"
+          }`}
+        />
       </div>
       {showSortBy && (
         <RadioGroup.Root

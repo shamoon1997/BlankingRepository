@@ -5,7 +5,7 @@ import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.t
 import { AreaSummary } from "./area-summary";
 import { FilterControls } from "./filter-controls";
 import { ListSorter } from "./list-sorter";
-import { PolesList } from "./poles-list";
+import { PolesList, SortingOrder } from "./poles-list";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { useActiveFilter, useFilterActions } from "@/state/map";
 import { getFilterBadgeText } from "@/utils/map";
@@ -18,6 +18,7 @@ export const FilterArea = () => {
   const bbox = useMapboxBbox();
   const { validatedLayerUrlState } = useLayerControlUrlState();
   const [sortBy, setSortBy] = useState<string>("sr-no");
+  const [sortOrder, setSortOrder] = useState<SortingOrder>("asc");
   let data; // will contain all the layers data
 
   const searchFilter = useActiveFilter();
@@ -111,10 +112,16 @@ export const FilterArea = () => {
         })}
       </div>
       <AreaSummary data={data} />
-      <ListSorter sortBy={sortBy} setSortBy={setSortBy} />
+      <ListSorter
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        setSortOrder={setSortOrder}
+        sortingOrder={sortOrder}
+      />
       <PolesList
         data={data}
         sortBy={sortBy}
+        sortingOrder={sortOrder}
         isSuccess={isSuccess}
         isError={isError}
       />
