@@ -104,12 +104,12 @@ export const PolesList = ({
               key={i}
             >
               <div className="flex items-center gap-1">
-                <p className="h-[16px] w-[38px] animate-pulse rounded-md bg-[#EEEEEE]" />
+                <p className="h-[16px] w-[38px] animate-pulse rounded bg-[#EEEEEE]" />
                 <span className="text-[#EEEEEE]">•</span>
-                <p className="h-[16px] w-[70px] animate-pulse rounded-md bg-[#EEEEEE]" />
+                <p className="h-[16px] w-[70px] animate-pulse rounded bg-[#EEEEEE]" />
               </div>
 
-              <div className="h-[25px] w-[66px] animate-pulse rounded-md bg-[#EEEEEE]" />
+              <div className="h-[25px] w-[66px] animate-pulse rounded bg-[#EEEEEE]" />
             </div>
           );
         })}
