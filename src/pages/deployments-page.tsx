@@ -9,7 +9,7 @@ import { ErrorBoundary } from "react-error-boundary";
 export const DeploymentPage = withAuthenticationRequired(
   () => {
     return (
-      <div>
+      <div className="w-full">
         <DeviceData />
       </div>
       // <div className="flex h-screen w-full flex-1 flex-col">

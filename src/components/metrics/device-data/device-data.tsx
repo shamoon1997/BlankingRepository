@@ -13,20 +13,23 @@ export const DeviceData = () => {
   const [currentTab, setCurrentTab] = useState<string>("metric");
 
   return (
-    <div className="flex h-screen w-screen flex-col font-mont text-[#161616]">
-      <div className="flex p-4">
+    <div className="flex h-screen flex-col font-mont text-[#161616]">
+      <div className="flex px-[26px] pb-[10px] pt-[20px]">
         <div className="text-[15px] font-semibold leading-normal tracking-tight">
           Device Data
         </div>
       </div>
-      <div className="mt-2 h-[0.5px] w-screen bg-[#D9D9D9]" />
-      <div className="flex px-4">
+
+      <div className="h-[0.5px] w-full bg-[#D9D9D9]" />
+
+      <div className="flex">
         <Tabs.Root
           defaultValue="metric"
+          className="w-full"
           onValueChange={(e) => setCurrentTab(e)}
           value={currentTab}
         >
-          <Tabs.List className="flex gap-x-[30px] pt-2">
+          <Tabs.List className="flex gap-x-[30px] px-4 pt-2">
             {tabOptionsList.map((tab) => {
               const { key, title } = tab;
               return (
@@ -43,21 +46,21 @@ export const DeviceData = () => {
             })}
           </Tabs.List>
 
-          <div className="ml-[-16px] mt-2 h-[0.5px] w-screen bg-[#D9D9D9]" />
+          <div className="mt-[6px] h-[0.5px] w-full bg-[#D9D9D9]" />
 
-          <Tabs.Content value="metric">
+          <Tabs.Content className="w-full " value="metric">
             <MetricsDataTab />
           </Tabs.Content>
 
-          <Tabs.Content value="per-blob-data">
+          <Tabs.Content className="w-full px-4" value="per-blob-data">
             <div>per blob data</div>
           </Tabs.Content>
 
-          <Tabs.Content value="high-res-data">
+          <Tabs.Content className="w-full px-4" value="high-res-data">
             <div>high res data</div>
           </Tabs.Content>
 
-          <Tabs.Content value="photos">
+          <Tabs.Content className="w-full px-4" value="photos">
             <div>photos</div>
           </Tabs.Content>
         </Tabs.Root>
