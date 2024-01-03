@@ -1,4 +1,12 @@
-import { ChevronIcon, CrossIcon, SearchIcon } from "@/assets";
+import {
+  ChevronIcon,
+  CrossIcon,
+  MoveGraphIcon,
+  SearchIcon,
+  ZoomInIcon,
+  ZoomOutIcon,
+  ZoomSectionIcon,
+} from "@/assets";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import React from "react";
 import * as Accordion from "@radix-ui/react-accordion";
@@ -35,7 +43,7 @@ const MetricsDataTab: React.FC = () => {
             </div>
           </div>
 
-          <div className="w-[154px]">
+          <div className="">
             <ToggleGroup.Root
               className="inline-flex h-[30px] w-full justify-between rounded-sm "
               type="single"
@@ -47,28 +55,36 @@ const MetricsDataTab: React.FC = () => {
                 className="grid w-full place-content-center border-[2px] bg-white p-[10px] text-base first:rounded-l last:rounded-r hover:bg-blue-100 focus:outline-none data-[state=on]:border-[#5283ED] data-[state=on]:bg-[#DBE6FF]"
                 aria-label="Left aligned"
               >
-                1
+                <div className="h-[12px] w-[12px]">
+                  <ZoomInIcon />
+                </div>
               </ToggleGroup.Item>
               <ToggleGroup.Item
                 value="2"
                 className="grid w-full place-content-center border-[2px] bg-white p-[10px] text-base first:rounded-l last:rounded-r hover:bg-blue-100 focus:outline-none data-[state=on]:border-[#5283ED] data-[state=on]:bg-[#DBE6FF]"
                 aria-label="Center aligned"
               >
-                2
+                <div className="h-[12px] w-[12px]">
+                  <ZoomOutIcon />
+                </div>
               </ToggleGroup.Item>
               <ToggleGroup.Item
                 value="3"
                 className="grid w-full place-content-center border-[2px] bg-white p-[10px] text-base first:rounded-l last:rounded-r hover:bg-blue-100 focus:outline-none data-[state=on]:border-[#5283ED] data-[state=on]:bg-[#DBE6FF]"
                 aria-label="Center aligned"
               >
-                3
+                <div className="h-[12px] w-[12px]">
+                  <MoveGraphIcon />
+                </div>
               </ToggleGroup.Item>
               <ToggleGroup.Item
                 value="4"
                 className="grid w-full place-content-center border-[2px] bg-white p-[10px] text-base first:rounded-l last:rounded-r hover:bg-blue-100 focus:outline-none data-[state=on]:border-[#5283ED] data-[state=on]:bg-[#DBE6FF]"
                 aria-label="Right aligned"
               >
-                4
+                <div className="h-[12px] w-[12px]">
+                  <ZoomSectionIcon />
+                </div>
               </ToggleGroup.Item>
             </ToggleGroup.Root>
           </div>
@@ -152,7 +168,7 @@ const MetricsDataTab: React.FC = () => {
                             GS124• 4024 • Lora
                           </p>
                         </div>
-                        <button className="grid h-[25px] w-[25px] place-content-center rounded-md border-[0.8px] border-[#CCCCCC] bg-white">
+                        <button className="grid h-[25px] w-[25px] place-content-center rounded-md border-[0.8px] border-[#CCCCCC] bg-white hover:bg-slate-100">
                           <div className="grid h-[12px] w-[12px] rotate-45 place-content-center ">
                             <CrossIcon />
                           </div>
