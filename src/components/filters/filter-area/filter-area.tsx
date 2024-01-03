@@ -64,13 +64,11 @@ export const FilterArea = () => {
     case "gridscope":
       data = gridScopeData;
       isSuccess = isGridScopeSuccess;
-
       isError = isGridScopeError;
       break;
     case "network":
       data = networkData;
       isSuccess = isNetworkSuccess;
-
       isError = isNetworkError;
       break;
     case "heatmap":

@@ -11,6 +11,8 @@ import HistoryIcon from "./history.svg";
 import EditIcon from "./edit.svg";
 import AddIcon from "./add.svg";
 import SelectedPole from "./selected-pole.svg";
+import MinimizeIcon from "./minimize.svg";
+import CloseIcon from "./close.svg";
 
 export {
   ChevronIcon,
@@ -26,4 +28,6 @@ export {
   EditIcon,
   AddIcon,
   SelectedPole,
+  MinimizeIcon,
+  CloseIcon,
 };

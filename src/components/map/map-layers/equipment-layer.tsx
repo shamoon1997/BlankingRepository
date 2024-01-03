@@ -23,7 +23,9 @@ import { MapStatusContainer, MapToolTipContainer } from "@/components";
 import { SettingIcon } from "@/assets/pole-view";
 import { Button } from "@/components/common";
 import { capitalize, intersection } from "lodash";
+import { useSelectedPoles, useSelectedPolesActions } from "@/state";
 import { useSelectedEquipments } from "@/state/map/selected-equipments-store.tsx";
+import { MapPopup } from "@/components/map/map-pop-up/map-pop-up.tsx";
 
 const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -36,7 +38,8 @@ export const EquipmentLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const bbox = useMapboxBbox();
   const [hoveredPoint, setHoveredPoint] = useState<Device | null>(null);
-
+  const selectedPoleIds = useSelectedPoles();
+  const { setSelectedPoleIds } = useSelectedPolesActions();
   const selectedEquipments = useSelectedEquipments();
 
   const {
@@ -99,8 +102,41 @@ export const EquipmentLayer = () => {
     };
   }, [data?.devices]);
 
+  const checkPoleClicked = (hardwareId: string) => {
+    return selectedPoleIds.find(
+      (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
+    );
+  };
+
+  const handlePoleClicked = (poleId: string) => {
+    if (selectedPoleIds.length < 3) {
+      // allowing only three poles to be clicked
+      if (!checkPoleClicked(poleId)) {
+        setSelectedPoleIds([
+          ...selectedPoleIds,
+          { selectedPoleId: poleId, isMinimized: false },
+        ]);
+      }
+    }
+  };
+
   return (
     <>
+      <div className="absolute z-20 flex overflow-y-auto">
+        {selectedPoleIds
+          .slice()
+          .sort((a, b) =>
+            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
+          )
+          .map((selectedPole) => (
+            <MapPopup
+              selectedPoleId={selectedPole.selectedPoleId}
+              isMinimized={selectedPole.isMinimized}
+              key={selectedPole.selectedPoleId}
+            />
+          ))}
+      </div>
+
       {points.map((i) => {
         const [lng, lat] = i.geometry.coordinates;
         const isAllSelected = selectedEquipments.find(
@@ -152,6 +188,7 @@ export const EquipmentLayer = () => {
                   ? 1000
                   : 0,
             }}
+            onClick={() => handlePoleClicked(i?.properties?.hardware_id)}
           >
             <div
               onMouseEnter={() => setHoveredPoint(i.properties)}
@@ -169,7 +206,17 @@ export const EquipmentLayer = () => {
                     <div className="w-[250px] px-[11px] py-[11px]">
                       <div className="flex flex-grow items-center justify-between gap-2">
                         <div className="flex items-center gap-[7px]">
-                          <MapsIcon className="h-[17px]" />
+                          <div className="relative">
+                            {checkPoleClicked(i.properties.hardware_id) && (
+                              <div className="absolute z-10">
+                                <MapsIcon className="h-[17px] text-blue-400" />
+                              </div>
+                            )}
+                            <div
+                              className={`drop-shadow-map-dot ${color} z-0 h-6 w-6 rounded-full border-2 border-solid border-white`}
+                            />
+                          </div>
+
                           <div className="font-mont  text-[11px] font-normal leading-normal text-black">
                             {i.properties.pole_id} •{" "}
                             {stripZeros(i.properties.device_sn ?? "")}
@@ -209,7 +256,8 @@ export const EquipmentLayer = () => {
                 )}
             </div>
 
-            {validatedMapUrlState.zoom > 16 &&
+            {(validatedMapUrlState.zoom > 16 ||
+              checkPoleClicked(i.properties.hardware_id)) &&
               !(
                 hoveredPoint &&
                 hoveredPoint.hardware_id === i.properties.hardware_id

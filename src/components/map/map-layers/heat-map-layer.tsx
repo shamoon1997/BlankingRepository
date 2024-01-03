@@ -25,6 +25,9 @@ import {
 } from "@/assets/pole-hover";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 import { ElectrometerIcon, VibrationIcon } from "@/assets";
+import { useSelectedPoles, useSelectedPolesActions } from "@/state";
+import { MapPopup } from "@/components/map/map-pop-up/map-pop-up.tsx";
+import { MapsIcon } from "@/assets/pole-view";
 import { useReadToFrom } from "@/hooks/calendar";
 
 const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
@@ -46,6 +49,8 @@ const labelColors = [
 export const HeatMapLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const { validatedLayerUrlState } = useLayerControlUrlState();
+  const selectedPoleIds = useSelectedPoles();
+  const { setSelectedPoleIds } = useSelectedPolesActions();
 
   const bbox = useMapboxBbox();
 
@@ -105,7 +110,6 @@ export const HeatMapLayer = () => {
           }
         });
       });
-      console.log(coordinates);
     }
 
     return {
@@ -144,12 +148,41 @@ export const HeatMapLayer = () => {
       colors: labelColors,
     });
   }
+  const checkPoleClicked = (hardwareId: string) => {
+    return selectedPoleIds.find(
+      (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
+    );
+  };
 
-  console.log(intervals, "intervals");
-  console.log(legendLabels, "legendLabels");
+  const handlePoleClicked = (poleId: string) => {
+    if (selectedPoleIds.length < 3) {
+      // allowing only three poles to be clicked
+      if (!checkPoleClicked(poleId)) {
+        setSelectedPoleIds([
+          ...selectedPoleIds,
+          { selectedPoleId: poleId, isMinimized: false },
+        ]);
+      }
+    }
+  };
 
   return (
     <>
+      <div className="absolute z-20 flex overflow-y-auto">
+        {selectedPoleIds
+          .slice()
+          .sort((a, b) =>
+            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
+          )
+          .map((selectedPole) => (
+            <MapPopup
+              selectedPoleId={selectedPole.selectedPoleId}
+              isMinimized={selectedPole.isMinimized}
+              key={selectedPole.selectedPoleId}
+            />
+          ))}
+      </div>
+
       {points.map((i) => {
         const [lng, lat] = i.geometry.coordinates;
         let color = "bg-unknown";
@@ -186,14 +219,25 @@ export const HeatMapLayer = () => {
         }
 
         return (
-          <Marker key={id} latitude={lat} longitude={lng}>
+          <Marker
+            key={id}
+            latitude={lat}
+            longitude={lng}
+            onClick={() => handlePoleClicked(i?.properties?.hardware_id)}
+          >
             <div className="relative">
+              {checkPoleClicked(i.properties.hardware_id) && (
+                <div className="absolute z-10">
+                  <MapsIcon className="text-blue-400" />
+                </div>
+              )}
               <div
                 className={`drop-shadow-map-dot ${color} z-0 h-6 w-6 rounded-full border-2 border-solid border-white`}
               />
             </div>
 
-            {validatedMapUrlState.zoom > 16 && (
+            {(validatedMapUrlState.zoom > 16 ||
+              checkPoleClicked(i.properties.hardware_id)) && (
               <MapZoomedBoxContainer>
                 <div className="flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
                   <div className="flex items-center gap-[7px] font-medium">

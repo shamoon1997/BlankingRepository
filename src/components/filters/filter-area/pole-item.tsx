@@ -1,6 +1,5 @@
 import { PoleViewButton } from "./pole-view-button";
 import { Device } from "@/api/types/types.ts";
-
 import { useNavigate } from "react-router-dom";
 import { useSelectedPoles, useSelectedPolesActions } from "@/state";
 
@@ -10,17 +9,21 @@ type poleItemProps = {
 };
 
 export const PoleItem = ({ device }: poleItemProps) => {
-  const poleIds = useSelectedPoles();
-  const { setPoleIds } = useSelectedPolesActions();
+  const selectedPoleIds = useSelectedPoles();
+  const { setSelectedPoleIds } = useSelectedPolesActions();
   const navigate = useNavigate();
 
   const checkPoleClicked = (hardwareId: string) => {
-    return poleIds.find((poleId) => poleId === hardwareId);
+    return selectedPoleIds.find(
+      (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
+    );
   };
 
   const handlePoleClicked = (hardwareId: string) => {
-    const filteredPole = poleIds.filter((poleId) => poleId !== hardwareId);
-    setPoleIds([...filteredPole]);
+    const filteredPole = selectedPoleIds.filter(
+      (selectedPoleId) => selectedPoleId.selectedPoleId !== hardwareId,
+    );
+    setSelectedPoleIds([...filteredPole]);
   };
 
   return (
@@ -40,16 +43,16 @@ export const PoleItem = ({ device }: poleItemProps) => {
       <PoleViewButton
         onClick={() => {
           if (checkPoleClicked(device?.hardware_id)) {
-            console.log("poleIds", poleIds);
-
-            if (poleIds.length > 0) {
-              const queryParams = poleIds
-                .map((poleId) => `deviceId=${poleId}`)
+            if (selectedPoleIds.length > 0) {
+              const queryParams = selectedPoleIds
+                .map(
+                  (selectedPoleId) =>
+                    `deviceId=${selectedPoleId.selectedPoleId}`,
+                )
                 .join("&");
-              navigate(`/dashboard/poleView?${queryParams}`);
+              navigate(`/dashboard/poleView?${queryParams}`, { replace: true });
             }
           }
-          console.log("onClicked");
         }}
       />
     </div>

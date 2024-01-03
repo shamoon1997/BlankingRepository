@@ -23,7 +23,9 @@ export const PolesList = ({
   const poleIds = useSelectedPoles();
 
   const checkPoleClicked = (hardwareId: string) => {
-    return poleIds.find((hardware_id) => hardware_id === hardwareId);
+    return poleIds.find(
+      (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
+    );
   };
 
   const sortDevices = (devices: Device[] | undefined) => {

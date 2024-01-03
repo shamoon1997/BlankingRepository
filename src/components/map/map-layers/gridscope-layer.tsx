@@ -19,6 +19,7 @@ import { MapNetworkStatus } from "@/components/map/map-network-status/map-networ
 import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { useSelectedPoles, useSelectedPolesActions } from "@/state";
+import { MapPopup } from "@/components/map/map-pop-up/map-pop-up.tsx";
 import { SelectedPole } from "@/assets";
 
 const GridScopeLayerLineStyles: mapboxgl.LinePaint = {
@@ -32,8 +33,8 @@ export const GridScopeLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const { validatedLayerUrlState } = useLayerControlUrlState();
   const bbox = useMapboxBbox();
-  const poleIds = useSelectedPoles();
-  const { setPoleIds } = useSelectedPolesActions();
+  const selectedPoleIds = useSelectedPoles();
+  const { setSelectedPoleIds } = useSelectedPolesActions();
 
   const {
     dataWithFilterApplied: data,
@@ -109,17 +110,39 @@ export const GridScopeLayer = () => {
   }, [filteredData]);
 
   const checkPoleClicked = (hardwareId: string) => {
-    return poleIds.find((hardware_id: string) => hardware_id === hardwareId);
+    return selectedPoleIds.find(
+      (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
+    );
   };
-  const handlePoleClicked = (hardwareId: string) => {
-    if (poleIds.length < 3) {
+
+  const handlePoleClicked = (poleId: string) => {
+    if (selectedPoleIds.length < 3) {
       // allowing only three poles to be clicked
-      setPoleIds([...poleIds, hardwareId]);
+      if (!checkPoleClicked(poleId)) {
+        setSelectedPoleIds([
+          ...selectedPoleIds,
+          { selectedPoleId: poleId, isMinimized: false },
+        ]);
+      }
     }
   };
 
   return (
     <>
+      <div className="absolute z-20 flex overflow-y-auto">
+        {selectedPoleIds
+          .slice()
+          .sort((a, b) =>
+            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
+          )
+          .map((selectedPole) => (
+            <MapPopup
+              selectedPoleId={selectedPole.selectedPoleId}
+              isMinimized={selectedPole.isMinimized}
+              key={selectedPole.selectedPoleId}
+            />
+          ))}
+      </div>
       {points.map((i) => {
         const [lng, lat] = i.geometry.coordinates;
         let color = "bg-unknown";
@@ -153,7 +176,7 @@ export const GridScopeLayer = () => {
             key={id}
             latitude={lat}
             longitude={lng}
-            onClick={() => handlePoleClicked(i.properties.hardware_id)}
+            onClick={() => handlePoleClicked(i?.properties?.hardware_id)}
           >
             <div className="relative">
               {checkPoleClicked(i.properties.hardware_id) && (
