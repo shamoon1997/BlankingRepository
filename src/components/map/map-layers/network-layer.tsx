@@ -13,7 +13,7 @@ import {
   SpottyIcon,
 } from "@/assets/pole-hover";
 import { MapStatusContainer } from "@/components";
-import { LegendItem } from "@/components/Legend/legend-item/legend-item";
+
 import { stripZeros } from "@/utils/strings/strip-zeros";
 import { NetworkControlLayer } from "@/components/map/dropdown-layers/network-control-layer";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
@@ -21,7 +21,8 @@ import { MapNetworkStatus } from "@/components/map/map-network-status/map-networ
 import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
 import { useSelectedPoles, useSelectedPolesActions } from "@/state";
 import { MapPopup } from "@/components/map/map-pop-up/map-pop-up.tsx";
-import { MapsIcon } from "@/assets/pole-view";
+import { LegendItem } from "@/components/legend/legend-item/legend-item.tsx";
+import { SelectedPoleIcon } from "@/assets";
 
 const NetworkLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -33,7 +34,8 @@ const NetworkLayerLineStyles: mapboxgl.LinePaint = {
 export const NetworkLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const selectedPoleIds = useSelectedPoles();
-  const { setSelectedPoleIds } = useSelectedPolesActions();
+  const { checkIfPoleIsSelected, toggleAddSelectedPole } =
+    useSelectedPolesActions();
   const bbox = useMapboxBbox();
   const {
     dataWithFilterApplied: data,
@@ -110,23 +112,23 @@ export const NetworkLayer = () => {
     };
   }, [filteredData]);
 
-  const checkPoleClicked = (hardwareId: string) => {
-    return selectedPoleIds.find(
-      (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
-    );
-  };
-
-  const handlePoleClicked = (poleId: string) => {
-    if (selectedPoleIds.length < 3) {
-      // allowing only three poles to be clicked
-      if (!checkPoleClicked(poleId)) {
-        setSelectedPoleIds([
-          ...selectedPoleIds,
-          { selectedPoleId: poleId, isMinimized: false },
-        ]);
-      }
-    }
-  };
+  // const checkPoleClicked = (hardwareId: string) => {
+  //   return selectedPoleIds.find(
+  //     (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
+  //   );
+  // };
+  //
+  // const handlePoleClicked = (poleId: string) => {
+  //   if (selectedPoleIds.length < 3) {
+  //     // allowing only three poles to be clicked
+  //     if (!checkPoleClicked(poleId)) {
+  //       setSelectedPoleIds([
+  //         ...selectedPoleIds,
+  //         { selectedPoleId: poleId, isMinimized: false },
+  //       ]);
+  //     }
+  //   }
+  // };
 
   return (
     <>
@@ -138,9 +140,9 @@ export const NetworkLayer = () => {
           )
           .map((selectedPole) => (
             <MapPopup
-              selectedPoleId={selectedPole.selectedPoleId}
+              selectedPoleHardwareId={selectedPole.selectedPoleHardwareId}
               isMinimized={selectedPole.isMinimized}
-              key={selectedPole.selectedPoleId}
+              key={selectedPole.selectedPoleHardwareId}
             />
           ))}
       </div>
@@ -177,12 +179,20 @@ export const NetworkLayer = () => {
             key={id}
             latitude={lat}
             longitude={lng}
-            onClick={() => handlePoleClicked(i?.properties?.hardware_id)}
+            onClick={() =>
+              toggleAddSelectedPole({
+                hardwareId: i.properties.hardware_id,
+                deviceSerialNumber: i.properties.device_sn,
+              })
+            }
+            style={{
+              zIndex: checkIfPoleIsSelected(i.properties.hardware_id) ? 200 : 0,
+            }}
           >
             <div className="relative">
-              {checkPoleClicked(i.properties.hardware_id) && (
-                <div className="absolute z-10">
-                  <MapsIcon className="text-blue-400" />
+              {checkIfPoleIsSelected(i.properties.hardware_id) && (
+                <div className="absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center">
+                  <SelectedPoleIcon className="h-[26px] w-[26px] text-blue-400" />
                 </div>
               )}
               <div
@@ -191,7 +201,7 @@ export const NetworkLayer = () => {
             </div>
 
             {(validatedMapUrlState.zoom > 16 ||
-              checkPoleClicked(i.properties.hardware_id)) && (
+              checkIfPoleIsSelected(i.properties.hardware_id)) && (
               <MapZoomedBoxContainer>
                 <div className="flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
                   <div className="flex items-center gap-[7px] font-medium">

@@ -1,5 +1,5 @@
 type PoleviewButtonProps = {
-  onClick: () => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 export const PoleViewButton = ({ onClick }: PoleviewButtonProps) => {
   return (

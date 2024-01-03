@@ -8,7 +8,7 @@ import { useSelectedPolesActions, useSelectedPoles } from "@/state";
 import { MapMinimizeView } from "@/components/map/map-minimize-view/map-minimize-view";
 
 type MapPopProps = {
-  selectedPoleId: string;
+  selectedPoleHardwareId: string;
   isMinimized: boolean;
 };
 
@@ -53,10 +53,13 @@ const openGoogleMaps = (
   window.open(url, "_blank");
 };
 
-export const MapPopup = ({ selectedPoleId, isMinimized }: MapPopProps) => {
-  const { data, error, isLoading } = useGetPoleView([selectedPoleId]);
+export const MapPopup = ({
+  selectedPoleHardwareId,
+  isMinimized,
+}: MapPopProps) => {
+  const { data, error, isLoading } = useGetPoleView([selectedPoleHardwareId]);
   const { setSelectedPoleIds } = useSelectedPolesActions();
-  const selectedPoleIds = useSelectedPoles();
+  const selectedPoles = useSelectedPoles();
 
   const [deviceData, setDeviceData] = useState<PoleView | undefined>();
 
@@ -69,26 +72,34 @@ export const MapPopup = ({ selectedPoleId, isMinimized }: MapPopProps) => {
   }, [data, isLoading, error]);
 
   const handleClose = () => {
-    let filteredPoleIds = selectedPoleIds.filter(
-      (selectedPoleIdO) => selectedPoleIdO.selectedPoleId !== selectedPoleId,
+    const filteredSelectedPoles = selectedPoles.filter(
+      (selectedPoleIdO) =>
+        selectedPoleIdO.selectedPoleHardwareId !== selectedPoleHardwareId,
     );
-    setSelectedPoleIds([...filteredPoleIds]);
+    setSelectedPoleIds([...filteredSelectedPoles]);
   };
 
   const handleMinimize = () => {
-    let foundIndex = selectedPoleIds.findIndex(
-      (selectedPoleIdO) => selectedPoleIdO.selectedPoleId == selectedPoleId,
-    );
-    selectedPoleIds[foundIndex].isMinimized = true;
-    setSelectedPoleIds([...selectedPoleIds]);
+    const updatedSelectedPoles = selectedPoles.map((selectedPole) => {
+      if (selectedPole.selectedPoleHardwareId == selectedPoleHardwareId) {
+        return {
+          ...selectedPole,
+          isMinimized: true,
+        };
+      } else {
+        return selectedPole;
+      }
+    });
+    setSelectedPoleIds(updatedSelectedPoles);
   };
 
   const handleMaximize = () => {
-    let foundIndex = selectedPoleIds.findIndex(
-      (selectedPoleIdO) => selectedPoleIdO.selectedPoleId == selectedPoleId,
+    const foundIndex = selectedPoles.findIndex(
+      (selectedPoleIdO) =>
+        selectedPoleIdO.selectedPoleHardwareId == selectedPoleHardwareId,
     );
-    selectedPoleIds[foundIndex].isMinimized = false;
-    setSelectedPoleIds([...selectedPoleIds]);
+    selectedPoles[foundIndex].isMinimized = false;
+    setSelectedPoleIds([...selectedPoles]);
   };
 
   return !isMinimized ? (
@@ -279,7 +290,7 @@ export const MapPopup = ({ selectedPoleId, isMinimized }: MapPopProps) => {
       className="flex h-[84vh] w-full max-w-[292px] flex-col justify-end gap-0 hover:cursor-pointer"
       onClick={() => handleMaximize()}
     >
-      <MapMinimizeView selectedPoleId={selectedPoleId} />
+      <MapMinimizeView selectedPoleId={selectedPoleHardwareId} />
     </div>
   );
 };

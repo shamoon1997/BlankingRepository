@@ -12,13 +12,12 @@ import { MapNetworkStatus } from "@/components/map/map-network-status/map-networ
 import { useGetEquipmentLayer } from "@/api/hooks/maps/use-get-equipment-layer.ts";
 import {
   HoverPinIcon,
-  MapsIcon,
   OfflineIcon,
   OnlineIcon,
   SpottyIcon,
 } from "@/assets/pole-hover";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
-import { SettingsIcon } from "@/assets";
+import { SelectedPoleIcon, SettingsIcon } from "@/assets";
 import { MapStatusContainer, MapToolTipContainer } from "@/components";
 import { SettingIcon } from "@/assets/pole-view";
 import { Button } from "@/components/common";
@@ -38,8 +37,9 @@ export const EquipmentLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const bbox = useMapboxBbox();
   const [hoveredPoint, setHoveredPoint] = useState<Device | null>(null);
-  const selectedPoleIds = useSelectedPoles();
-  const { setSelectedPoleIds } = useSelectedPolesActions();
+  const selectedPoles = useSelectedPoles();
+  const { checkIfPoleIsSelected, toggleAddSelectedPole } =
+    useSelectedPolesActions();
   const selectedEquipments = useSelectedEquipments();
 
   const {
@@ -102,37 +102,37 @@ export const EquipmentLayer = () => {
     };
   }, [data?.devices]);
 
-  const checkPoleClicked = (hardwareId: string) => {
-    return selectedPoleIds.find(
-      (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
-    );
-  };
-
-  const handlePoleClicked = (poleId: string) => {
-    if (selectedPoleIds.length < 3) {
-      // allowing only three poles to be clicked
-      if (!checkPoleClicked(poleId)) {
-        setSelectedPoleIds([
-          ...selectedPoleIds,
-          { selectedPoleId: poleId, isMinimized: false },
-        ]);
-      }
-    }
-  };
+  // const checkPoleClicked = (hardwareId: string) => {
+  //   return selectedPoles.find(
+  //     (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
+  //   );
+  // };
+  //
+  // const handlePoleClicked = (poleId: string) => {
+  //   if (selectedPoles.length < 3) {
+  //     // allowing only three poles to be clicked
+  //     if (!checkPoleClicked(poleId)) {
+  //       setSelectedPoleIds([
+  //         ...selectedPoles,
+  //         { selectedPoleId: poleId, isMinimized: false },
+  //       ]);
+  //     }
+  //   }
+  // };
 
   return (
     <>
       <div className="absolute z-20 flex overflow-y-auto">
-        {selectedPoleIds
+        {selectedPoles
           .slice()
           .sort((a, b) =>
             a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
           )
           .map((selectedPole) => (
             <MapPopup
-              selectedPoleId={selectedPole.selectedPoleId}
+              selectedPoleHardwareId={selectedPole.selectedPoleHardwareId}
               isMinimized={selectedPole.isMinimized}
-              key={selectedPole.selectedPoleId}
+              key={selectedPole.selectedPoleHardwareId}
             />
           ))}
       </div>
@@ -183,20 +183,33 @@ export const EquipmentLayer = () => {
             longitude={lng}
             style={{
               zIndex:
-                hoveredPoint &&
-                hoveredPoint.hardware_id === i.properties.hardware_id
-                  ? 1000
+                (hoveredPoint &&
+                  hoveredPoint.hardware_id === i.properties.hardware_id) ||
+                checkIfPoleIsSelected(i.properties.hardware_id)
+                  ? 200
                   : 0,
             }}
-            onClick={() => handlePoleClicked(i?.properties?.hardware_id)}
+            onClick={() =>
+              toggleAddSelectedPole({
+                hardwareId: i.properties.hardware_id,
+                deviceSerialNumber: i.properties.device_sn,
+              })
+            }
           >
             <div
               onMouseEnter={() => setHoveredPoint(i.properties)}
               onMouseLeave={() => setHoveredPoint(null)}
             >
-              <div
-                className={`drop-shadow-map-dot ${color} h-6 w-6 rounded-full border-2 border-solid border-white `}
-              />
+              <div className="relative">
+                {checkIfPoleIsSelected(i.properties.hardware_id) && (
+                  <div className="absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center">
+                    <SelectedPoleIcon className="h-[26px] w-[26px] text-blue-400" />
+                  </div>
+                )}
+                <div
+                  className={`drop-shadow-map-dot ${color} z-0 h-6 w-6 rounded-full border-2 border-solid border-white`}
+                />
+              </div>
 
               {hoveredPoint &&
                 hoveredPoint.hardware_id === i.properties.hardware_id && (
@@ -206,17 +219,6 @@ export const EquipmentLayer = () => {
                     <div className="w-[250px] px-[11px] py-[11px]">
                       <div className="flex flex-grow items-center justify-between gap-2">
                         <div className="flex items-center gap-[7px]">
-                          <div className="relative">
-                            {checkPoleClicked(i.properties.hardware_id) && (
-                              <div className="absolute z-10">
-                                <MapsIcon className="h-[17px] text-blue-400" />
-                              </div>
-                            )}
-                            <div
-                              className={`drop-shadow-map-dot ${color} z-0 h-6 w-6 rounded-full border-2 border-solid border-white`}
-                            />
-                          </div>
-
                           <div className="font-mont  text-[11px] font-normal leading-normal text-black">
                             {i.properties.pole_id} •{" "}
                             {stripZeros(i.properties.device_sn ?? "")}
@@ -255,9 +257,8 @@ export const EquipmentLayer = () => {
                   </MapToolTipContainer>
                 )}
             </div>
-
             {(validatedMapUrlState.zoom > 16 ||
-              checkPoleClicked(i.properties.hardware_id)) &&
+              checkIfPoleIsSelected(i.properties.hardware_id)) &&
               !(
                 hoveredPoint &&
                 hoveredPoint.hardware_id === i.properties.hardware_id

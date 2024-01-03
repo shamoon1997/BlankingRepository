@@ -20,7 +20,7 @@ import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.t
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { useSelectedPoles, useSelectedPolesActions } from "@/state";
 import { MapPopup } from "@/components/map/map-pop-up/map-pop-up.tsx";
-import { SelectedPole } from "@/assets";
+import { SelectedPoleIcon } from "@/assets";
 
 const GridScopeLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -34,7 +34,8 @@ export const GridScopeLayer = () => {
   const { validatedLayerUrlState } = useLayerControlUrlState();
   const bbox = useMapboxBbox();
   const selectedPoleIds = useSelectedPoles();
-  const { setSelectedPoleIds } = useSelectedPolesActions();
+  const { toggleAddSelectedPole, checkIfPoleIsSelected } =
+    useSelectedPolesActions();
 
   const {
     dataWithFilterApplied: data,
@@ -109,23 +110,23 @@ export const GridScopeLayer = () => {
     };
   }, [filteredData]);
 
-  const checkPoleClicked = (hardwareId: string) => {
-    return selectedPoleIds.find(
-      (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
-    );
-  };
-
-  const handlePoleClicked = (poleId: string) => {
-    if (selectedPoleIds.length < 3) {
-      // allowing only three poles to be clicked
-      if (!checkPoleClicked(poleId)) {
-        setSelectedPoleIds([
-          ...selectedPoleIds,
-          { selectedPoleId: poleId, isMinimized: false },
-        ]);
-      }
-    }
-  };
+  // const checkPoleClicked = (hardwareId: string) => {
+  //   return selectedPoleIds.find(
+  //     (selectedPoleId) => selectedPoleId.selectedPoleHardwareId === hardwareId,
+  //   );
+  // };
+  //
+  // const handlePoleClicked = (poleId: string) => {
+  //   if (selectedPoleIds.length < 3) {
+  //     // allowing only three poles to be clicked
+  //     if (!checkPoleClicked(poleId)) {
+  //       setSelectedPoleIds([
+  //         ...selectedPoleIds,
+  //         { selectedPoleHardwareId: poleId, isMinimized: false },
+  //       ]);
+  //     }
+  //   }
+  // };
 
   return (
     <>
@@ -137,9 +138,9 @@ export const GridScopeLayer = () => {
           )
           .map((selectedPole) => (
             <MapPopup
-              selectedPoleId={selectedPole.selectedPoleId}
+              selectedPoleHardwareId={selectedPole.selectedPoleHardwareId}
               isMinimized={selectedPole.isMinimized}
-              key={selectedPole.selectedPoleId}
+              key={selectedPole.selectedPoleHardwareId}
             />
           ))}
       </div>
@@ -176,37 +177,47 @@ export const GridScopeLayer = () => {
             key={id}
             latitude={lat}
             longitude={lng}
-            onClick={() => handlePoleClicked(i?.properties?.hardware_id)}
+            onClick={() =>
+              toggleAddSelectedPole({
+                hardwareId: i.properties.hardware_id,
+                deviceSerialNumber: i.properties.device_sn,
+              })
+            }
+            style={{
+              zIndex: checkIfPoleIsSelected(i.properties.hardware_id) ? 200 : 0,
+            }}
           >
-            <div className="relative">
-              {checkPoleClicked(i.properties.hardware_id) && (
-                <div className="absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center">
-                  <SelectedPole className="h-[26px] w-[26px] text-blue-400" />
-                </div>
-              )}
-              <div
-                className={`drop-shadow-map-dot ${color} z-0 h-6 w-6 rounded-full border-2 border-solid border-white`}
-              />
-            </div>
+            <div>
+              <div className="relative">
+                {checkIfPoleIsSelected(i.properties.hardware_id) && (
+                  <div className="absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center">
+                    <SelectedPoleIcon className="h-[26px] w-[26px] text-blue-400" />
+                  </div>
+                )}
+                <div
+                  className={`drop-shadow-map-dot ${color} z-0 h-6 w-6 rounded-full border-2 border-solid border-white`}
+                />
+              </div>
 
-            {(validatedMapUrlState.zoom > 16 ||
-              checkPoleClicked(i.properties.hardware_id)) && (
-              <MapZoomedBoxContainer>
-                <div className="flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
-                  <div className="flex items-center gap-[7px] font-medium">
-                    <HoverPinIcon className="w-[11px]" />
-                    <p>
-                      {i.properties.pole_id} •{" "}
-                      {stripZeros(i.properties.device_sn ?? "")}
-                    </p>
+              {(validatedMapUrlState.zoom > 16 ||
+                checkIfPoleIsSelected(i.properties.hardware_id)) && (
+                <MapZoomedBoxContainer>
+                  <div className="z-100 flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
+                    <div className="flex items-center gap-[7px] font-medium">
+                      <HoverPinIcon className="w-[11px]" />
+                      <p>
+                        {i.properties.pole_id} •{" "}
+                        {stripZeros(i.properties.device_sn ?? "")}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-[5px]">
+                      {NetworkStatusIcon}
+                      <p>{networkStatusText}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-[5px]">
-                    {NetworkStatusIcon}
-                    <p>{networkStatusText}</p>
-                  </div>
-                </div>
-              </MapZoomedBoxContainer>
-            )}
+                </MapZoomedBoxContainer>
+              )}
+            </div>
           </Marker>
         );
       })}
