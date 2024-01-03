@@ -110,27 +110,9 @@ export const GridScopeLayer = () => {
     };
   }, [filteredData]);
 
-  // const checkPoleClicked = (hardwareId: string) => {
-  //   return selectedPoleIds.find(
-  //     (selectedPoleId) => selectedPoleId.selectedPoleHardwareId === hardwareId,
-  //   );
-  // };
-  //
-  // const handlePoleClicked = (poleId: string) => {
-  //   if (selectedPoleIds.length < 3) {
-  //     // allowing only three poles to be clicked
-  //     if (!checkPoleClicked(poleId)) {
-  //       setSelectedPoleIds([
-  //         ...selectedPoleIds,
-  //         { selectedPoleHardwareId: poleId, isMinimized: false },
-  //       ]);
-  //     }
-  //   }
-  // };
-
   return (
     <>
-      <div className="absolute z-20 flex overflow-y-auto">
+      <div className="absolute z-[200] flex">
         {selectedPoleIds
           .slice()
           .sort((a, b) =>

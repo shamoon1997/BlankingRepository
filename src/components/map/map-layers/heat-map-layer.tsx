@@ -148,41 +148,9 @@ export const HeatMapLayer = () => {
       colors: labelColors,
     });
   }
-  // const checkPoleClicked = (hardwareId: string) => {
-  //   return selectedPoleIds.find(
-  //     (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
-  //   );
-  // };
-  //
-  // const handlePoleClicked = (poleId: string) => {
-  //   if (selectedPoleIds.length < 3) {
-  //     // allowing only three poles to be clicked
-  //     if (!checkPoleClicked(poleId)) {
-  //       setSelectedPoleIds([
-  //         ...selectedPoleIds,
-  //         { selectedPoleId: poleId, isMinimized: false },
-  //       ]);
-  //     }
-  //   }
-  // };
 
   return (
     <>
-      <div className="absolute z-20 flex overflow-y-auto">
-        {selectedPoleIds
-          .slice()
-          .sort((a, b) =>
-            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
-          )
-          .map((selectedPole) => (
-            <MapPopup
-              selectedPoleHardwareId={selectedPole.selectedPoleHardwareId}
-              isMinimized={selectedPole.isMinimized}
-              key={selectedPole.selectedPoleHardwareId}
-            />
-          ))}
-      </div>
-
       {points.map((i) => {
         const [lng, lat] = i.geometry.coordinates;
         let color = "bg-unknown";
@@ -276,6 +244,21 @@ export const HeatMapLayer = () => {
       })}
 
       <HeatMapControlLayer />
+
+      <div className="absolute bottom-0 top-16 z-[9] flex h-full gap-3  overflow-y-auto bg-red-500">
+        {selectedPoleIds
+          .slice()
+          .sort((a, b) =>
+            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
+          )
+          .map((selectedPole) => (
+            <MapPopup
+              selectedPoleHardwareId={selectedPole.selectedPoleHardwareId}
+              isMinimized={selectedPole.isMinimized}
+              key={selectedPole.selectedPoleHardwareId}
+            />
+          ))}
+      </div>
 
       <MapStatusContainer>
         {(isLoading || isRefetching) && (

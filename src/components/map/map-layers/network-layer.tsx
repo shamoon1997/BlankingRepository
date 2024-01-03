@@ -112,27 +112,9 @@ export const NetworkLayer = () => {
     };
   }, [filteredData]);
 
-  // const checkPoleClicked = (hardwareId: string) => {
-  //   return selectedPoleIds.find(
-  //     (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
-  //   );
-  // };
-  //
-  // const handlePoleClicked = (poleId: string) => {
-  //   if (selectedPoleIds.length < 3) {
-  //     // allowing only three poles to be clicked
-  //     if (!checkPoleClicked(poleId)) {
-  //       setSelectedPoleIds([
-  //         ...selectedPoleIds,
-  //         { selectedPoleId: poleId, isMinimized: false },
-  //       ]);
-  //     }
-  //   }
-  // };
-
   return (
     <>
-      <div className="absolute z-20 flex overflow-y-auto">
+      <div className="absolute z-[200] flex overflow-y-auto">
         {selectedPoleIds
           .slice()
           .sort((a, b) =>

@@ -102,7 +102,7 @@ export const FilterArea = () => {
               </div>
 
               <CloseIcon
-                className="ml-2 h-2 w-2 cursor-pointer rounded-full text-black"
+                className="ml-2 h-4 w-4 cursor-pointer rounded-full text-black"
                 /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
                 onClick={() => removeFilter(i)}
               />

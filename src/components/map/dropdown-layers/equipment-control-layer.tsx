@@ -36,7 +36,7 @@ export const EquipmentControlLayer: React.FC = () => {
   const { setSelectedEquipments } = useSelectedEquipmentActions();
 
   return (
-    <div className="pointer-events-none absolute z-[2] flex w-full justify-end gap-2 p-2 pr-4 pt-4">
+    <div className="pointer-events-none absolute z-20 flex w-full justify-end gap-2 p-2 pr-4 pt-4">
       <div className="pointer-events-none flex gap-2">
         <div className="pointer-events-auto w-[170px]">
           <MultiSelectDropdown

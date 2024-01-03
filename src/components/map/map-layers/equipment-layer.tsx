@@ -102,41 +102,8 @@ export const EquipmentLayer = () => {
     };
   }, [data?.devices]);
 
-  // const checkPoleClicked = (hardwareId: string) => {
-  //   return selectedPoles.find(
-  //     (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
-  //   );
-  // };
-  //
-  // const handlePoleClicked = (poleId: string) => {
-  //   if (selectedPoles.length < 3) {
-  //     // allowing only three poles to be clicked
-  //     if (!checkPoleClicked(poleId)) {
-  //       setSelectedPoleIds([
-  //         ...selectedPoles,
-  //         { selectedPoleId: poleId, isMinimized: false },
-  //       ]);
-  //     }
-  //   }
-  // };
-
   return (
     <>
-      <div className="absolute z-20 flex overflow-y-auto">
-        {selectedPoles
-          .slice()
-          .sort((a, b) =>
-            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
-          )
-          .map((selectedPole) => (
-            <MapPopup
-              selectedPoleHardwareId={selectedPole.selectedPoleHardwareId}
-              isMinimized={selectedPole.isMinimized}
-              key={selectedPole.selectedPoleHardwareId}
-            />
-          ))}
-      </div>
-
       {points.map((i) => {
         const [lng, lat] = i.geometry.coordinates;
         const isAllSelected = selectedEquipments.find(
@@ -288,6 +255,25 @@ export const EquipmentLayer = () => {
       })}
 
       <EquipmentControlLayer />
+
+      <div
+        className={`${
+          selectedPoles.length > 0 ? "pl-3 pr-3" : ""
+        }  absolute bottom-4 top-16 z-[9] flex gap-3`}
+      >
+        {selectedPoles
+          .slice()
+          .sort((a, b) =>
+            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
+          )
+          .map((selectedPole) => (
+            <MapPopup
+              selectedPoleHardwareId={selectedPole.selectedPoleHardwareId}
+              isMinimized={selectedPole.isMinimized}
+              key={selectedPole.selectedPoleHardwareId}
+            />
+          ))}
+      </div>
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={EquipmentLayerLineStyles} />
