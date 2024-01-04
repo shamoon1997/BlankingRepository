@@ -1,18 +1,20 @@
 import { MapsIcon } from "@/assets/pole-view";
 
-function MapMinimizeView() {
+type MapMinimizeProps = {
+  selectedPoleId: string;
+};
+
+export const MapMinimizeView = ({ selectedPoleId }: MapMinimizeProps) => {
   return (
-    <div className="absolute bottom-2 left-[50%]">
-      <div className="drop-shadow-map-minimize w-47 h-47 flex flex-col items-center justify-center rounded-full bg-white p-2">
+    <div>
+      <div className="flex h-[70px] w-[70px] min-w-0 flex-col items-center justify-center rounded-full bg-white p-2 drop-shadow-map-minimize">
         <div className="[&_svg]:w-11.8 [&_svg]:h-18">
           <MapsIcon className="text-[#7537FA]" />
         </div>
-        <div className="font-mont text-sm font-normal leading-normal text-[#5B5B5B]">
-          GS527
+        <div className="mt-1 flex w-full min-w-0 justify-center overflow-hidden text-ellipsis whitespace-nowrap font-mont text-sm font-normal leading-normal text-[#5B5B5B]">
+          {selectedPoleId}
         </div>
       </div>
     </div>
   );
-}
-
-export default MapMinimizeView;
+};

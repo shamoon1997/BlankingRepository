@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({ heading }) => {
   };
 
   return (
-    <div className=" flex h-[80px] w-full justify-between bg-slate-100 px-[20px] 2xl:h-[124px]">
+    <div className=" flex h-[80px] w-full justify-between bg-[#EDEDED] px-[20px]">
       <h1 className="self-center text-[24px] font-semibold">{heading}</h1>
       <div className=" mt-3 flex gap-[8px] self-start">
         <div className="grid h-[28px] w-[28px] place-content-center rounded-full bg-slate-200 [&_svg]:h-[12px] [&_svg]:w-[12px]">

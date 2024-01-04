@@ -3,12 +3,11 @@ import { BaseMap } from "./map";
 import { MapToolTipContainer } from "./map/map-tooltip";
 import { PageLoader } from "./page-loaders/page-loader";
 import { HomeLoader } from "./page-loaders/home-loader";
-import LegendTodo from "./legend/legend-todo";
-import LegendStatus from "./legend/legend-status";
-import LegendRange from "./legend/legend-range";
 import MapHoverMenu from "./map/map-hover-menu/map-hover-menu";
 import SideNavigation from "./side-navigation";
 import PoleViewTabGroup from "./pole-view/pole-view-tab-group";
+import MapStatusContainer from "./legend/legend-container/map-status-container";
+import LegendRange from "./legend/legend-range/legend-range";
 
 export {
   GridScopeLayer,
@@ -17,9 +16,8 @@ export {
   PageLoader,
   HomeLoader,
   SideNavigation,
-  LegendTodo,
+  MapStatusContainer,
   MapHoverMenu,
-  LegendStatus,
   LegendRange,
   PoleViewTabGroup,
 };

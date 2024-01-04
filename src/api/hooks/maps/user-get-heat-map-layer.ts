@@ -1,0 +1,116 @@
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { ApiResources, MAX_LAG_BUFFER_LIMIT } from "@/api/config/api-config.ts";
+import {
+  HeatmapDevice,
+  HeatMapLayerPostBody,
+  HeatmapLayerResponse,
+} from "@/api/types/types.ts";
+import { useMemo, useRef } from "react";
+import { uniqBy } from "lodash";
+import { getHeatMapLayer } from "@/api/api-calls/get-heatmap-layer";
+import { useActiveFilter } from "@/state";
+import { applyFilterFunc } from "@/utils/map";
+
+export const useGetHeatMapLayer = (args: HeatMapLayerPostBody | null) => {
+  const lagBuffer = useRef<HeatmapDevice[] | undefined>([]);
+
+  // From filter store
+  const filters = useActiveFilter();
+
+  const { data, ...rest } = useQuery({
+    queryKey: [
+      // IMPORTANT
+      // Always use the route path plus the bounding box, if two calls come under the same path
+      // differentiate between them using an additional unique key, otherwise your cache will be the same
+      // and the key same will be used for two logically different pieces of data causing all sorts of issues
+      ApiResources.getHeatMapLayer,
+      args?.lat1,
+      args?.lat2,
+      args?.lon1,
+      args?.lon2,
+      args?.t1,
+      args?.t2,
+    ],
+    queryFn: ({ signal }) => {
+      return getHeatMapLayer(args!, signal);
+    },
+    // keeps previous data in cache until we get new data
+    placeholderData: keepPreviousData,
+    // only fire if we get the bbox from the map never remove this
+    enabled: !!args,
+    // retry only one don't bombard the server
+  });
+
+  const dataWithLagBuffer: HeatmapLayerResponse | undefined = useMemo(() => {
+    if (!data) return undefined;
+
+    // LOGIC for the lag buffer if max lag buffer size is 3 for example.
+    // get a,b,c,d,e -> A is a fetch call
+    // prev is null -> B is a fetch call
+    // combine A and B -> remove duplicates
+    // render it out
+    // set prev to c d e // keep in mind max limit of X points
+    // bbox moves to another place
+    // get  f g h i j k -> A
+    // prev is c,d,e -> B
+    // combine A and B -> remove duplicates
+    // render it out
+    // set prev to i j k
+
+    //render out these
+    const newDevices = [
+      ...(data.data.devices?.slice?.() ?? []),
+      //   get what ever is in the current buffer, order does not matter as points are geographically placed not order wise
+      ...(lagBuffer.current ?? []),
+    ];
+
+    // de-duplicate points by hardware id
+    // hardware id must ALWAYS be unique GLOBALLY
+    const deduplicatedDevices = uniqBy(newDevices, (dev) => dev.hardware_id);
+
+    // updated the prev buffer and use it to the maximum amount
+    const prevData = data.data.devices.slice(-MAX_LAG_BUFFER_LIMIT);
+    const bufferLength = lagBuffer.current?.length ?? 0;
+    const combinedLength = bufferLength + prevData.length;
+
+    if (combinedLength > MAX_LAG_BUFFER_LIMIT) {
+      const itemsToDelete = combinedLength - MAX_LAG_BUFFER_LIMIT;
+      lagBuffer.current?.splice(0, itemsToDelete);
+    }
+    lagBuffer.current?.push(...prevData);
+
+    return {
+      summary: data.data.summary,
+      devices: deduplicatedDevices,
+      heatmap_metrics_min_max: data.data.heatmap_metrics_min_max,
+    };
+  }, [data]);
+
+  const dataWithFilterApplied: HeatmapLayerResponse | undefined =
+    useMemo(() => {
+      if (!data) return undefined;
+      if (!data?.data?.devices?.length && filters?.length < 1) return data.data;
+
+      let filteredList: HeatmapDevice[] = data?.data?.devices;
+
+      for (let i = 0; i < filters?.length; i++) {
+        filteredList = applyFilterFunc(
+          data?.data?.devices as unknown as HeatmapDevice[],
+          filters[i],
+        );
+      }
+
+      return {
+        summary: data.data.summary,
+        devices: filteredList,
+        heatmap_metrics_min_max: data.data.heatmap_metrics_min_max,
+      };
+    }, [data, filters]);
+
+  return {
+    dataWithLagBuffer,
+    dataWithFilterApplied,
+    data,
+    ...rest,
+  };
+};

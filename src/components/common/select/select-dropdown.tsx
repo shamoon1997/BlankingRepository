@@ -2,18 +2,19 @@ import { ChevronIcon } from "@/assets";
 import * as Select from "@radix-ui/react-select";
 import React, { ReactNode } from "react";
 import SelectItem from "./select-item";
-import { useSearchParams } from "react-router-dom";
+import { useLayerControlUrlState } from "@/hooks/layer-options/use-layer-control-url-state.tsx";
 import { TextLimiter } from "..";
+import { LayerControlsSchemaType } from "@/utils/validation-schemas";
 
 type Props = {
   placeholder?: string;
-  triggerIcon?: ReactNode; //Adds fixed icon on dropdown
+  triggerIcon?: ReactNode;
   options: {
     value: string;
     child: string | React.JSX.Element;
     icon?: React.JSX.Element;
   }[];
-  searchParamKey?: string;
+  searchParamKey: keyof LayerControlsSchemaType;
 };
 
 const SelectDropdown: React.FC<Props> = ({
@@ -22,23 +23,14 @@ const SelectDropdown: React.FC<Props> = ({
   options,
   searchParamKey,
 }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { setSearchParams, validatedLayerUrlState, searchParams } =
+    useLayerControlUrlState();
 
   if (options.length === 0) {
     console.error(
       "Select Dropdown: options length is 0, it must contain at least 1 item.",
     );
-    return;
-  }
-
-  // TODO: add zod validation and make this into a separate hook look at /src/hooks/map/use-map-url-state.tsx - for Waleed
-  let valueFromQuery: string | undefined = undefined;
-  if (searchParamKey) {
-    const keyInUrl = searchParams.get(searchParamKey);
-    if (keyInUrl) {
-      const preSelectedOption = options.find((item) => item.value === keyInUrl);
-      valueFromQuery = preSelectedOption?.value ?? undefined;
-    }
+    return null;
   }
 
   return (
@@ -46,16 +38,18 @@ const SelectDropdown: React.FC<Props> = ({
       onValueChange={(value: string) => {
         if (!searchParamKey?.length) return;
         searchParams.set(searchParamKey, value);
-        setSearchParams(searchParams);
+
+        setSearchParams(searchParams, {
+          replace: true,
+        });
       }}
-      value={valueFromQuery}
-      defaultValue={options[0].value}
+      value={validatedLayerUrlState[searchParamKey]}
     >
       <Select.Trigger
         className="inline-flex h-[38px] w-full cursor-pointer items-center justify-between rounded-md border-[0.5px] border-default bg-white px-2 pl-3 font-mont text-sm leading-none text-primary-hard shadow-dropdown outline-none data-[placeholder]:text-primary-hard"
         aria-label="dropdown"
       >
-        <div className="flex min-w-0 items-center font-semibold">
+        <div className="flex min-w-0 items-center text-xs font-semibold">
           {triggerIcon}
           <TextLimiter>
             <Select.Value className="flex-1" placeholder={placeholder} />
@@ -78,7 +72,7 @@ const SelectDropdown: React.FC<Props> = ({
               {options?.map((item) => {
                 return (
                   <SelectItem
-                    className="flex cursor-pointer rounded-[5px] border-none p-2 text-xs outline-none hover:bg-[#F2F2F2] data-[state=checked]:bg-[#F7F7F7]"
+                    className="flex cursor-pointer rounded-[5px] border-none p-2 text-[11px] outline-none hover:bg-[#F2F2F2] data-[state=checked]:bg-[#F7F7F7]"
                     key={item.value}
                     value={item.value}
                   >

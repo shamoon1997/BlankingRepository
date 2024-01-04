@@ -1,13 +1,15 @@
 import Button from "./button/button";
 import SelectDropdown from "./select/select-dropdown";
-import DateRangeCalendar from "./calendar/date-range-calendar";
-import MultiSelectDropdown from "./multi-select/multi-select-dropdown";
+import { Carousel } from "./carousel/carousel";
+import { MultiSelectDropdown } from "./multi-select/multi-select-dropdown";
 import { TextLimiter } from "./text-limit/text-limit";
+import CalendarInput from "@/components/common/calendar/calendar-input.tsx";
 
 export {
-  DateRangeCalendar,
+  CalendarInput,
   SelectDropdown,
   Button,
   MultiSelectDropdown,
   TextLimiter,
+  Carousel,
 };
