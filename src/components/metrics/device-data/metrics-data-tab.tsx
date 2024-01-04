@@ -11,6 +11,9 @@ import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import React from "react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { LocationIcon } from "@/assets/pole-view";
+import DeviceDataDropdown from "@/components/common/select/device-data-dropdown";
+
+import * as Select from "@radix-ui/react-select";
 
 const MetricsDataTab: React.FC = () => {
   return (
@@ -22,8 +25,56 @@ const MetricsDataTab: React.FC = () => {
           </div>
 
           <div className="flex w-[120px] items-center justify-between rounded border-[2px] px-[10px]">
-            <div className="text-[10px] text-[#8B8B8B]">Device</div>
-            <div className="text-[10px] font-semibold text-black">Map(#)</div>
+            <DeviceDataDropdown
+              options={[
+                {
+                  value: "map-view",
+                  child: (
+                    <Select.ItemText>
+                      <div>Map View (3)</div>
+                    </Select.ItemText>
+                  ),
+                },
+                {
+                  value: "pole-view",
+                  child: (
+                    <Select.ItemText>
+                      <div>Pole View (3)</div>
+                    </Select.ItemText>
+                  ),
+                },
+                {
+                  value: "graph-view",
+                  child: (
+                    <Select.ItemText>
+                      <div>Graph View (0)</div>
+                    </Select.ItemText>
+                  ),
+                },
+                {
+                  value: "all-devices",
+                  child: (
+                    <Select.ItemText>
+                      <div>All Devices (422)</div>
+                    </Select.ItemText>
+                  ),
+                },
+                {
+                  value: "deployment",
+                  child: (
+                    <Select.ItemText>
+                      <div>Deployment (32)</div>
+                    </Select.ItemText>
+                  ),
+                },
+              ]}
+              // triggerIcon={
+              //   <div className="text-[10px] text-[#8B8B8B]">Device</div>
+              // }
+              placeholder="Devices"
+            />
+            {/* <div className="text-[10px] text-[#8B8B8B]">Device</div>
+            <div className="text-[10px] font-semibold text-black">Map(#)</div> */}
           </div>
 
           <div className="flex w-[120px] items-center justify-between rounded border-[2px] px-[10px]">
@@ -195,8 +246,8 @@ const MetricsDataTab: React.FC = () => {
             </div>
           </Accordion.Trigger>
           <Accordion.Content>
-            Yes. It's unstyled by default, giving you freedom over the look and
-            feel.
+            Yes. It&apos;s unstyled by default, giving you freedom over the look
+            and feel.
           </Accordion.Content>
         </Accordion.Item>
 
