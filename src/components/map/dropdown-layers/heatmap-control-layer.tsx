@@ -14,23 +14,12 @@ export const HeatMapControlLayer: React.FC = () => {
       </div>
 
       <div className="pointer-events-none flex gap-2 self-start">
-        <div
-          id={"heatmap-options"}
-          className="hack pointer-events-auto w-[170px]"
-        >
-          <SelectDropdown
-            portalId={"heatmap-options"}
-            options={heatMapOptions}
-            searchParamKey={"heatmap"}
-          />
+        <div className="hack pointer-events-auto w-[170px]">
+          <SelectDropdown options={heatMapOptions} searchParamKey={"heatmap"} />
         </div>
-        <div
-          id={"layer-options"}
-          className="hack pointer-events-auto w-[170px]"
-        >
+        <div className="hack pointer-events-auto w-[170px]">
           <SelectDropdown
             zIndex={20}
-            portalId={"layer-options"}
             triggerIcon={
               <div className="mr-3 flex items-center justify-center [&_svg]:h-4 [&_svg]:w-4">
                 <GridScopeIcon />

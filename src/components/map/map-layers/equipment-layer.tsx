@@ -25,7 +25,7 @@ import { MapStatusContainer, MapToolTipContainer } from "@/components";
 import { SettingIcon } from "@/assets/pole-view";
 import { Button } from "@/components/common";
 import { capitalize, intersection } from "lodash";
-import { useSelectedPolesActions } from "@/state";
+import { useSelectedPoles, useSelectedPolesActions } from "@/state";
 import { useSelectedEquipments } from "@/state/map/selected-equipments-store.tsx";
 import { SelectedPoleViews } from "@/components/map/selected-poleview-container/selected-pole-views.tsx";
 
@@ -43,6 +43,7 @@ export const EquipmentLayer = () => {
   const { checkIfPoleIsSelected, toggleAddSelectedPole } =
     useSelectedPolesActions();
   const selectedEquipments = useSelectedEquipments();
+  const selectedPoles = useSelectedPoles();
 
   const {
     dataWithFilterApplied: data,
@@ -213,7 +214,7 @@ export const EquipmentLayer = () => {
         );
       })}
 
-      <SelectedPoleViews />
+      <SelectedPoleViews selectedPoles={selectedPoles} />
 
       <EquipmentControlLayer />
 

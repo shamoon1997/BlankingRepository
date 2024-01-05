@@ -12,12 +12,8 @@ export const GridscopeControlLayer: React.FC = () => {
     <>
       <div className="pointer-events-none relative z-[20] flex w-full justify-end gap-2 p-2 pr-4 pt-4">
         <div className="pointer-events-none flex gap-2">
-          <div
-            id={"gridscope-options"}
-            className="hack pointer-events-auto w-[170px]"
-          >
+          <div className="hack pointer-events-auto w-[170px]">
             <SelectDropdown
-              portalId={"gridscope-options"}
               triggerIcon={
                 <div className="mb-[1.5px] mr-3 flex items-center justify-center [&_svg]:h-4 [&_svg]:w-4">
                   <FilterIcon />
@@ -33,7 +29,6 @@ export const GridscopeControlLayer: React.FC = () => {
           >
             <SelectDropdown
               zIndex={20}
-              portalId={"layer-options"}
               triggerIcon={
                 <div className="mr-3 flex items-center justify-center [&_svg]:h-4 [&_svg]:w-4">
                   <GridScopeIcon />

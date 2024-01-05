@@ -28,7 +28,7 @@ import {
 } from "@/assets/pole-hover";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 import { ElectrometerIcon, SelectedPoleIcon, VibrationIcon } from "@/assets";
-import { useSelectedPolesActions } from "@/state";
+import { useSelectedPoles, useSelectedPolesActions } from "@/state";
 import { useReadToFrom } from "@/hooks/calendar";
 import { SelectedPoleViews } from "@/components/map/selected-poleview-container/selected-pole-views.tsx";
 
@@ -55,8 +55,8 @@ export const HeatMapLayer = () => {
     useSelectedPolesActions();
 
   const bbox = useMapboxBbox();
-
   const fromTo = useReadToFrom();
+  const selectedPoles = useSelectedPoles();
 
   const {
     dataWithFilterApplied: data,
@@ -204,7 +204,7 @@ export const HeatMapLayer = () => {
 
       <HeatMapControlLayer />
 
-      <SelectedPoleViews />
+      <SelectedPoleViews selectedPoles={selectedPoles} />
 
       <MapStatusContainer>
         {(isLoading || isRefetching) && (

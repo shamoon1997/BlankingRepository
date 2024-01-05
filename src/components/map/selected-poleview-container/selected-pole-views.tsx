@@ -1,9 +1,10 @@
-import { useSelectedPoles } from "@/state";
 import { MapPopup } from "@/components/map/map-pop-up/map-pop-up.tsx";
+import { SelectedPoleType } from "@/state/map/selected-poles-store.tsx";
 
-export const SelectedPoleViews = () => {
-  const selectedPoles = useSelectedPoles();
-
+type SelectedPoleViewProps = {
+  selectedPoles: SelectedPoleType[];
+};
+export const SelectedPoleViews = ({ selectedPoles }: SelectedPoleViewProps) => {
   return (
     <div
       className={`${

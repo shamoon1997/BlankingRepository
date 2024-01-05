@@ -22,7 +22,7 @@ import { NetworkControlLayer } from "@/components/map/dropdown-layers/network-co
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
-import { useSelectedPolesActions } from "@/state";
+import { useSelectedPoles, useSelectedPolesActions } from "@/state";
 import { LegendItem } from "@/components/legend/legend-item/legend-item.tsx";
 import { SelectedPoleIcon } from "@/assets";
 import { SelectedPoleViews } from "@/components/map/selected-poleview-container/selected-pole-views.tsx";
@@ -46,6 +46,8 @@ export const NetworkLayer = () => {
     isRefetching,
     isSuccess,
   } = useGetNetworkLayer(bbox);
+
+  const selectedPoles = useSelectedPoles();
 
   const { validatedLayerUrlState } = useLayerControlUrlState();
 
@@ -150,7 +152,7 @@ export const NetworkLayer = () => {
 
       <NetworkControlLayer />
 
-      <SelectedPoleViews />
+      <SelectedPoleViews selectedPoles={selectedPoles} />
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={NetworkLayerLineStyles} />

@@ -21,7 +21,7 @@ import { LegendRange, MapStatusContainer } from "@/components";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
-import { useSelectedPolesActions } from "@/state";
+import { useSelectedPoles, useSelectedPolesActions } from "@/state";
 import { SelectedPoleIcon } from "@/assets";
 import { SelectedPoleViews } from "@/components/map/selected-poleview-container/selected-pole-views.tsx";
 
@@ -38,6 +38,7 @@ export const GridScopeLayer = () => {
   const bbox = useMapboxBbox();
   const { toggleAddSelectedPole, checkIfPoleIsSelected } =
     useSelectedPolesActions();
+  const selectedPoles = useSelectedPoles();
 
   const {
     dataWithFilterApplied: data,
@@ -151,7 +152,7 @@ export const GridScopeLayer = () => {
 
       <GridscopeControlLayer />
 
-      <SelectedPoleViews />
+      <SelectedPoleViews selectedPoles={selectedPoles} />
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={GridScopeLayerLineStyles} />

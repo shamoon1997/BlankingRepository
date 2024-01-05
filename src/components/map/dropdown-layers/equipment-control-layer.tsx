@@ -50,12 +50,8 @@ export const EquipmentControlLayer: React.FC = () => {
             }}
           />
         </div>
-        <div
-          id={"noice"}
-          className={"hack noice pointer-events-auto relative w-[170px]"}
-        >
+        <div className={"hack  pointer-events-auto relative w-[170px]"}>
           <SelectDropdown
-            portalId={"noice"}
             zIndex={20}
             triggerIcon={
               <div className="mr-3 flex items-center justify-center [&_svg]:h-4 [&_svg]:w-4">
