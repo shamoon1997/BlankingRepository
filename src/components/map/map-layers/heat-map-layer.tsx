@@ -1,10 +1,13 @@
 import { useLayerControlUrlState, useMapUrlState } from "@/hooks";
-import { Feature, Point, Position } from "geojson";
+import { Feature, Point } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
 import { MapZoomedBoxContainer } from "../map-zoomed-box";
 import { HeatmapDevice } from "@/api/types/types.ts";
-import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
+import {
+  generateLines,
+  generatePoints,
+} from "@/utils/map/geojson-manipulators.ts";
 import { useMemo } from "react";
 import { HeatMapControlLayer } from "@/components/map/dropdown-layers/heatmap-control-layer";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
@@ -26,8 +29,8 @@ import {
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 import { ElectrometerIcon, SelectedPoleIcon, VibrationIcon } from "@/assets";
 import { useSelectedPoles, useSelectedPolesActions } from "@/state";
-import { MapPopup } from "@/components/map/map-pop-up/map-pop-up.tsx";
 import { useReadToFrom } from "@/hooks/calendar";
+import { SelectedPoleViews } from "@/components/map/selected-poleview-container/selected-pole-views.tsx";
 
 const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -48,13 +51,12 @@ const labelColors = [
 export const HeatMapLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const { validatedLayerUrlState } = useLayerControlUrlState();
-  const selectedPoleIds = useSelectedPoles();
   const { checkIfPoleIsSelected, toggleAddSelectedPole } =
     useSelectedPolesActions();
 
   const bbox = useMapboxBbox();
-
   const fromTo = useReadToFrom();
+  const selectedPoles = useSelectedPoles();
 
   const {
     dataWithFilterApplied: data,
@@ -73,55 +75,11 @@ export const HeatMapLayer = () => {
   );
 
   const points: Feature<Point, HeatmapDevice>[] = useMemo(() => {
-    if (data?.devices && data.devices.length > 0) {
-      const modify = data.devices.map((item) => {
-        return {
-          ...item,
-          id: item.hardware_id,
-        };
-      });
-      return mapDataToGeoJsonPoints(modify);
-    }
-
-    return [];
+    return generatePoints(data?.devices);
   }, [data?.devices]);
 
   const lines: Feature = useMemo(() => {
-    const visitedPairs = new Set();
-    const coordinates: Position[][] = [];
-
-    if (data?.devices && data.devices.length > 0) {
-      data.devices.forEach((device) => {
-        return device.neighbors.forEach((neighborId) => {
-          const neighborDevice = data.devices.find(
-            (d) => d.hardware_id === neighborId,
-          );
-
-          // sort is needed to ensure key consistency don't remove
-          const pairKey = [device.hardware_id, neighborId].sort().join("-");
-
-          if (!visitedPairs.has(pairKey) && neighborDevice) {
-            visitedPairs.add(pairKey);
-
-            coordinates.push([
-              [device.longitude, device.latitude],
-              [neighborDevice.longitude, neighborDevice.latitude],
-            ]);
-          }
-        });
-      });
-    }
-
-    return {
-      type: "Feature",
-      geometry: {
-        type: "MultiLineString",
-        coordinates,
-      },
-      properties: {
-        color: "#8A8A8A",
-      },
-    };
+    return generateLines(data?.devices);
   }, [data?.devices]);
 
   let legendLabels = [];
@@ -198,7 +156,8 @@ export const HeatMapLayer = () => {
               })
             }
             style={{
-              zIndex: checkIfPoleIsSelected(i.properties.hardware_id) ? 200 : 0,
+              cursor: "pointer",
+              zIndex: checkIfPoleIsSelected(i.properties.hardware_id) ? 10 : 0,
             }}
           >
             <div className="relative">
@@ -245,20 +204,7 @@ export const HeatMapLayer = () => {
 
       <HeatMapControlLayer />
 
-      <div className="absolute bottom-0 top-16 z-[9] flex h-full gap-3  overflow-y-auto bg-red-500">
-        {selectedPoleIds
-          .slice()
-          .sort((a, b) =>
-            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
-          )
-          .map((selectedPole) => (
-            <MapPopup
-              selectedPoleHardwareId={selectedPole.selectedPoleHardwareId}
-              isMinimized={selectedPole.isMinimized}
-              key={selectedPole.selectedPoleHardwareId}
-            />
-          ))}
-      </div>
+      <SelectedPoleViews selectedPoles={selectedPoles} />
 
       <MapStatusContainer>
         {(isLoading || isRefetching) && (

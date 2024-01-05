@@ -32,7 +32,7 @@ export const PoleItem = ({ hardwareId, deviceSerialNumber }: poleItemProps) => {
       <PoleViewButton
         onClick={(e) => {
           e.stopPropagation();
-          alert("This is disable temporarily will be enabled soon!");
+          alert("This feature is in development and will be enabled soon!");
           // if (checkIfPoleIsSelected(hardwareId)) {
           //   if (selectedPoles.length > 0) {
           //     const queryParams = selectedPoles

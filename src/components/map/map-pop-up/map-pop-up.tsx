@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useGetPoleView } from "@/api/hooks/poles/use-get-pole-view";
-import { PoleView } from "@/api/types/types.ts";
 import { MapsIcon, LocationIcon, SettingIcon } from "@/assets/pole-view";
 import { MinimizeIcon, CloseIcon } from "@/assets/misc";
 import { useSelectedPolesActions, useSelectedPoles } from "@/state";
-import { MapMinimizeView } from "@/components/map/map-minimize-view/map-minimize-view";
+import { MapMinimizedView } from "@/components/map/map-minimize-view/map-minimized-view.tsx";
 import { format } from "date-fns";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
+import { MapPopUpLoadingView } from "@/components/map/map-pop-up/map-pop-up-loading-view.tsx";
+import { MapMinimizedViewLoadingView } from "@/components/map/map-minimize-view/map-minimized-loading-view.tsx";
+import { MapPopUpErrorView } from "@/components/map/map-pop-up/map-pop-up-error-view.tsx";
+import { MapMinimizedViewErrorView } from "@/components/map/map-minimize-view/map-minimized-error-view.tsx";
 
 type MapPopProps = {
   selectedPoleHardwareId: string;
@@ -39,19 +41,15 @@ export const MapPopup = ({
   selectedPoleHardwareId,
   isMinimized,
 }: MapPopProps) => {
-  const { data, error, isLoading } = useGetPoleView([selectedPoleHardwareId]);
+  const { data, isLoading, isError, isSuccess } = useGetPoleView([
+    selectedPoleHardwareId,
+  ]);
   const { setSelectedPoleIds } = useSelectedPolesActions();
   const selectedPoles = useSelectedPoles();
 
-  const [deviceData, setDeviceData] = useState<PoleView | undefined>();
+  const deviceData = data?.[0];
 
   const tabs = ["Overview", "Per-Blob", "High-res", "Audio", "Frequency"];
-
-  useEffect(() => {
-    if (!isLoading && !error) {
-      setDeviceData(data?.[0]);
-    }
-  }, [data, isLoading, error]);
 
   const handleClose = () => {
     const filteredSelectedPoles = selectedPoles.filter(
@@ -76,20 +74,77 @@ export const MapPopup = ({
   };
 
   const handleMaximize = () => {
-    const foundIndex = selectedPoles.findIndex(
-      (selectedPoleId) =>
-        selectedPoleId.selectedPoleHardwareId == selectedPoleHardwareId,
-    );
-    selectedPoles[foundIndex].isMinimized = false;
-    setSelectedPoleIds([...selectedPoles]);
+    const updatedSelectedPoles = selectedPoles.map((selectedPole) => {
+      if (selectedPole.selectedPoleHardwareId == selectedPoleHardwareId) {
+        return {
+          ...selectedPole,
+          isMinimized: false,
+        };
+      } else {
+        return selectedPole;
+      }
+    });
+    setSelectedPoleIds(updatedSelectedPoles);
   };
 
-  return !isMinimized ? (
-    <div className="flex h-full w-[340px] flex-col gap-0 rounded-sm bg-white shadow-pole-view">
-      {isLoading ? (
-        <div>Loading....</div>
-      ) : (
-        <>
+  if (isLoading && isMinimized) {
+    return (
+      <div
+        onClick={() => handleMaximize()}
+        className="mb-4 flex flex-col justify-end gap-0 first:ml-10 hover:cursor-pointer"
+      >
+        <MapMinimizedViewLoadingView />
+      </div>
+    );
+  }
+
+  if (isError && isMinimized) {
+    return (
+      <div
+        onClick={() => handleMaximize()}
+        className="mb-4 flex flex-col justify-end gap-0 first:ml-10 hover:cursor-pointer"
+      >
+        <MapMinimizedViewErrorView />
+      </div>
+    );
+  }
+
+  if (isSuccess && isMinimized) {
+    return (
+      <div
+        className="mb-4 flex flex-col justify-end gap-0 first:ml-10 hover:cursor-pointer"
+        onClick={() => handleMaximize()}
+      >
+        <MapMinimizedView
+          selectedPoleId={stripZeros(deviceData?.device_sn ?? "")}
+        />
+      </div>
+    );
+  }
+
+  if (isLoading && !isMinimized) {
+    return (
+      <MapPopUpLoadingView
+        tabs={tabs}
+        handleClose={handleClose}
+        handleMinimize={handleMinimize}
+      />
+    );
+  }
+
+  if (isError && !isMinimized) {
+    return (
+      <MapPopUpErrorView
+        handleClose={handleClose}
+        handleMinimize={handleMinimize}
+      />
+    );
+  }
+
+  if (isSuccess && !isMinimized) {
+    return (
+      <>
+        <div className="flex h-full w-[340px] flex-col gap-0 rounded-sm bg-white shadow-pole-view">
           <div className="relative flex h-[214px] shrink-0 rounded-sm">
             <div className="absolute right-1 top-1 flex items-center justify-center gap-2 hover:cursor-pointer">
               <MinimizeIcon
@@ -269,17 +324,8 @@ export const MapPopup = ({
               </Tabs.Root>
             </div>
           </div>
-        </>
-      )}
-    </div>
-  ) : (
-    <div
-      className="flex flex-col justify-end gap-0 hover:cursor-pointer"
-      onClick={() => handleMaximize()}
-    >
-      <MapMinimizeView
-        selectedPoleId={stripZeros(deviceData?.device_sn ?? "")}
-      />
-    </div>
-  );
+        </div>
+      </>
+    );
+  }
 };

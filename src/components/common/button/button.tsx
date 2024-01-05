@@ -6,9 +6,10 @@ type Props = React.ComponentPropsWithoutRef<"button"> & {
   className?: string;
 };
 
-const Button: React.FC<Props> = ({ text, className }: Props) => {
+// TODO: fix this component
+const Button: React.FC<Props> = ({ text, className, ...rest }: Props) => {
   return (
-    <button className={className}>
+    <button {...rest} className={className}>
       <p>{text}</p>
     </button>
   );

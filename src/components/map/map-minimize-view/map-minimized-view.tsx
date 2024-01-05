@@ -4,7 +4,7 @@ type MapMinimizeProps = {
   selectedPoleId: string;
 };
 
-export const MapMinimizeView = ({ selectedPoleId }: MapMinimizeProps) => {
+export const MapMinimizedView = ({ selectedPoleId }: MapMinimizeProps) => {
   return (
     <div>
       <div className="flex h-[70px] w-[70px] min-w-0 flex-col items-center justify-center rounded-full bg-white p-2 drop-shadow-map-minimize">
