@@ -7,7 +7,7 @@ import {
   generateLines,
   generatePoints,
 } from "@/utils/map/geojson-manipulators.ts";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MapZoomedBoxContainer } from "@/components/map/map-zoomed-box";
 import { EquipmentControlLayer } from "@/components/map/dropdown-layers/equipment-control-layer.tsx";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
@@ -36,6 +36,8 @@ const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-dasharray": [0.22, 0.24],
 };
 
+const MOUSE_HANDLER_DELAY = 200;
+
 export const EquipmentLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const bbox = useMapboxBbox();
@@ -60,6 +62,30 @@ export const EquipmentLayer = () => {
   const lines: Feature = useMemo(() => {
     return generateLines(data?.devices);
   }, [data?.devices]);
+
+  const leaveTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const timeoutId = leaveTimeoutRef.current;
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, []);
+
+  const handleMouseEnter = (device: Device | null) => {
+    setHoveredPoint(device);
+    if (leaveTimeoutRef.current) {
+      clearTimeout(leaveTimeoutRef.current);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    leaveTimeoutRef.current = setTimeout(() => {
+      setHoveredPoint(null);
+    }, MOUSE_HANDLER_DELAY) as unknown as number;
+  };
 
   return (
     <>
@@ -116,18 +142,21 @@ export const EquipmentLayer = () => {
                   ? 10
                   : 0,
             }}
-            onClick={() =>
-              toggleAddSelectedPole({
-                hardwareId: i.properties.hardware_id,
-                deviceSerialNumber: i.properties.device_sn,
-              })
-            }
           >
             <div
-              onMouseEnter={() => setHoveredPoint(i.properties)}
-              onMouseLeave={() => setHoveredPoint(null)}
+              onMouseEnter={() => handleMouseEnter(i.properties)}
+              onMouseLeave={() => handleMouseLeave()}
+              className="relative"
             >
-              <div className="relative">
+              <div
+                className="relative"
+                onClick={() =>
+                  toggleAddSelectedPole({
+                    hardwareId: i.properties.hardware_id,
+                    deviceSerialNumber: i.properties.device_sn,
+                  })
+                }
+              >
                 {checkIfPoleIsSelected(i.properties.hardware_id) && (
                   <div className="absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center">
                     <SelectedPoleIcon className="h-[26px] w-[26px] text-blue-400" />
@@ -176,6 +205,12 @@ export const EquipmentLayer = () => {
                       </div>
 
                       <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          alert(
+                            "This feature is in development and will be enabled soon!",
+                          );
+                        }}
                         type="button"
                         className="mt-3 min-h-[24px] w-full rounded-[5px] border-0 bg-[#ff176b] px-2.5 py-1 font-mont text-[12px] leading-normal tracking-[-0.4px] text-white shadow-sm transition-all hover:bg-[#db185f] focus:bg-[#db185f] active:bg-[#db185f]"
                         text="Pole View"
