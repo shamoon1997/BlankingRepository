@@ -52,7 +52,8 @@ function App() {
   return (
     <div className={`${showSideBar ? "flex" : null}`}>
       {showSideBar && <SideNavigation />}
-      <ErrorBoundary FallbackComponent={FallBackPage}>
+      <DeploymentPage />
+      {/* <ErrorBoundary FallbackComponent={FallBackPage}>
         <Routes>
           {RouteMappings.map((mapping) => {
             return (
@@ -64,7 +65,7 @@ function App() {
             );
           })}
         </Routes>
-      </ErrorBoundary>
+      </ErrorBoundary> */}
     </div>
   );
 }
