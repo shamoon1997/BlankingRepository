@@ -110,7 +110,7 @@ export const EquipmentLayer = () => {
               cursor: "pointer",
               zIndex:
                 (hoveredPoint &&
-                  hoveredPoint.hardware_id === i.properties.hardware_id) ||
+                  hoveredPoint.hardware_id === i.properties.hardware_id) ??
                 checkIfPoleIsSelected(i.properties.hardware_id)
                   ? 10
                   : 0,
