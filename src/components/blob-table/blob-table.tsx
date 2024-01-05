@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MapBlobIcon, RefreshBlobIcon } from "@/assets/misc";
+import { MapBlobIcon, RefreshGrayIcon } from "@/assets/misc";
 import * as Switch from "@radix-ui/react-switch";
 import { AccordionDemo } from "@/components/common/accordion/accordion";
 
@@ -92,7 +92,11 @@ export const BlobTable = () => {
         />
       ),
       cell: (item: {
-        row: { getIsSelected: () => any; getToggleSelectedHandler: () => any };
+        row: {
+          getIsSelected: () => any;
+          getToggleSelectedHandler: () => any;
+          id: string;
+        };
       }) => {
         return (
           <>
@@ -343,16 +347,22 @@ export const BlobTable = () => {
         );
       },
       accessorKey: "Refresh",
-      cell: () => {
+      cell: (item: {
+        row: {
+          getIsSelected: () => any;
+          getToggleSelectedHandler: () => any;
+          id: string;
+        };
+      }) => {
         return (
           <>
             <div className="cursor-pointer">
               <Switch.Root
-                className="shadow-blackA4 relative h-[15px] w-[32px] cursor-default rounded-[17px] border border-solid border-gray-500 bg-[#EDEDED] outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#5283ED] data-[state=checked]:bg-[#5283ED]"
+                className="relative flex h-4 w-[32px] cursor-default items-center rounded-[17px] border border-solid border-[#c9c9c9] bg-[#EDEDED] outline-none data-[state=checked]:border-[#5283ED] data-[state=checked]:bg-[#5283ED]"
                 id="airplane-mode"
               >
-                <Switch.Thumb className="shadow-blackA4 block h-[10px] w-[12px] translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]">
-                  <RefreshBlobIcon className="ml-[1px] mt-[1px]" />
+                <Switch.Thumb className="flex h-4 w-4 translate-x-[-1px] items-center justify-center rounded-full border border-solid border-[#949494] bg-transparent transition-transform duration-100  will-change-transform data-[state=checked]:translate-x-4 data-[state=checked]:border-[#5283ED] data-[state=checked]:bg-white">
+                  <RefreshGrayIcon className="h-4 w-4" />
                 </Switch.Thumb>
               </Switch.Root>
             </div>

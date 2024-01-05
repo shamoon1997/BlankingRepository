@@ -16,6 +16,7 @@ import CloseIcon from "./close.svg";
 import MapBlobIcon from "./map-blob.svg";
 import RefreshBlobIcon from "./refresh-blob.svg";
 import AccordionDownIcon from "./accordion-down.svg";
+import RefreshGrayIcon from "./refresh.svg";
 
 export {
   ChevronIcon,
@@ -36,4 +37,5 @@ export {
   MapBlobIcon,
   RefreshBlobIcon,
   AccordionDownIcon,
+  RefreshGrayIcon,
 };
