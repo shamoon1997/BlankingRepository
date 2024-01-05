@@ -9,7 +9,7 @@ import { PolesList, SortingOrder } from "./poles-list";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { useActiveFilter, useFilterActions } from "@/state/map";
 import { getFilterBadgeText } from "@/utils/map";
-import { CloseIcon } from "@/assets";
+import { CloseIcon } from "@/assets/misc";
 import { useGetEquipmentLayer } from "@/api/hooks/maps/use-get-equipment-layer.ts";
 import { useGetHeatMapLayer } from "@/api/hooks/maps/user-get-heat-map-layer.ts";
 import { useReadToFrom } from "@/hooks/calendar";
