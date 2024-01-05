@@ -1,9 +1,12 @@
 import { useMapUrlState } from "@/hooks";
-import { Feature, Point, Position } from "geojson";
+import { Feature, Point } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
 import { Device } from "@/api/types/types.ts";
-import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
+import {
+  generateLines,
+  generatePoints,
+} from "@/utils/map/geojson-manipulators.ts";
 import { useMemo, useState } from "react";
 import { MapZoomedBoxContainer } from "@/components/map/map-zoomed-box";
 import { EquipmentControlLayer } from "@/components/map/dropdown-layers/equipment-control-layer.tsx";
@@ -50,55 +53,11 @@ export const EquipmentLayer = () => {
   } = useGetEquipmentLayer(bbox);
 
   const points: Feature<Point, Device>[] = useMemo(() => {
-    if (data?.devices && data.devices.length > 0) {
-      const modify = data.devices.map((item) => {
-        return {
-          ...item,
-          id: item.hardware_id,
-        };
-      });
-      return mapDataToGeoJsonPoints(modify);
-    }
-
-    return [];
+    return generatePoints(data?.devices);
   }, [data?.devices]);
 
   const lines: Feature = useMemo(() => {
-    const visitedPairs = new Set();
-    const coordinates: Position[][] = [];
-
-    if (data?.devices && data.devices.length > 0) {
-      data.devices.forEach((device) => {
-        return device.neighbors.forEach((neighborId) => {
-          const neighborDevice = data.devices.find(
-            (d) => d.hardware_id === neighborId,
-          );
-
-          // sort is needed to ensure key consistency don't remove
-          const pairKey = [device.hardware_id, neighborId].sort().join("-");
-
-          if (!visitedPairs.has(pairKey) && neighborDevice) {
-            visitedPairs.add(pairKey);
-
-            coordinates.push([
-              [device.longitude, device.latitude],
-              [neighborDevice.longitude, neighborDevice.latitude],
-            ]);
-          }
-        });
-      });
-    }
-
-    return {
-      type: "Feature",
-      geometry: {
-        type: "MultiLineString",
-        coordinates,
-      },
-      properties: {
-        color: "#8A8A8A",
-      },
-    };
+    return generateLines(data?.devices);
   }, [data?.devices]);
 
   return (
