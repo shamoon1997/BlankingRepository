@@ -22,9 +22,9 @@ import { MapStatusContainer, MapToolTipContainer } from "@/components";
 import { SettingIcon } from "@/assets/pole-view";
 import { Button } from "@/components/common";
 import { capitalize, intersection } from "lodash";
-import { useSelectedPoles, useSelectedPolesActions } from "@/state";
+import { useSelectedPolesActions } from "@/state";
 import { useSelectedEquipments } from "@/state/map/selected-equipments-store.tsx";
-import { MapPopup } from "@/components/map/map-pop-up/map-pop-up.tsx";
+import { SelectedPoleViews } from "@/components/map/selected-poleview-container/selected-pole-views.tsx";
 
 const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -37,7 +37,6 @@ export const EquipmentLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const bbox = useMapboxBbox();
   const [hoveredPoint, setHoveredPoint] = useState<Device | null>(null);
-  const selectedPoles = useSelectedPoles();
   const { checkIfPoleIsSelected, toggleAddSelectedPole } =
     useSelectedPolesActions();
   const selectedEquipments = useSelectedEquipments();
@@ -149,11 +148,12 @@ export const EquipmentLayer = () => {
             latitude={lat}
             longitude={lng}
             style={{
+              cursor: "pointer",
               zIndex:
                 (hoveredPoint &&
                   hoveredPoint.hardware_id === i.properties.hardware_id) ||
                 checkIfPoleIsSelected(i.properties.hardware_id)
-                  ? 200
+                  ? 10
                   : 0,
             }}
             onClick={() =>
@@ -181,7 +181,7 @@ export const EquipmentLayer = () => {
               {hoveredPoint &&
                 hoveredPoint.hardware_id === i.properties.hardware_id && (
                   <MapToolTipContainer
-                    className={"left-[30px] top-[-30px] z-50"}
+                    className={"z-12 left-[30px] top-[-30px]"}
                   >
                     <div className="w-[250px] px-[11px] py-[11px]">
                       <div className="flex flex-grow items-center justify-between gap-2">
@@ -254,26 +254,9 @@ export const EquipmentLayer = () => {
         );
       })}
 
-      <EquipmentControlLayer />
+      <SelectedPoleViews />
 
-      <div
-        className={`${
-          selectedPoles.length > 0 ? "pl-3 pr-3" : ""
-        }  absolute bottom-4 top-16 z-[9] flex gap-3`}
-      >
-        {selectedPoles
-          .slice()
-          .sort((a, b) =>
-            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
-          )
-          .map((selectedPole) => (
-            <MapPopup
-              selectedPoleHardwareId={selectedPole.selectedPoleHardwareId}
-              isMinimized={selectedPole.isMinimized}
-              key={selectedPole.selectedPoleHardwareId}
-            />
-          ))}
-      </div>
+      <EquipmentControlLayer />
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={EquipmentLayerLineStyles} />

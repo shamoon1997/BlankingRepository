@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useGetPoleView } from "@/api/hooks/poles/use-get-pole-view";
-import { PoleView } from "@/api/types/types.ts";
 import { MapsIcon, LocationIcon, SettingIcon } from "@/assets/pole-view";
 import { MinimizeIcon, CloseIcon } from "@/assets/misc";
 import { useSelectedPolesActions, useSelectedPoles } from "@/state";
@@ -39,19 +37,13 @@ export const MapPopup = ({
   selectedPoleHardwareId,
   isMinimized,
 }: MapPopProps) => {
-  const { data, error, isLoading } = useGetPoleView([selectedPoleHardwareId]);
+  const { data, isLoading } = useGetPoleView([selectedPoleHardwareId]);
   const { setSelectedPoleIds } = useSelectedPolesActions();
   const selectedPoles = useSelectedPoles();
 
-  const [deviceData, setDeviceData] = useState<PoleView | undefined>();
+  const deviceData = data?.[0];
 
   const tabs = ["Overview", "Per-Blob", "High-res", "Audio", "Frequency"];
-
-  useEffect(() => {
-    if (!isLoading && !error) {
-      setDeviceData(data?.[0]);
-    }
-  }, [data, isLoading, error]);
 
   const handleClose = () => {
     const filteredSelectedPoles = selectedPoles.filter(
@@ -76,12 +68,17 @@ export const MapPopup = ({
   };
 
   const handleMaximize = () => {
-    const foundIndex = selectedPoles.findIndex(
-      (selectedPoleId) =>
-        selectedPoleId.selectedPoleHardwareId == selectedPoleHardwareId,
-    );
-    selectedPoles[foundIndex].isMinimized = false;
-    setSelectedPoleIds([...selectedPoles]);
+    const updatedSelectedPoles = selectedPoles.map((selectedPole) => {
+      if (selectedPole.selectedPoleHardwareId == selectedPoleHardwareId) {
+        return {
+          ...selectedPole,
+          isMinimized: false,
+        };
+      } else {
+        return selectedPole;
+      }
+    });
+    setSelectedPoleIds(updatedSelectedPoles);
   };
 
   return !isMinimized ? (

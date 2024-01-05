@@ -7,6 +7,8 @@ import { TextLimiter } from "..";
 import { LayerControlsSchemaType } from "@/utils/validation-schemas";
 
 type Props = {
+  portalId?: string;
+  zIndex?: number;
   placeholder?: string;
   triggerIcon?: ReactNode;
   options: {
@@ -22,6 +24,8 @@ const SelectDropdown: React.FC<Props> = ({
   triggerIcon,
   options,
   searchParamKey,
+  portalId,
+  zIndex,
 }) => {
   const { setSearchParams, validatedLayerUrlState, searchParams } =
     useLayerControlUrlState();
@@ -59,11 +63,15 @@ const SelectDropdown: React.FC<Props> = ({
           <ChevronIcon />
         </Select.Icon>
       </Select.Trigger>
-      <Select.Portal>
+      <Select.Portal
+        container={portalId ? document.getElementById(portalId) : document.body}
+      >
         <Select.Content
-          className="w-[var(--radix-select-trigger-width)] min-w-0 rounded-md border-[0.5px] border-default bg-white font-mont shadow-dropdown"
-          position="popper"
+          className={`${
+            zIndex ? `z-[${zIndex}]` : ""
+          } w-[var(--radix-select-trigger-width)] min-w-0 rounded-md border-[0.5px] border-default bg-white font-mont shadow-dropdown`}
           align="center"
+          position={"popper"}
           side="bottom"
           sideOffset={5}
         >

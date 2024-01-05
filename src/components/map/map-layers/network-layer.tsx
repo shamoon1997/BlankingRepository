@@ -19,10 +19,10 @@ import { NetworkControlLayer } from "@/components/map/dropdown-layers/network-co
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
-import { useSelectedPoles, useSelectedPolesActions } from "@/state";
-import { MapPopup } from "@/components/map/map-pop-up/map-pop-up.tsx";
+import { useSelectedPolesActions } from "@/state";
 import { LegendItem } from "@/components/legend/legend-item/legend-item.tsx";
 import { SelectedPoleIcon } from "@/assets";
+import { SelectedPoleViews } from "@/components/map/selected-poleview-container/selected-pole-views.tsx";
 
 const NetworkLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -33,7 +33,6 @@ const NetworkLayerLineStyles: mapboxgl.LinePaint = {
 
 export const NetworkLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
-  const selectedPoleIds = useSelectedPoles();
   const { checkIfPoleIsSelected, toggleAddSelectedPole } =
     useSelectedPolesActions();
   const bbox = useMapboxBbox();
@@ -114,21 +113,6 @@ export const NetworkLayer = () => {
 
   return (
     <>
-      <div className="absolute z-[200] flex overflow-y-auto">
-        {selectedPoleIds
-          .slice()
-          .sort((a, b) =>
-            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
-          )
-          .map((selectedPole) => (
-            <MapPopup
-              selectedPoleHardwareId={selectedPole.selectedPoleHardwareId}
-              isMinimized={selectedPole.isMinimized}
-              key={selectedPole.selectedPoleHardwareId}
-            />
-          ))}
-      </div>
-
       {points.map((i) => {
         const id = i.properties.hardware_id;
         const [lng, lat] = i.geometry.coordinates;
@@ -168,7 +152,8 @@ export const NetworkLayer = () => {
               })
             }
             style={{
-              zIndex: checkIfPoleIsSelected(i.properties.hardware_id) ? 200 : 0,
+              cursor: "pointer",
+              zIndex: checkIfPoleIsSelected(i.properties.hardware_id) ? 10 : 0,
             }}
           >
             <div className="relative">
@@ -205,6 +190,8 @@ export const NetworkLayer = () => {
       })}
 
       <NetworkControlLayer />
+
+      <SelectedPoleViews />
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={NetworkLayerLineStyles} />

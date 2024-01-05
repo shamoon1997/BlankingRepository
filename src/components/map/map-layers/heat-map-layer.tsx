@@ -25,9 +25,9 @@ import {
 } from "@/assets/pole-hover";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 import { ElectrometerIcon, SelectedPoleIcon, VibrationIcon } from "@/assets";
-import { useSelectedPoles, useSelectedPolesActions } from "@/state";
-import { MapPopup } from "@/components/map/map-pop-up/map-pop-up.tsx";
+import { useSelectedPolesActions } from "@/state";
 import { useReadToFrom } from "@/hooks/calendar";
+import { SelectedPoleViews } from "@/components/map/selected-poleview-container/selected-pole-views.tsx";
 
 const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -48,7 +48,6 @@ const labelColors = [
 export const HeatMapLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const { validatedLayerUrlState } = useLayerControlUrlState();
-  const selectedPoleIds = useSelectedPoles();
   const { checkIfPoleIsSelected, toggleAddSelectedPole } =
     useSelectedPolesActions();
 
@@ -198,7 +197,8 @@ export const HeatMapLayer = () => {
               })
             }
             style={{
-              zIndex: checkIfPoleIsSelected(i.properties.hardware_id) ? 200 : 0,
+              cursor: "pointer",
+              zIndex: checkIfPoleIsSelected(i.properties.hardware_id) ? 10 : 0,
             }}
           >
             <div className="relative">
@@ -245,20 +245,7 @@ export const HeatMapLayer = () => {
 
       <HeatMapControlLayer />
 
-      <div className="absolute bottom-0 top-16 z-[9] flex h-full gap-3  overflow-y-auto bg-red-500">
-        {selectedPoleIds
-          .slice()
-          .sort((a, b) =>
-            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
-          )
-          .map((selectedPole) => (
-            <MapPopup
-              selectedPoleHardwareId={selectedPole.selectedPoleHardwareId}
-              isMinimized={selectedPole.isMinimized}
-              key={selectedPole.selectedPoleHardwareId}
-            />
-          ))}
-      </div>
+      <SelectedPoleViews />
 
       <MapStatusContainer>
         {(isLoading || isRefetching) && (

@@ -18,9 +18,9 @@ import { LegendRange, MapStatusContainer } from "@/components";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
-import { useSelectedPoles, useSelectedPolesActions } from "@/state";
-import { MapPopup } from "@/components/map/map-pop-up/map-pop-up.tsx";
+import { useSelectedPolesActions } from "@/state";
 import { SelectedPoleIcon } from "@/assets";
+import { SelectedPoleViews } from "@/components/map/selected-poleview-container/selected-pole-views.tsx";
 
 const GridScopeLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -33,7 +33,6 @@ export const GridScopeLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const { validatedLayerUrlState } = useLayerControlUrlState();
   const bbox = useMapboxBbox();
-  const selectedPoleIds = useSelectedPoles();
   const { toggleAddSelectedPole, checkIfPoleIsSelected } =
     useSelectedPolesActions();
 
@@ -112,20 +111,6 @@ export const GridScopeLayer = () => {
 
   return (
     <>
-      <div className="absolute z-[200] flex">
-        {selectedPoleIds
-          .slice()
-          .sort((a, b) =>
-            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
-          )
-          .map((selectedPole) => (
-            <MapPopup
-              selectedPoleHardwareId={selectedPole.selectedPoleHardwareId}
-              isMinimized={selectedPole.isMinimized}
-              key={selectedPole.selectedPoleHardwareId}
-            />
-          ))}
-      </div>
       {points.map((i) => {
         const [lng, lat] = i.geometry.coordinates;
         let color = "bg-unknown";
@@ -166,7 +151,8 @@ export const GridScopeLayer = () => {
               })
             }
             style={{
-              zIndex: checkIfPoleIsSelected(i.properties.hardware_id) ? 200 : 0,
+              cursor: "pointer",
+              zIndex: checkIfPoleIsSelected(i.properties.hardware_id) ? 10 : 0,
             }}
           >
             <div>
@@ -205,6 +191,8 @@ export const GridScopeLayer = () => {
       })}
 
       <GridscopeControlLayer />
+
+      <SelectedPoleViews />
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={GridScopeLayerLineStyles} />

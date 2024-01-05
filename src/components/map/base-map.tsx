@@ -75,6 +75,7 @@ export const BaseMap = () => {
 
   return (
     <Map
+      id={"map"}
       ref={ref}
       onLoad={setDebouncedBbox}
       reuseMaps
