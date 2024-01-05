@@ -12,6 +12,7 @@ type Props = {
     child: string | React.JSX.Element;
     icon?: React.JSX.Element;
   }[];
+  valChangeFunc: (val: string) => void;
 };
 
 const DeviceDataDropdown: React.FC<Props> = ({

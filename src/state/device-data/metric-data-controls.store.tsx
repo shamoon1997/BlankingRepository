@@ -1,26 +1,26 @@
 import { create } from "zustand";
 
 type FilterStoreType<T> = {
-  deviceTypeFilter: string;
+  metricDeviceFilter: string;
   mapControl: string | number;
-  selectedItems: T[]; // Since we're not sure what to store in the selected yet
+  selectedMetrics: T[]; // Since we're not sure what to store in the selected yet
   actions: {
-    applyDeviceFilterType: (val: string) => void;
+    applyMetricDeviceFilterType: (val: string) => void;
   };
 };
 
-const useDeviceDataStore = create<FilterStoreType<unknown>>((set) => ({
-  deviceTypeFilter: "",
+const useMetricDataStore = create<FilterStoreType<unknown>>((set) => ({
+  metricDeviceFilter: "",
   mapControl: "",
-  selectedItems: [],
+  selectedMetrics: [],
 
   actions: {
-    applyDeviceFilterType: (val) => {
-      set((state) => ({ ...state, deviceTypeFilter: val }));
+    applyMetricDeviceFilterType: (val) => {
+      set((state) => ({ ...state, metricDeviceFilter: val }));
     },
   },
 }));
 
-export const useDeviceDataState = () => useDeviceDataStore((state) => state);
-export const useDeviceDataActions = () =>
-  useDeviceDataStore((state) => state.actions);
+export const useMetricDataState = () => useMetricDataStore((state) => state);
+export const useMetricDataActions = () =>
+  useMetricDataStore((state) => state.actions);

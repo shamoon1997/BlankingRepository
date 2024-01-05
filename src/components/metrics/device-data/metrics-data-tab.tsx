@@ -14,8 +14,10 @@ import { LocationIcon } from "@/assets/pole-view";
 import DeviceDataDropdown from "@/components/common/select/device-data-dropdown";
 
 import * as Select from "@radix-ui/react-select";
+import { useMetricDataActions } from "@/state/device-data/metric-data-controls.store";
 
 const MetricsDataTab: React.FC = () => {
+  const { applyMetricDeviceFilterType } = useMetricDataActions();
   return (
     <>
       <div className="mt-[12px] flex w-full justify-between px-4">
@@ -26,6 +28,13 @@ const MetricsDataTab: React.FC = () => {
 
           <div className="flex w-[120px] items-center justify-between rounded border-[2px] px-[10px]">
             <DeviceDataDropdown
+              // triggerIcon={
+              //   <div className="text-[10px] text-[#8B8B8B]">Device</div>
+              // }
+              placeholder="Devices"
+              valChangeFunc={(val) => {
+                applyMetricDeviceFilterType(val);
+              }}
               options={[
                 {
                   value: "map-view",
@@ -68,10 +77,6 @@ const MetricsDataTab: React.FC = () => {
                   ),
                 },
               ]}
-              // triggerIcon={
-              //   <div className="text-[10px] text-[#8B8B8B]">Device</div>
-              // }
-              placeholder="Devices"
             />
             {/* <div className="text-[10px] text-[#8B8B8B]">Device</div>
             <div className="text-[10px] font-semibold text-black">Map(#)</div> */}
