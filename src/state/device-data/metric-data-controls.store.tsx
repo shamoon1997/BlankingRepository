@@ -12,7 +12,11 @@ type FilterStoreType<T> = {
 const useMetricDataStore = create<FilterStoreType<unknown>>((set) => ({
   metricDeviceFilter: "",
   mapControl: "",
-  selectedMetrics: [],
+  selectedMetrics: [
+    { name: "GS124• 4024 • Lora" },
+    { name: "GS124• 4024 • Cellular" },
+    { name: "GS124• 4024 • Network" },
+  ],
 
   actions: {
     applyMetricDeviceFilterType: (val) => {

@@ -12,11 +12,16 @@ import React from "react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { LocationIcon } from "@/assets/pole-view";
 import DeviceDataDropdown from "@/components/common/select/device-data-dropdown";
-import { useMetricDataActions } from "@/state/device-data/metric-data-controls.store";
+import {
+  useMetricDataActions,
+  useMetricDataState,
+} from "@/state/device-data/metric-data-controls.store";
 import { metricsDataDevicesOptions } from "@/utils/device-data";
 
 const MetricsDataTab: React.FC = () => {
   const { applyMetricDeviceFilterType } = useMetricDataActions();
+  const metricDataState = useMetricDataState();
+
   return (
     <>
       <div className="mt-[12px] flex w-full justify-between px-4">
@@ -166,6 +171,28 @@ const MetricsDataTab: React.FC = () => {
 
                 <div className="no-scrollbar max-h-[250px] overflow-y-scroll">
                   {/* SELECTED HERE */}
+
+                  {metricDataState?.selectedMetrics?.map((_, i) => {
+                    return (
+                      <div
+                        className="mb-[8px] flex items-center gap-[5px]"
+                        key={`selected-metrics-${i}`}
+                      >
+                        <div className="flex h-[25px] w-[180px] items-center overflow-hidden rounded-md border-[0.8px] border-[#CCCCCC] bg-white text-[8px]">
+                          <div className="grid h-[25px] w-[25px] place-content-center bg-[#B7B7B7] [&_path]:fill-white">
+                            <LocationIcon />
+                          </div>
+                          {/* @ts-expect-error name might not exist */}
+                          <p className="ml-[6px] font-medium">{_?.name}</p>
+                        </div>
+                        <button className="grid h-[25px] w-[25px] place-content-center rounded-md border-[0.8px] border-[#CCCCCC] bg-white hover:bg-slate-100">
+                          <div className="grid h-[12px] w-[12px] place-content-center ">
+                            <CrossIcon />
+                          </div>
+                        </button>
+                      </div>
+                    );
+                  })}
 
                   {[...Array(16)]?.map((_, i) => {
                     return (
