@@ -12,9 +12,8 @@ import React from "react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { LocationIcon } from "@/assets/pole-view";
 import DeviceDataDropdown from "@/components/common/select/device-data-dropdown";
-
-import * as Select from "@radix-ui/react-select";
 import { useMetricDataActions } from "@/state/device-data/metric-data-controls.store";
+import { metricsDataDevicesOptions } from "@/utils/device-data";
 
 const MetricsDataTab: React.FC = () => {
   const { applyMetricDeviceFilterType } = useMetricDataActions();
@@ -35,48 +34,7 @@ const MetricsDataTab: React.FC = () => {
               valChangeFunc={(val) => {
                 applyMetricDeviceFilterType(val);
               }}
-              options={[
-                {
-                  value: "map-view",
-                  child: (
-                    <Select.ItemText>
-                      <div>Map View (3)</div>
-                    </Select.ItemText>
-                  ),
-                },
-                {
-                  value: "pole-view",
-                  child: (
-                    <Select.ItemText>
-                      <div>Pole View (3)</div>
-                    </Select.ItemText>
-                  ),
-                },
-                {
-                  value: "graph-view",
-                  child: (
-                    <Select.ItemText>
-                      <div>Graph View (0)</div>
-                    </Select.ItemText>
-                  ),
-                },
-                {
-                  value: "all-devices",
-                  child: (
-                    <Select.ItemText>
-                      <div>All Devices (422)</div>
-                    </Select.ItemText>
-                  ),
-                },
-                {
-                  value: "deployment",
-                  child: (
-                    <Select.ItemText>
-                      <div>Deployment (32)</div>
-                    </Select.ItemText>
-                  ),
-                },
-              ]}
+              options={metricsDataDevicesOptions}
             />
             {/* <div className="text-[10px] text-[#8B8B8B]">Device</div>
             <div className="text-[10px] font-semibold text-black">Map(#)</div> */}

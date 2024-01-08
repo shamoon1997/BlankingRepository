@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 type FilterStoreType<T> = {
   metricDeviceFilter: string;
-  mapControl: string | number;
+  mapControl: string;
   selectedMetrics: T[]; // Since we're not sure what to store in the selected yet
   actions: {
     applyMetricDeviceFilterType: (val: string) => void;
