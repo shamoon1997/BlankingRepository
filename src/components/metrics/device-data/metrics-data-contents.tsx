@@ -2,28 +2,43 @@ import { MetricDataresponseType } from "@/api/types/types";
 import { CrossIcon, SearchIcon } from "@/assets";
 import { LocationIcon } from "@/assets/pole-view";
 import { useMetricDataState } from "@/state/device-data/metric-data-controls.store";
-import React from "react";
-
-/*
-
-
-Selected Items from Zustand Metric Data will go through the response data and transform
-Props
-data: resData
-key: "acoustic-rms"
-
-
-device[key]
-
-*/
+import React, { useEffect } from "react";
 
 type Props = {
-  key?: string;
-  data?: MetricDataresponseType;
+  metricKey: string;
+  data?: MetricDataresponseType[];
 };
 
-const MetricsDataContents: React.FC<Props> = () => {
+const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
   const metricDataState = useMetricDataState();
+
+  useEffect(() => {
+    if (!data) return;
+
+    const finalObj: any = {};
+
+    data?.forEach((device) => {
+      const foundChannel = device.metric_channels.find(
+        (metric) => metric.channel_name === metricKey,
+      );
+
+      if (!finalObj[metricKey]) finalObj[metricKey] = [];
+
+      finalObj[metricKey].push({
+        hardware_id: device.hardware_id,
+        time: device.recorded_at,
+        values: foundChannel?.channel_values ?? null,
+      });
+
+      console.log(finalObj);
+
+      return () => {
+        // console.clear();
+        console.log("RETURN FUNC");
+        return;
+      };
+    });
+  }, [data]);
 
   return (
     <>

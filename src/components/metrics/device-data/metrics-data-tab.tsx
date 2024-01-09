@@ -152,7 +152,7 @@ const MetricsDataTab: React.FC = () => {
                 </Accordion.Trigger>
                 <Accordion.Content>
                   {/* Will be different for other keys */}
-                  <MetricsDataContents key={item.key} data={data} />
+                  <MetricsDataContents metricKey={item.key} data={data?.data} />
                   {/* ================================ */}
                 </Accordion.Content>
               </Accordion.Item>

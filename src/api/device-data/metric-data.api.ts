@@ -1,9 +1,12 @@
+import { AxiosResponse } from "axios";
 import { API, ApiResources } from "../config/api-config";
 import { MetricDataresponseType } from "../types/types";
 
 // CURRENTLY HARDCODED WITH IDS
 
-export const getMetricDataAPI = (): Promise<MetricDataresponseType> => {
+export const getMetricDataAPI = (): Promise<
+  AxiosResponse<MetricDataresponseType[]>
+> => {
   return API.post(ApiResources.getMetricData, {
     hardware_ids: [
       "3f0017000c5030415738382000000001",
