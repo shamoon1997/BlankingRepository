@@ -15,6 +15,9 @@ export const ApiResources = {
   getNetworkLayer: "layer/network",
   getHeatMapLayer: "layer/heatmap",
   getEquipmentLayer: "layer/equipment",
+
+  // Device Data here:
+  getMetricData: "/device_data/metric_data",
 };
 
 export const MAX_LAG_BUFFER_LIMIT = 100;

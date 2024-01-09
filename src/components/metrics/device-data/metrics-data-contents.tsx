@@ -1,9 +1,28 @@
+import { MetricDataresponseType } from "@/api/types/types";
 import { CrossIcon, SearchIcon } from "@/assets";
 import { LocationIcon } from "@/assets/pole-view";
 import { useMetricDataState } from "@/state/device-data/metric-data-controls.store";
 import React from "react";
 
-const MetricsDataContents: React.FC = () => {
+/*
+
+
+Selected Items from Zustand Metric Data will go through the response data and transform
+Props
+data: resData
+key: "acoustic-rms"
+
+
+device[key]
+
+*/
+
+type Props = {
+  key?: string;
+  data?: MetricDataresponseType;
+};
+
+const MetricsDataContents: React.FC<Props> = () => {
   const metricDataState = useMetricDataState();
 
   return (

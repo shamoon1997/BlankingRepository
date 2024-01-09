@@ -67,3 +67,15 @@ export interface Device {
 }
 
 export type EquipmentsListResponse = string[];
+
+export type MetricChannelType = {
+  channel_name: string;
+  channel_values: number[] | null;
+};
+
+export type MetricDataresponseType = {
+  hardware_id: string;
+  recorded_at: string[];
+  inode_idx: null | number[];
+  metric_channels: MetricChannelType[];
+};

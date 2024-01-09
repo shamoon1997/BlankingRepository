@@ -16,9 +16,18 @@ import {
   metricsDataDevicesOptions,
 } from "@/utils/device-data";
 import MetricsDataContents from "./metrics-data-contents";
+import { useQuery } from "@tanstack/react-query";
+import { getMetricDataAPI } from "@/api/device-data";
 
 const MetricsDataTab: React.FC = () => {
   const { applyMetricDeviceFilterType } = useMetricDataActions();
+
+  const { data } = useQuery({
+    queryKey: ["metric-data"],
+    queryFn: async () => {
+      return getMetricDataAPI();
+    },
+  });
 
   return (
     <>
@@ -143,7 +152,7 @@ const MetricsDataTab: React.FC = () => {
                 </Accordion.Trigger>
                 <Accordion.Content>
                   {/* Will be different for other keys */}
-                  <MetricsDataContents />
+                  <MetricsDataContents key={item.key} data={data} />
                   {/* ================================ */}
                 </Accordion.Content>
               </Accordion.Item>
