@@ -21,6 +21,7 @@ export const SelectedPoleViews = ({ selectedPoles }: SelectedPoleViewProps) => {
             selectedPoleHardwareId={selectedPole.selectedPoleHardwareId}
             isMinimized={selectedPole.isMinimized}
             key={selectedPole.selectedPoleHardwareId}
+            assignedColor={selectedPole.assignedColor}
           />
         ))}
     </div>

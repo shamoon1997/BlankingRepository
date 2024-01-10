@@ -1,3 +1,4 @@
+import { mapIconColors } from "@/utils/styleguide";
 import { create } from "zustand";
 
 const MAX_POLES = 3;
@@ -6,10 +7,12 @@ export type SelectedPoleType = {
   isMinimized: boolean;
   // minimal information needed to make selecting a pole view work without relying on data from backend
   deviceSerialNumber: string;
+  assignedColor: string;
 };
 
 type SelectedPolesStoreType = {
   selectedPoles: SelectedPoleType[];
+  colorsList: string[];
   actions: {
     setSelectedPoleIds: (poles: SelectedPoleType[]) => void;
     checkIfPoleIsSelected: (hardwareId: string) => boolean;
@@ -25,6 +28,7 @@ type SelectedPolesStoreType = {
 
 const useSelectedPolesStore = create<SelectedPolesStoreType>((set, get) => ({
   selectedPoles: [],
+  colorsList: [...mapIconColors],
   actions: {
     setSelectedPoleIds: (selectedPoles) => set({ selectedPoles }),
     checkIfPoleIsSelected: (hardwareId) => {
@@ -37,11 +41,20 @@ const useSelectedPolesStore = create<SelectedPolesStoreType>((set, get) => ({
     },
     toggleAddSelectedPole: ({ hardwareId, deviceSerialNumber }) => {
       const selectedPoles = get().selectedPoles;
+
+      if (selectedPoles.length === 0) set({ colorsList: [...mapIconColors] });
+
       const checkIfPoleIsSelected = get().actions.checkIfPoleIsSelected;
 
       // allowing only three poles to be clicked
       if (!checkIfPoleIsSelected(hardwareId)) {
         if (selectedPoles.length < MAX_POLES) {
+          const updatedList = [...get().colorsList];
+          const colorGiven = updatedList.shift();
+          if (colorGiven) updatedList.push(colorGiven);
+
+          console.log(updatedList);
+
           set({
             selectedPoles: [
               ...selectedPoles,
@@ -49,8 +62,10 @@ const useSelectedPolesStore = create<SelectedPolesStoreType>((set, get) => ({
                 selectedPoleHardwareId: hardwareId,
                 isMinimized: false,
                 deviceSerialNumber: deviceSerialNumber,
+                assignedColor: colorGiven ?? "",
               },
             ],
+            colorsList: updatedList,
           });
         }
       } else {

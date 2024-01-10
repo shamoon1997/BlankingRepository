@@ -15,6 +15,7 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 type MapPopProps = {
   selectedPoleHardwareId: string;
   isMinimized: boolean;
+  assignedColor: string;
 };
 
 const getNetworkMode = (networkMode: number | undefined) => {
@@ -41,6 +42,7 @@ const openGoogleMaps = (
 export const MapPopup = ({
   selectedPoleHardwareId,
   isMinimized,
+  assignedColor,
 }: MapPopProps) => {
   const { data, isLoading, isError, isSuccess } = useGetPoleView([
     selectedPoleHardwareId,
@@ -195,8 +197,10 @@ export const MapPopup = ({
                   </div>
                 </div>
 
-                <div className="mt-[-5px] flex items-center justify-center">
-                  <MapsIcon className="text-blue-400" />
+                <div
+                  className={`mt-[-5px] flex items-center justify-center [&_path]:fill-[${assignedColor}]`}
+                >
+                  <MapsIcon />
                 </div>
               </div>
 
