@@ -1,6 +1,7 @@
 import React from "react";
 import * as Accordion from "@radix-ui/react-accordion";
-import { AccordionDownIcon } from "@/assets";
+import { AccordionSelectDropDown } from "../accordion-select/accordion-select";
+import { AccordionDownIcon, BlobToolTipIcon } from "@/assets";
 
 type AccordionItemProps = {
   children: React.ReactNode;
@@ -56,13 +57,33 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
 export const AccordionDemo: React.FC = () => (
   <Accordion.Root type="single" defaultValue={"item-1"} collapsible>
     <AccordionItem value="item-1">
-      <AccordionTrigger>
-        <span className="text-12 font-mont font-semibold text-[#161616]">
-          Vibration Max
-        </span>
-      </AccordionTrigger>
+      <div className="flex justify-between">
+        <AccordionTrigger>
+          <span className="text-12 font-mont font-semibold text-[#161616]">
+            Vibration Max
+          </span>
+        </AccordionTrigger>
+        <div className="mr-[10px] flex h-[18px] w-[111px] flex-shrink-0 items-center justify-center rounded-[4px] border border-solid border-[#8A8A8A] bg-white">
+          <div className="flex gap-x-[5px]">
+            <div className="flex items-center [&_path]:fill-[#628FEE]">
+              <BlobToolTipIcon />
+            </div>
+            <div className="letter-spacing-[0.5px] text-center font-mont text-[10px] font-bold leading-normal tracking-tighter text-[#5B5B5B]">
+              Max 02:00
+            </div>
+          </div>
+        </div>
+      </div>
+
       <AccordionContent>
-        <img src="/images/graph.png" alt="" />
+        <div className="flex flex-col">
+          <div>
+            <img src="/images/graph.png" alt="" />
+          </div>
+          <div>
+            <AccordionSelectDropDown />
+          </div>
+        </div>
       </AccordionContent>
     </AccordionItem>
 

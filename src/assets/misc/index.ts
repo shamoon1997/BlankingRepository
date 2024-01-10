@@ -14,9 +14,10 @@ import SelectedPole from "./selected-pole.svg";
 import MinimizeIcon from "./minimize.svg";
 import CloseIcon from "./close.svg";
 import MapBlobIcon from "./map-blob.svg";
-import RefreshBlobIcon from "./refresh-blob.svg";
 import AccordionDownIcon from "./accordion-down.svg";
 import RefreshGrayIcon from "./refresh.svg";
+import BlobMapIcon from "./blob-map.svg";
+import BlobToolTipIcon from "./blob-tooltip.svg";
 
 export {
   ChevronIcon,
@@ -35,7 +36,8 @@ export {
   MinimizeIcon,
   CloseIcon,
   MapBlobIcon,
-  RefreshBlobIcon,
   AccordionDownIcon,
   RefreshGrayIcon,
+  BlobMapIcon,
+  BlobToolTipIcon,
 };

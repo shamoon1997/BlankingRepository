@@ -361,7 +361,7 @@ export const BlobTable = () => {
                 className="relative flex h-4 w-[32px] cursor-default items-center rounded-[17px] border border-solid border-[#c9c9c9] bg-[#EDEDED] outline-none data-[state=checked]:border-[#5283ED] data-[state=checked]:bg-[#5283ED]"
                 id="airplane-mode"
               >
-                <Switch.Thumb className="flex h-4 w-4 translate-x-[-1px] items-center justify-center rounded-full border border-solid border-[#949494] bg-transparent transition-transform duration-100  will-change-transform data-[state=checked]:translate-x-4 data-[state=checked]:border-[#5283ED] data-[state=checked]:bg-white">
+                <Switch.Thumb className="flex h-4 w-4 translate-x-[-1px] items-center justify-center rounded-full border border-solid border-[#949494] bg-transparent transition-transform duration-100  will-change-transform data-[state=checked]:translate-x-4 data-[state=checked]:border-[#5283ED] data-[state=checked]:bg-white ">
                   <RefreshGrayIcon className="h-4 w-4" />
                 </Switch.Thumb>
               </Switch.Root>
