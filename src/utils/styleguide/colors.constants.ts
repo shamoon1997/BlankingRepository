@@ -23,6 +23,7 @@ export const mapIconColors = [
   "#6217DB",
 ];
 
+// Need the classsnames for taiwind dynamic classnames thing to work
 export const pathFillMapIconColors = [
   "[&_path]:fill-[#628FEE]",
   "[&_path]:fill-[#FF176B]",
