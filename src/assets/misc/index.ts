@@ -18,6 +18,8 @@ import AccordionDownIcon from "./accordion-down.svg";
 import RefreshGrayIcon from "./refresh.svg";
 import BlobMapIcon from "./blob-map.svg";
 import BlobToolTipIcon from "./blob-tooltip.svg";
+import ReadingLockIcon from "./readings-lock.svg";
+import ForwardArrowIcon from "./forward-arrow.svg";
 
 export {
   ChevronIcon,
@@ -40,4 +42,6 @@ export {
   RefreshGrayIcon,
   BlobMapIcon,
   BlobToolTipIcon,
+  ReadingLockIcon,
+  ForwardArrowIcon,
 };
