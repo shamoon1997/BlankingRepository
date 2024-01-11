@@ -53,8 +53,6 @@ const useSelectedPolesStore = create<SelectedPolesStoreType>((set, get) => ({
           const colorGiven = updatedList.shift();
           if (colorGiven) updatedList.push(colorGiven);
 
-          console.log(updatedList);
-
           set({
             selectedPoles: [
               ...selectedPoles,
