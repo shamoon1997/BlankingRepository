@@ -20,6 +20,8 @@ import BlobMapIcon from "./blob-map.svg";
 import BlobToolTipIcon from "./blob-tooltip.svg";
 import ReadingLockIcon from "./readings-lock.svg";
 import ForwardArrowIcon from "./forward-arrow.svg";
+import PlayAudioIcon from "./play-audio.svg";
+import PauseAudioIcon from "./pause-audio.svg";
 
 export {
   ChevronIcon,
@@ -44,4 +46,6 @@ export {
   BlobToolTipIcon,
   ReadingLockIcon,
   ForwardArrowIcon,
+  PlayAudioIcon,
+  PauseAudioIcon,
 };

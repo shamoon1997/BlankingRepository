@@ -1,7 +1,7 @@
 import * as React from "react";
 import { MapBlobIcon, RefreshGrayIcon } from "@/assets/misc";
 import * as Switch from "@radix-ui/react-switch";
-import { AccordionDemo } from "@/components/blob/accordion/accordion";
+import { AccordionHighRes } from "@/components/high-res/accordion/accordion";
 
 import {
   flexRender,
@@ -73,7 +73,7 @@ const defaultData: TableData[] = [
   },
 ];
 
-export const BlobTable = () => {
+export const HighResTable = () => {
   const columns = [
     {
       id: "select",
@@ -338,10 +338,15 @@ export const BlobTable = () => {
       header: () => {
         return (
           <>
-            <div className="flex items-center justify-center gap-x-[5px]">
-              <div className="text-10 cursor-pointer text-right font-mont font-bold text-[#5283ED] underline">
-                Refresh
-              </div>
+            <div className="ml-6 cursor-pointer">
+              <Switch.Root
+                className="relative flex h-4 w-[32px] cursor-default items-center rounded-[17px] border border-solid border-[#c9c9c9] bg-[#EDEDED] outline-none data-[state=checked]:border-[#5283ED] data-[state=checked]:bg-[#5283ED]"
+                id="airplane-mode"
+              >
+                <Switch.Thumb className="flex h-4 w-4 translate-x-[-1px] items-center justify-center rounded-full border border-solid border-[#949494] bg-transparent transition-transform duration-100  will-change-transform data-[state=checked]:translate-x-4 data-[state=checked]:border-[#5283ED] data-[state=checked]:bg-white ">
+                  <RefreshGrayIcon className="h-4 w-4" />
+                </Switch.Thumb>
+              </Switch.Root>
             </div>
           </>
         );
@@ -455,8 +460,8 @@ export const BlobTable = () => {
               {expandedRows.includes(row.id as never) && (
                 <tr>
                   <td colSpan={columns.length}>
-                    <div className="rounded-[3px] bg-[#F5F5F5] p-2">
-                      <AccordionDemo />
+                    <div className="rounded-[3px] bg-white p-2">
+                      <AccordionHighRes />
                     </div>
                   </td>
                 </tr>
