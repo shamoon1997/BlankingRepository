@@ -8,9 +8,15 @@ import {
 import { useMemo, useRef } from "react";
 import { uniqBy } from "lodash";
 import { getHeatMapLayer } from "@/api/api-calls/get-heatmap-layer";
+import { useActiveFilter } from "@/state";
+import { applyFilterFunc } from "@/utils/map";
 
 export const useGetHeatMapLayer = (args: HeatMapLayerPostBody | null) => {
   const lagBuffer = useRef<HeatmapDevice[] | undefined>([]);
+
+  // From filter store
+  const filters = useActiveFilter();
+
   const { data, ...rest } = useQuery({
     queryKey: [
       // IMPORTANT
@@ -22,6 +28,8 @@ export const useGetHeatMapLayer = (args: HeatMapLayerPostBody | null) => {
       args?.lat2,
       args?.lon1,
       args?.lon2,
+      args?.t1,
+      args?.t2,
     ],
     queryFn: ({ signal }) => {
       return getHeatMapLayer(args!, signal);
@@ -78,8 +86,30 @@ export const useGetHeatMapLayer = (args: HeatMapLayerPostBody | null) => {
     };
   }, [data]);
 
+  const dataWithFilterApplied: HeatmapLayerResponse | undefined =
+    useMemo(() => {
+      if (!data) return undefined;
+      if (!data?.data?.devices?.length && filters?.length < 1) return data.data;
+
+      let filteredList: HeatmapDevice[] = data?.data?.devices;
+
+      for (let i = 0; i < filters?.length; i++) {
+        filteredList = applyFilterFunc(
+          data?.data?.devices as unknown as HeatmapDevice[],
+          filters[i],
+        );
+      }
+
+      return {
+        summary: data.data.summary,
+        devices: filteredList,
+        heatmap_metrics_min_max: data.data.heatmap_metrics_min_max,
+      };
+    }, [data, filters]);
+
   return {
     dataWithLagBuffer,
+    dataWithFilterApplied,
     data,
     ...rest,
   };

@@ -1,603 +1,347 @@
 import * as Tabs from "@radix-ui/react-tabs";
+import { useGetPoleView } from "@/api/hooks/poles/use-get-pole-view";
 import { MapsIcon, LocationIcon, SettingIcon } from "@/assets/pole-view";
+import { MinimizeIcon, CloseIcon } from "@/assets/misc";
+import { useSelectedPolesActions, useSelectedPoles } from "@/state";
+import { MapMinimizedView } from "@/components/map/map-minimize-view/map-minimized-view.tsx";
+import { format } from "date-fns";
+import { stripZeros } from "@/utils/strings/strip-zeros.ts";
+import { MapPopUpLoadingView } from "@/components/map/map-pop-up/map-pop-up-loading-view.tsx";
+import { MapMinimizedViewLoadingView } from "@/components/map/map-minimize-view/map-minimized-loading-view.tsx";
+import { MapPopUpErrorView } from "@/components/map/map-pop-up/map-pop-up-error-view.tsx";
+import { MapMinimizedViewErrorView } from "@/components/map/map-minimize-view/map-minimized-error-view.tsx";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
-function MapPopup() {
-  const tabs = ["overview", "Per-Blob", "High-res", "Audio", "Frequency"];
+type MapPopProps = {
+  selectedPoleHardwareId: string;
+  isMinimized: boolean;
+};
 
-  return (
-    <div className="ml-10 mt-10 flex w-full max-w-[292px] flex-col gap-0 rounded-sm bg-white shadow-pole-view">
-      <div className="relative flex h-[214px] items-center justify-center">
-        <img
-          src="/images/popup.png"
-          alt="Your Image Alt Text"
-          className="h-full w-full object-cover"
+const getNetworkMode = (networkMode: number | undefined) => {
+  switch (networkMode) {
+    case 1:
+      return "Cellular";
+    case 2:
+      return "Lora";
+    case 3:
+      return "Unknown";
+    default:
+      return "Unknown";
+  }
+};
+
+const openGoogleMaps = (
+  latitude: number | undefined,
+  longitude: number | undefined,
+) => {
+  const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
+  window.open(url, "_blank");
+};
+
+export const MapPopup = ({
+  selectedPoleHardwareId,
+  isMinimized,
+}: MapPopProps) => {
+  const { data, isLoading, isError, isSuccess } = useGetPoleView([
+    selectedPoleHardwareId,
+  ]);
+  const { setSelectedPoleIds } = useSelectedPolesActions();
+  const selectedPoles = useSelectedPoles();
+
+  const deviceData = data?.[0];
+
+  const tabs = ["Overview", "Per-Blob", "High-res", "Audio", "Frequency"];
+
+  const handleClose = () => {
+    const filteredSelectedPoles = selectedPoles.filter(
+      (selectedPoleIdO) =>
+        selectedPoleIdO.selectedPoleHardwareId !== selectedPoleHardwareId,
+    );
+    setSelectedPoleIds([...filteredSelectedPoles]);
+  };
+
+  const handleMinimize = () => {
+    const updatedSelectedPoles = selectedPoles.map((selectedPole) => {
+      if (selectedPole.selectedPoleHardwareId == selectedPoleHardwareId) {
+        return {
+          ...selectedPole,
+          isMinimized: true,
+        };
+      } else {
+        return selectedPole;
+      }
+    });
+    setSelectedPoleIds(updatedSelectedPoles);
+  };
+
+  const handleMaximize = () => {
+    const updatedSelectedPoles = selectedPoles.map((selectedPole) => {
+      if (selectedPole.selectedPoleHardwareId == selectedPoleHardwareId) {
+        return {
+          ...selectedPole,
+          isMinimized: false,
+        };
+      } else {
+        return selectedPole;
+      }
+    });
+    setSelectedPoleIds(updatedSelectedPoles);
+  };
+
+  if (isLoading && isMinimized) {
+    return (
+      <div
+        onClick={() => handleMaximize()}
+        className="mb-4 flex flex-col justify-end gap-0 first:ml-10 hover:cursor-pointer"
+      >
+        <MapMinimizedViewLoadingView />
+      </div>
+    );
+  }
+
+  if (isError && isMinimized) {
+    return (
+      <div
+        onClick={() => handleMaximize()}
+        className="mb-4 flex flex-col justify-end gap-0 first:ml-10 hover:cursor-pointer"
+      >
+        <MapMinimizedViewErrorView />
+      </div>
+    );
+  }
+
+  if (isSuccess && isMinimized) {
+    return (
+      <div
+        className="mb-4 flex flex-col justify-end gap-0 first:ml-10 hover:cursor-pointer"
+        onClick={() => handleMaximize()}
+      >
+        <MapMinimizedView
+          selectedPoleId={stripZeros(deviceData?.device_sn ?? "")}
         />
       </div>
-      <div className="flex flex-col items-start gap-2.5 px-5 pb-2.5 pt-3.5">
-        <div className="flex w-full justify-between">
-          <div className="flex gap-1">
-            <div className="min-w-[38px] font-mont text-sm font-semibold leading-normal text-[#5B5B5B]">
-              Pole
+    );
+  }
+
+  if (isLoading && !isMinimized) {
+    return (
+      <MapPopUpLoadingView
+        tabs={tabs}
+        handleClose={handleClose}
+        handleMinimize={handleMinimize}
+      />
+    );
+  }
+
+  if (isError && !isMinimized) {
+    return (
+      <MapPopUpErrorView
+        handleClose={handleClose}
+        handleMinimize={handleMinimize}
+      />
+    );
+  }
+
+  if (isSuccess && !isMinimized) {
+    return (
+      <>
+        <div className="flex h-full w-[340px] flex-col gap-0 rounded-sm bg-white shadow-pole-view">
+          <div className="relative flex h-[214px] shrink-0 rounded-sm">
+            <div className="absolute right-1 top-1 z-[2] flex items-center justify-center gap-2 hover:cursor-pointer">
+              <MinimizeIcon
+                className="h-[15px] w-[15px] shrink-0"
+                onClick={() => handleMinimize()}
+              />
+              <CloseIcon
+                className="h-[16px] w-[16px]  shrink-0"
+                onClick={() => handleClose()}
+              />
             </div>
-            <div className="font-mont text-sm font-normal leading-normal text-[#5B5B5B]">
-              1533. GS526
-            </div>
+            <TransformWrapper
+              doubleClick={{
+                step: 0.7,
+              }}
+              pinch={{
+                step: 0.5,
+              }}
+              limitToBounds
+              wheel={{
+                smoothStep: 0.01,
+                step: 0.2,
+              }}
+            >
+              <TransformComponent wrapperClass="h-full w-full shrink-0 rounded-sm object-cover">
+                <img
+                  /*  find the first non null url*/
+                  src={deviceData?.installation_photos?.find((i) => Boolean(i))}
+                  alt="Image of pole installation"
+                />
+              </TransformComponent>
+            </TransformWrapper>
           </div>
-          <div className="mt-[-5px] flex items-center justify-center">
-            <MapsIcon className="text-blue-400" />
+          <div className="h-full overflow-y-auto">
+            <div className="flex flex-col items-start gap-2.5 px-5 pb-2.5 pt-3.5">
+              <div className="flex w-full justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="font-mont text-base font-semibold leading-normal text-[#5B5B5B]">
+                    Pole
+                  </div>
+                  <div className="font-mont text-base font-normal leading-normal text-[#5B5B5B]">
+                    {deviceData?.pole_id}
+                  </div>
+                  <span>•</span>
+                  <div className="font-mont text-base font-normal leading-normal text-[#5B5B5B]">
+                    {stripZeros(deviceData?.device_sn ?? "")}
+                  </div>
+                </div>
+
+                <div className="mt-[-5px] flex items-center justify-center">
+                  <MapsIcon className="text-blue-400" />
+                </div>
+              </div>
+
+              <div className="inline-flex items-center gap-[7px]">
+                <div
+                  className={`h-2.5 w-2.5 shrink-0 rounded-full ${
+                    deviceData?.online === 0 ? "bg-offline" : "bg-online"
+                  }`}
+                />
+                <div className="font-mont text-[12px] font-normal leading-normal tracking-[-0.5px] text-[#161616]">
+                  {deviceData?.online === 0 ? "Offline" : "Online"}
+                </div>
+              </div>
+            </div>
+            <div className="mx-auto mb-8 w-full">
+              <Tabs.Root defaultValue="Overview">
+                <Tabs.List className="flex gap-3.5 overflow-x-auto border-b border-solid border-[#d9d9d9] px-6">
+                  {tabs.map((tab) => {
+                    return (
+                      <Tabs.Trigger
+                        key={tab}
+                        value={tab}
+                        className="overflow-hidden whitespace-nowrap border-b border-solid border-transparent py-[7px] font-mont text-[11px] font-normal leading-[100%] text-[#5B5B5B] data-[state=active]:border-[#628fee] data-[state=active]:text-[#628fee]"
+                      >
+                        {tab}
+                      </Tabs.Trigger>
+                    );
+                  })}
+                </Tabs.List>
+
+                <Tabs.Content value="Overview">
+                  <div className="border-b border-solid border-[#d9d9d9] p-5 text-[12px] ">
+                    <div className="grid grid-cols-2 gap-y-[10px]">
+                      <div className="font-mont font-semibold leading-normal text-[#5B5B5B]">
+                        Pole
+                      </div>
+                      <div className="text-left font-mont font-normal leading-normal text-[#474747]">
+                        {deviceData?.pole_id}
+                      </div>
+
+                      <div className=" font-mont font-semibold leading-normal text-[#5B5B5B]">
+                        Serial{" "}
+                      </div>
+                      <div className="text-left font-mont font-normal leading-normal text-[#474747]">
+                        {deviceData?.device_sn}
+                      </div>
+
+                      <div className=" font-mont font-semibold leading-normal text-[#5B5B5B]">
+                        Deployment
+                      </div>
+                      <div className="text-left font-mont font-normal leading-normal text-[#474747]">
+                        {deviceData?.deployment}
+                      </div>
+
+                      <div className=" font-mont font-semibold leading-normal text-[#5B5B5B]">
+                        Network
+                      </div>
+                      <div className="text-left font-mont font-normal leading-normal text-[#474747]">
+                        {getNetworkMode(deviceData?.network_mode)}
+                      </div>
+
+                      <div className=" font-mont font-semibold leading-normal text-[#5B5B5B]">
+                        Last seen
+                      </div>
+                      <div className="text-left font-mont font-normal leading-normal text-[#474747]">
+                        {deviceData?.last_health_report &&
+                          format(
+                            new Date(deviceData.last_health_report),
+                            "M/dd/yyyy h:mm:ss a",
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="border-b border-solid border-[#d9d9d9] p-5">
+                    <div className="flex flex-col gap-2.5">
+                      <div className="flex items-center gap-[5px]">
+                        <div className="flex h-3 w-3 items-center justify-center">
+                          <LocationIcon />
+                        </div>
+                        <div
+                          className="font-mont font-normal capitalize leading-normal text-[#5B5B5B] underline hover:cursor-pointer"
+                          onClick={() =>
+                            openGoogleMaps(
+                              deviceData?.latitude,
+                              deviceData?.longitude,
+                            )
+                          }
+                        >
+                          Open in Google Map
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-[5px]">
+                        <div className="flex h-3 w-3 items-center justify-center">
+                          <SettingIcon />
+                        </div>
+                        <div className="font-mont font-normal leading-normal text-[#5B5B5B]">
+                          Insulators, Transformers, Conductors
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="border-b border-solid border-[#d9d9d9] p-5">
+                    <div className="flex flex-col gap-[3px]">
+                      <div className="font-mont font-semibold leading-normal text-[#5B5B5B]">
+                        Vegetation
+                      </div>
+                      <div className="font-mont font-normal leading-normal text-[#5B5B5B]">
+                        {deviceData?.vegetation_notes ?? "No notes found."}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className=" p-5">
+                    <div className="flex flex-col gap-[3px]">
+                      <div className="font-mont font-semibold leading-normal text-[#5B5B5B]">
+                        Installation Notes
+                      </div>
+                      <div className="font-mont font-normal leading-normal text-[#5B5B5B]">
+                        {deviceData?.installation_notes ?? "No notes found."}
+                      </div>
+                    </div>
+                  </div>
+                </Tabs.Content>
+
+                <Tabs.Content value="Per-Blob">
+                  <div className="p-5">Not Implemented yet</div>
+                </Tabs.Content>
+
+                <Tabs.Content value="High-res">
+                  <div className="p-5">Not Implemented yet</div>
+                </Tabs.Content>
+
+                <Tabs.Content value="Audio">
+                  <div className="p-5">Not Implemented yet</div>
+                </Tabs.Content>
+
+                <Tabs.Content value="Frequency">
+                  <div className="p-5">Not Implemented yet</div>
+                </Tabs.Content>
+              </Tabs.Root>
+            </div>
           </div>
         </div>
-        <div className="inline-flex items-center gap-[5px] py-1">
-          <div className="mt-px h-2 w-2 shrink-0 rounded-full bg-[#DF4C2B]" />
-          <div className="font-m text-[10px] font-normal leading-normal tracking-[-0.5px] text-[#161616]">
-            Offline
-          </div>
-        </div>
-      </div>
-      <div className="mx-auto mb-8 w-full">
-        <Tabs.Root defaultValue="overview">
-          <Tabs.List className="flex gap-3.5 overflow-x-auto border-b border-solid border-[#d9d9d9] px-6">
-            {tabs.map((tab) => {
-              return (
-                <Tabs.Trigger
-                  key={tab}
-                  value={tab}
-                  className="whitespace-nowrap border-b border-solid border-transparent py-[7px] font-mont text-[8px] font-normal leading-[100%] text-[#5B5B5B] data-[state=active]:border-[#628fee] data-[state=active]:text-[#628fee]"
-                >
-                  {tab}
-                </Tabs.Trigger>
-              );
-            })}
-          </Tabs.List>
-
-          <Tabs.Content value="overview">
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-2.5">
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Pole
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    1f0010000c503041503041500c5
-                  </div>
-                </div>
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Serial{" "}
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    GS00000526
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Deployment
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    Birmingham City
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Circuit
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    20123
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Network
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    Jazz
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Last seen
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    6/15/2023 9:50:55 AM
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-2.5">
-                <div className="flex items-center gap-[5px]">
-                  <div className="flex h-3 w-3 items-center justify-center">
-                    <LocationIcon />
-                  </div>
-                  <div className="font-mont text-[10px] font-normal capitalize leading-normal text-[#5B5B5B] underline">
-                    Open in Google Map
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-[5px]">
-                  <div className="flex h-3 w-3 items-center justify-center">
-                    <SettingIcon />
-                  </div>
-                  <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                    Insulators, Transformers, Conductors
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-[3px]">
-                <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                  Vegetarian
-                </div>
-                <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
-                  itaque recusandae excepturi. Dicta repellat deserunt totam
-                  dolor cum inventore culpa.
-                </div>
-              </div>
-            </div>
-            <div className="p-5">
-              <div className="flex flex-col gap-0.5">
-                <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                  Notes
-                </div>
-                <div className="flex gap-[11px]">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#D9D9D9] font-mont text-[10px] font-semibold leading-normal text-black">
-                    KC
-                  </div>
-                  <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                    Debitis perferendis hic aperiam modi obcaecati facere
-                    aliquam vero veniam culpa quasi!
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Tabs.Content>
-
-          <Tabs.Content value="Per-Blob">
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-2.5">
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Pole
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    1f0010000c503041503041500c5
-                  </div>
-                </div>
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Serial{" "}
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    GS00000526
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Deployment
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    Birmingham City
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Circuit
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    20123
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Network
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    Jazz
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Last seen
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    6/15/2023 9:50:55 AM
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-2.5">
-                <div className="flex items-center gap-[5px]">
-                  <div className="flex h-3 w-3 items-center justify-center">
-                    <LocationIcon />
-                  </div>
-                  <div className="font-mont text-[10px] font-normal capitalize leading-normal text-[#5B5B5B] underline">
-                    Open in Google Map
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-[5px]">
-                  <div className="flex h-3 w-3 items-center justify-center">
-                    <SettingIcon />
-                  </div>
-                  <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                    Insulators, Transformers, Conductors
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-[3px]">
-                <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                  Vegetarian
-                </div>
-                <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
-                  itaque recusandae excepturi. Dicta repellat deserunt totam
-                  dolor cum inventore culpa.
-                </div>
-              </div>
-            </div>
-            <div className="p-5">
-              <div className="flex flex-col gap-0.5">
-                <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                  Notes
-                </div>
-                <div className="flex gap-[11px]">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#D9D9D9] font-mont text-[10px] font-semibold leading-normal text-black">
-                    KC
-                  </div>
-                  <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                    Debitis perferendis hic aperiam modi obcaecati facere
-                    aliquam vero veniam culpa quasi!
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Tabs.Content>
-
-          <Tabs.Content value="High-res">
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-2.5">
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Pole
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    1f0010000c503041503041500c5
-                  </div>
-                </div>
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Serial{" "}
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    GS00000526
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Deployment
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    Birmingham City
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Circuit
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    20123
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Network
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    Jazz
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Last seen
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    6/15/2023 9:50:55 AM
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-2.5">
-                <div className="flex items-center gap-[5px]">
-                  <div className="flex h-3 w-3 items-center justify-center">
-                    <LocationIcon />
-                  </div>
-                  <div className="font-mont text-[10px] font-normal capitalize leading-normal text-[#5B5B5B] underline">
-                    Open in Google Map
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-[5px]">
-                  <div className="flex h-3 w-3 items-center justify-center">
-                    <SettingIcon />
-                  </div>
-                  <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                    Insulators, Transformers, Conductors
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-[3px]">
-                <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                  Vegetarian
-                </div>
-                <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
-                  itaque recusandae excepturi. Dicta repellat deserunt totam
-                  dolor cum inventore culpa.
-                </div>
-              </div>
-            </div>
-            <div className="p-5">
-              <div className="flex flex-col gap-0.5">
-                <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                  Notes
-                </div>
-                <div className="flex gap-[11px]">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#D9D9D9] font-mont text-[10px] font-semibold leading-normal text-black">
-                    KC
-                  </div>
-                  <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                    Debitis perferendis hic aperiam modi obcaecati facere
-                    aliquam vero veniam culpa quasi!
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Tabs.Content>
-
-          <Tabs.Content value="Audio">
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-2.5">
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Pole
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    1f0010000c503041503041500c5
-                  </div>
-                </div>
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Serial{" "}
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    GS00000526
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Deployment
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    Birmingham City
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Circuit
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    20123
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Network
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    Jazz
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Last seen
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    6/15/2023 9:50:55 AM
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-2.5">
-                <div className="flex items-center gap-[5px]">
-                  <div className="flex h-3 w-3 items-center justify-center">
-                    <LocationIcon />
-                  </div>
-                  <div className="font-mont text-[10px] font-normal capitalize leading-normal text-[#5B5B5B] underline">
-                    Open in Google Map
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-[5px]">
-                  <div className="flex h-3 w-3 items-center justify-center">
-                    <SettingIcon />
-                  </div>
-                  <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                    Insulators, Transformers, Conductors
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-[3px]">
-                <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                  Vegetarian
-                </div>
-                <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
-                  itaque recusandae excepturi. Dicta repellat deserunt totam
-                  dolor cum inventore culpa.
-                </div>
-              </div>
-            </div>
-            <div className="p-5">
-              <div className="flex flex-col gap-0.5">
-                <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                  Notes
-                </div>
-                <div className="flex gap-[11px]">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#D9D9D9] font-mont text-[10px] font-semibold leading-normal text-black">
-                    KC
-                  </div>
-                  <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                    Debitis perferendis hic aperiam modi obcaecati facere
-                    aliquam vero veniam culpa quasi!
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Tabs.Content>
-
-          <Tabs.Content value="Frequency">
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-2.5">
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Pole
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    1f0010000c503041503041500c5
-                  </div>
-                </div>
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Serial{" "}
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    GS00000526
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Deployment
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    Birmingham City
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Circuit
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    20123
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Network
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    Jazz
-                  </div>
-                </div>
-
-                <div className="flex gap-8">
-                  <div className="min-w-[62px] font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                    Last seen
-                  </div>
-                  <div className="text-left font-mont text-[10px] font-normal leading-normal text-[#474747]">
-                    6/15/2023 9:50:55 AM
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-2.5">
-                <div className="flex items-center gap-[5px]">
-                  <div className="flex h-3 w-3 items-center justify-center">
-                    <LocationIcon />
-                  </div>
-                  <div className="font-mont text-[10px] font-normal capitalize leading-normal text-[#5B5B5B] underline">
-                    Open in Google Map
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-[5px]">
-                  <div className="flex h-3 w-3 items-center justify-center">
-                    <SettingIcon />
-                  </div>
-                  <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                    Insulators, Transformers, Conductors
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="border-b border-solid border-[#d9d9d9] p-5">
-              <div className="flex flex-col gap-[3px]">
-                <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                  Vegetarian
-                </div>
-                <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
-                  itaque recusandae excepturi. Dicta repellat deserunt totam
-                  dolor cum inventore culpa.
-                </div>
-              </div>
-            </div>
-            <div className="p-5">
-              <div className="flex flex-col gap-0.5">
-                <div className="font-mont text-[10px] font-semibold leading-normal text-[#5B5B5B]">
-                  Notes
-                </div>
-                <div className="flex gap-[11px]">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#D9D9D9] font-mont text-[10px] font-semibold leading-normal text-black">
-                    KC
-                  </div>
-                  <div className="font-mont text-[10px] font-normal leading-normal text-[#5B5B5B]">
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                    Debitis perferendis hic aperiam modi obcaecati facere
-                    aliquam vero veniam culpa quasi!
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Tabs.Content>
-        </Tabs.Root>
-      </div>
-    </div>
-  );
-}
-
-export default MapPopup;
+      </>
+    );
+  }
+};

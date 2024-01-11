@@ -16,6 +16,8 @@ export const ApiResources = {
   getHeatMapLayer: "layer/heatmap",
   getEquipmentLayer: "layer/equipment",
 
+  getPoleView: "/poleview",
+
   // Device Data here:
   getMetricData: "/device_data/metric_data",
 };

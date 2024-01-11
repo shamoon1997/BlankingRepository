@@ -1,9 +1,5 @@
 import { useLayerControlUrlState, useMapUrlState } from "@/hooks";
-import Map, {
-  FullscreenControl,
-  MapRef,
-  NavigationControl,
-} from "react-map-gl";
+import Map, { MapRef, NavigationControl } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef } from "react";
 import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
@@ -17,6 +13,7 @@ import {
   useMapboxBboxActions,
 } from "@/state/map/bbox-store.tsx";
 import { HeatMapLayer } from "@/components/map/map-layers/heat-map-layer.tsx";
+import { useReadToFrom } from "@/hooks/calendar";
 import { useGetHeatMapLayer } from "@/api/hooks/maps/user-get-heat-map-layer.ts";
 
 const MapBoxGL = import("mapbox-gl");
@@ -26,6 +23,8 @@ export const BaseMap = () => {
     useMapUrlState();
   const { validatedLayerUrlState } = useLayerControlUrlState();
   const ref = useRef<MapRef | null>(null);
+
+  const fromTo = useReadToFrom();
 
   const bbox = useMapboxBbox();
   const { setDebouncedBbox } = useMapboxBboxActions();
@@ -37,8 +36,8 @@ export const BaseMap = () => {
     bbox
       ? {
           ...bbox,
-          t1: "2023-11-24 21:00:00",
-          t2: "2023-11-24 21:30:00",
+          t1: fromTo.from,
+          t2: fromTo.to,
         }
       : null,
   );
@@ -59,6 +58,8 @@ export const BaseMap = () => {
       return;
     }
     ref.current?.flyTo({
+      animate: false,
+      zoom: validatedMapUrlState.zoom,
       bearing: validatedMapUrlState.bearing,
       center: {
         lat: validatedMapUrlState.lat,
@@ -103,7 +104,6 @@ export const BaseMap = () => {
       style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
       mapStyle="mapbox://styles/mapbox/light-v11"
     >
-      <FullscreenControl position="bottom-left" />
       <NavigationControl position="bottom-left" showCompass />
       {validatedLayerUrlState.layer === "gridscope" && <GridScopeLayer />}
       {validatedLayerUrlState.layer === "heatmap" && <HeatMapLayer />}

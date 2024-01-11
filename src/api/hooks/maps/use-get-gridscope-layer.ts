@@ -8,9 +8,15 @@ import {
 import { useMemo, useRef } from "react";
 import { uniqBy } from "lodash";
 import { getGridScopeLayer } from "@/api/api-calls/get-gridscope-layer.ts";
+import { useActiveFilter } from "@/state/map";
+import { applyFilterFunc } from "@/utils/map";
 
 export const useGetGridScopeLayer = (args: EquipmentLayerPostBody | null) => {
   const lagBuffer = useRef<Device[] | undefined>([]);
+
+  // From filter store
+  const filters = useActiveFilter();
+
   const { data, ...rest } = useQuery({
     queryKey: [
       // IMPORTANT
@@ -64,8 +70,25 @@ export const useGetGridScopeLayer = (args: EquipmentLayerPostBody | null) => {
     };
   }, [data]);
 
+  const dataWithFilterApplied: BaseLayerResponse | undefined = useMemo(() => {
+    if (!data) return undefined;
+    if (!data?.data?.devices?.length && filters?.length < 1) return data.data;
+
+    let filteredList: Device[] = data?.data?.devices;
+
+    for (let i = 0; i < filters?.length; i++) {
+      filteredList = applyFilterFunc(
+        data?.data?.devices as unknown as Device[],
+        filters[i],
+      );
+    }
+
+    return { summary: data.data.summary, devices: filteredList };
+  }, [data, filters]);
+
   return {
     dataWithLagBuffer,
+    dataWithFilterApplied,
     data,
     ...rest,
   };

@@ -24,8 +24,6 @@ export const MultiSelectDropdown = <T extends DropDownListItemOption>({
   selectedItems,
   onChange,
 }: MultiSelectDropdownProps<T>) => {
-  console.log(selectedItems, "selectedItemsselectedItemsselectedItems");
-
   let selectedText = "";
   if (isLoading) {
     selectedText = "Loading ...";

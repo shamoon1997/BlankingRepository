@@ -57,9 +57,12 @@ export interface Device {
   hardware_id: string;
   device_sn: string;
   pole_id: string;
+  deployment: string;
   longitude: number;
   latitude: number;
   last_health_report: string;
+  fw_version: string;
+  pcb_rev: string;
   network_mode: number;
   online: number;
   neighbors: string[];
@@ -79,3 +82,42 @@ export type MetricDataresponseType = {
   inode_idx: null | number[];
   metric_channels: MetricChannelType[];
 };
+interface Neighbor {
+  hardware_id: string;
+}
+
+export interface PoleView {
+  online: number;
+  hardware_id: string;
+  last_health_report: string;
+  device_sn: string;
+  deployment: string;
+  pole_id: string;
+  longitude: number;
+  latitude: number;
+  altitude: number;
+  accuracy: number;
+  network_mode: number;
+  orientation: string;
+  vegetation_notes: string;
+  installation_notes: string;
+  iccid: string;
+  imei: string;
+  dev_eui: string;
+  pcb_rev: string;
+  pcb_sn: string;
+  fw_version: string;
+  fw_hash: string;
+  heatmap_metrics: HeatmapMetrics;
+  neighbors: Neighbor[];
+  installation_photos: string[];
+}
+export type poleView = PoleView;
+
+export type PoleViewResponse = PoleView[];
+
+export interface DeploymentResponse {
+  name: string;
+  longitude: number;
+  latitude: number;
+}

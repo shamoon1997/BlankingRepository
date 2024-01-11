@@ -8,9 +8,15 @@ import {
 import { useMemo, useRef } from "react";
 import { uniqBy } from "lodash";
 import { getNetworkLayer } from "@/api/api-calls/get-network-layer.ts";
+import { useActiveFilter } from "@/state";
+import { applyFilterFunc } from "@/utils/map";
 
 export const useGetNetworkLayer = (args: EquipmentLayerPostBody | null) => {
   const lagBuffer = useRef<Device[] | undefined>([]);
+
+  // From filter store
+  const filters = useActiveFilter();
+
   const { data, ...rest } = useQuery({
     queryKey: [
       ApiResources.getNetworkLayer,
@@ -52,8 +58,25 @@ export const useGetNetworkLayer = (args: EquipmentLayerPostBody | null) => {
     };
   }, [data]);
 
+  const dataWithFilterApplied: BaseLayerResponse | undefined = useMemo(() => {
+    if (!data) return undefined;
+    if (!data?.data?.devices?.length && filters?.length < 1) return data.data;
+
+    let filteredList: Device[] = data?.data?.devices;
+
+    for (let i = 0; i < filters?.length; i++) {
+      filteredList = applyFilterFunc(
+        data?.data?.devices as unknown as Device[],
+        filters[i],
+      );
+    }
+
+    return { summary: data.data.summary, devices: filteredList };
+  }, [data, filters]);
+
   return {
     dataWithLagBuffer,
+    dataWithFilterApplied,
     data,
     ...rest,
   };

@@ -13,3 +13,7 @@
     scrollbar-width: none; /* Firefox */
   }
 }
+/*hack to make position absolute instead of fixed in radix ui select to make z-index work properly*/
+.hack [data-radix-popper-content-wrapper] {
+  position: absolute !important;
+}

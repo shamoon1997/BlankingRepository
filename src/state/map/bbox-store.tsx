@@ -4,7 +4,7 @@ import debounce from "lodash/debounce";
 import mapboxgl from "mapbox-gl";
 import { ViewStateChangeEvent } from "react-map-gl";
 
-type MapBboxStore = {
+type MapBboxStoreType = {
   bbox: CommonLayerPostBody | null;
   actions: {
     setDebouncedBbox: (
@@ -13,7 +13,7 @@ type MapBboxStore = {
   };
 };
 
-const useMapboxBboxStore = create<MapBboxStore>((set) => {
+const useMapboxBboxStore = create<MapBboxStoreType>((set) => {
   const debounced = debounce(
     (e: mapboxgl.MapboxEvent<undefined> | ViewStateChangeEvent) => {
       const bounds = e.target.getBounds();

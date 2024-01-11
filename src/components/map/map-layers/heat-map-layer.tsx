@@ -1,10 +1,13 @@
 import { useLayerControlUrlState, useMapUrlState } from "@/hooks";
-import { Feature, Point, Position } from "geojson";
+import { Feature, Point } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
 import { MapZoomedBoxContainer } from "../map-zoomed-box";
 import { HeatmapDevice } from "@/api/types/types.ts";
-import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
+import {
+  generateLines,
+  generatePoints,
+} from "@/utils/map/geojson-manipulators.ts";
 import { useMemo } from "react";
 import { HeatMapControlLayer } from "@/components/map/dropdown-layers/heatmap-control-layer";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
@@ -24,7 +27,10 @@ import {
   SpottyIcon,
 } from "@/assets/pole-hover";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
-import { ElectrometerIcon, VibrationIcon } from "@/assets";
+import { ElectrometerIcon, SelectedPoleIcon, VibrationIcon } from "@/assets";
+import { useSelectedPoles, useSelectedPolesActions } from "@/state";
+import { useReadToFrom } from "@/hooks/calendar";
+import { SelectedPoleViews } from "@/components/map/selected-poleview-container/selected-pole-views.tsx";
 
 const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -45,11 +51,15 @@ const labelColors = [
 export const HeatMapLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const { validatedLayerUrlState } = useLayerControlUrlState();
+  const { checkIfPoleIsSelected, toggleAddSelectedPole } =
+    useSelectedPolesActions();
 
   const bbox = useMapboxBbox();
+  const fromTo = useReadToFrom();
+  const selectedPoles = useSelectedPoles();
 
   const {
-    dataWithLagBuffer: data,
+    dataWithFilterApplied: data,
     isError,
     isLoading,
     isRefetching,
@@ -58,63 +68,18 @@ export const HeatMapLayer = () => {
     bbox
       ? {
           ...bbox,
-          t1: "2023-11-24 21:00:00",
-          t2: "2023-11-24 21:30:00",
+          t1: fromTo.from,
+          t2: fromTo.to,
         }
       : null,
   );
 
   const points: Feature<Point, HeatmapDevice>[] = useMemo(() => {
-    if (data?.devices && data.devices.length > 0) {
-      const modify = data.devices.map((item) => {
-        return {
-          ...item,
-          id: item.hardware_id,
-        };
-      });
-      return mapDataToGeoJsonPoints(modify);
-    }
-
-    return [];
+    return generatePoints(data?.devices);
   }, [data?.devices]);
 
   const lines: Feature = useMemo(() => {
-    const visitedPairs = new Set();
-    const coordinates: Position[][] = [];
-
-    if (data?.devices && data.devices.length > 0) {
-      data.devices.forEach((device) => {
-        return device.neighbors.forEach((neighborId) => {
-          const neighborDevice = data.devices.find(
-            (d) => d.hardware_id === neighborId,
-          );
-
-          // sort is needed to ensure key consistency don't remove
-          const pairKey = [device.hardware_id, neighborId].sort().join("-");
-
-          if (!visitedPairs.has(pairKey) && neighborDevice) {
-            visitedPairs.add(pairKey);
-
-            coordinates.push([
-              [device.longitude, device.latitude],
-              [neighborDevice.longitude, neighborDevice.latitude],
-            ]);
-          }
-        });
-      });
-      console.log(coordinates);
-    }
-
-    return {
-      type: "Feature",
-      geometry: {
-        type: "MultiLineString",
-        coordinates,
-      },
-      properties: {
-        color: "#8A8A8A",
-      },
-    };
+    return generateLines(data?.devices);
   }, [data?.devices]);
 
   let legendLabels = [];
@@ -141,9 +106,6 @@ export const HeatMapLayer = () => {
       colors: labelColors,
     });
   }
-
-  console.log(intervals, "intervals");
-  console.log(legendLabels, "legendLabels");
 
   return (
     <>
@@ -183,14 +145,34 @@ export const HeatMapLayer = () => {
         }
 
         return (
-          <Marker key={id} latitude={lat} longitude={lng}>
+          <Marker
+            key={id}
+            latitude={lat}
+            longitude={lng}
+            onClick={() =>
+              toggleAddSelectedPole({
+                hardwareId: i.properties.hardware_id,
+                deviceSerialNumber: i.properties.device_sn,
+              })
+            }
+            style={{
+              cursor: "pointer",
+              zIndex: checkIfPoleIsSelected(i.properties.hardware_id) ? 10 : 0,
+            }}
+          >
             <div className="relative">
+              {checkIfPoleIsSelected(i.properties.hardware_id) && (
+                <div className="absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center">
+                  <SelectedPoleIcon className="h-[26px] w-[26px] text-blue-400" />
+                </div>
+              )}
               <div
                 className={`drop-shadow-map-dot ${color} z-0 h-6 w-6 rounded-full border-2 border-solid border-white`}
               />
             </div>
 
-            {validatedMapUrlState.zoom > 16 && (
+            {(validatedMapUrlState.zoom > 16 ||
+              checkIfPoleIsSelected(i.properties.hardware_id)) && (
               <MapZoomedBoxContainer>
                 <div className="flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
                   <div className="flex items-center gap-[7px] font-medium">
@@ -221,6 +203,8 @@ export const HeatMapLayer = () => {
       })}
 
       <HeatMapControlLayer />
+
+      <SelectedPoleViews selectedPoles={selectedPoles} />
 
       <MapStatusContainer>
         {(isLoading || isRefetching) && (
