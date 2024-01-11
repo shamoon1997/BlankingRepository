@@ -13,6 +13,7 @@ import AddIcon from "./add.svg";
 import SelectedPoleIcon from "./selected-pole.svg";
 import MinimizeIcon from "./minimize.svg";
 import CloseIcon from "./close.svg";
+import PointingArrowIcon from "./pointing-arrow.svg";
 
 export {
   ChevronIcon,
@@ -30,4 +31,5 @@ export {
   SelectedPoleIcon,
   MinimizeIcon,
   CloseIcon,
+  PointingArrowIcon,
 };

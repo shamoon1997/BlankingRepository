@@ -1,7 +1,9 @@
 import {
   ChevronIcon,
   MoveGraphIcon,
+  PointingArrowIcon,
   SearchIcon,
+  TimeIcon,
   ZoomInIcon,
   ZoomOutIcon,
   ZoomSectionIcon,
@@ -18,9 +20,33 @@ import {
 import MetricsDataContents from "./metrics-data-contents";
 import { useQuery } from "@tanstack/react-query";
 import { getMetricDataAPI } from "@/api/device-data";
+import { useCalendarUrlState } from "@/hooks/calendar";
+import { format, fromUnixTime } from "date-fns";
+import { toSentenceCase } from "js-convert-case";
 
 const MetricsDataTab: React.FC = () => {
   const { applyMetricDeviceFilterType } = useMetricDataActions();
+  const { validatedCalendarUrlState } = useCalendarUrlState();
+
+  let from;
+  if (typeof validatedCalendarUrlState.from === "number") {
+    from = format(
+      fromUnixTime(validatedCalendarUrlState.from),
+      "MM/dd/yyyy hh:mm a",
+    );
+  } else {
+    from = toSentenceCase(validatedCalendarUrlState.from);
+  }
+
+  let to;
+  if (typeof validatedCalendarUrlState.to === "number") {
+    to = format(
+      fromUnixTime(validatedCalendarUrlState.to),
+      "MM/dd/yyyy hh:mm a",
+    );
+  } else {
+    to = toSentenceCase(validatedCalendarUrlState.to);
+  }
 
   const { data } = useQuery({
     queryKey: ["metric-data"],
@@ -52,21 +78,15 @@ const MetricsDataTab: React.FC = () => {
             <div className="text-[10px] font-semibold text-black">Map(#)</div> */}
           </div>
 
-          <div className="flex w-[120px] items-center justify-between rounded border-[2px] px-[10px]">
-            <div className="text-[10px] text-[#8B8B8B]">Device</div>
-            <div className="text-[10px] font-semibold text-black">Map(#)</div>
-          </div>
-
-          <div className="flex w-[120px] items-center justify-between rounded border-[2px] px-[10px]">
-            <div className="text-[10px] text-[#8B8B8B]">Device</div>
-            <div className="text-[10px] font-semibold text-black">Map(#)</div>
-          </div>
-
-          <div className="flex w-[120px] items-center justify-between rounded border-[2px] px-[10px]">
-            <div className="text-[10px] text-[#8B8B8B]">All data types</div>
-            <div className="rotate-180 [&_svg]:h-[12px] [&_svg]:w-[12px]">
-              <ChevronIcon />
+          <div className="flex min-w-[186px] cursor-pointer items-center justify-between rounded border-[2px] px-[10px]">
+            <div className="mr-[5px] [&_path]:fill-[#8B8B8B] [&_svg]:h-[10px] [&_svg]:w-[10px]">
+              <TimeIcon />
             </div>
+            <p className="text-[10px] text-[#8B8B8B]">{from ?? "DD/MM/YYYY"}</p>
+            <div className="mx-[9px] [&_svg]:h-[10px] [&_svg]:w-[10px]">
+              <PointingArrowIcon />
+            </div>
+            <p className="text-[10px] text-[#8B8B8B]">{to ?? "DD/MM/YYYY"}</p>
           </div>
 
           <div className="">
