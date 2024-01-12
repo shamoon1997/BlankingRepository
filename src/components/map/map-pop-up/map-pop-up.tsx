@@ -2,18 +2,25 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { useGetPoleView } from "@/api/hooks/poles/use-get-pole-view";
 import { MapsIcon, LocationIcon, SettingIcon } from "@/assets/pole-view";
 import { MinimizeIcon, CloseIcon } from "@/assets/misc";
-import { useSelectedPolesActions, useSelectedPoles } from "@/state";
+import {
+  useSelectedPolesActions,
+  useSelectedPoles,
+  useCalendarTimeZone,
+} from "@/state";
 import { MapMinimizedView } from "@/components/map/map-minimize-view/map-minimized-view.tsx";
-import { format } from "date-fns";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 import { MapPopUpLoadingView } from "@/components/map/map-pop-up/map-pop-up-loading-view.tsx";
 import { MapMinimizedViewLoadingView } from "@/components/map/map-minimize-view/map-minimized-loading-view.tsx";
 import { MapPopUpErrorView } from "@/components/map/map-pop-up/map-pop-up-error-view.tsx";
 import { MapMinimizedViewErrorView } from "@/components/map/map-minimize-view/map-minimized-error-view.tsx";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { formatInTimeZone } from "date-fns-tz";
+import enUS from "date-fns/locale/en-US";
 
 type MapPopProps = {
   selectedPoleHardwareId: string;
   isMinimized: boolean;
+  assignedColor: string;
 };
 
 const getNetworkMode = (networkMode: number | undefined) => {
@@ -40,6 +47,7 @@ const openGoogleMaps = (
 export const MapPopup = ({
   selectedPoleHardwareId,
   isMinimized,
+  assignedColor,
 }: MapPopProps) => {
   const { data, isLoading, isError, isSuccess } = useGetPoleView([
     selectedPoleHardwareId,
@@ -49,7 +57,8 @@ export const MapPopup = ({
 
   const deviceData = data?.[0];
 
-  const tabs = ["Overview", "Per-Blob", "High-res", "Audio", "Frequency"];
+  const timeZone = useCalendarTimeZone();
+  const tabs = ["Overview", "Per-Blob", "High-res", "Photos"];
 
   const handleClose = () => {
     const filteredSelectedPoles = selectedPoles.filter(
@@ -116,6 +125,7 @@ export const MapPopup = ({
         onClick={() => handleMaximize()}
       >
         <MapMinimizedView
+          assignedColor={assignedColor}
           selectedPoleId={stripZeros(deviceData?.device_sn ?? "")}
         />
       </div>
@@ -144,9 +154,9 @@ export const MapPopup = ({
   if (isSuccess && !isMinimized) {
     return (
       <>
-        <div className="flex h-full w-[340px] flex-col gap-0 rounded-sm bg-white shadow-pole-view">
+        <div className="flex h-full w-[275px] flex-col gap-0 rounded-sm bg-white shadow-pole-view">
           <div className="relative flex h-[214px] shrink-0 rounded-sm">
-            <div className="absolute right-1 top-1 flex items-center justify-center gap-2 hover:cursor-pointer">
+            <div className="absolute right-1 top-1 z-[2] flex items-center justify-center gap-2 hover:cursor-pointer">
               <MinimizeIcon
                 className="h-[15px] w-[15px] shrink-0"
                 onClick={() => handleMinimize()}
@@ -156,12 +166,20 @@ export const MapPopup = ({
                 onClick={() => handleClose()}
               />
             </div>
-            <img
-              /*  find the first non null url*/
-              src={deviceData?.installation_photos?.find((i) => Boolean(i))}
-              alt="Image of pole installation"
-              className="h-full w-full shrink-0 rounded-sm object-cover"
-            />
+            <TransformWrapper
+              doubleClick={{ step: 0.7 }}
+              pinch={{ step: 0.5 }}
+              limitToBounds
+              wheel={{ smoothStep: 0.01, step: 0.2 }}
+            >
+              <TransformComponent wrapperClass="h-full w-full shrink-0 rounded-sm object-cover">
+                <img
+                  /*  find the first non null url*/
+                  src={deviceData?.installation_photos?.find((i) => Boolean(i))}
+                  alt="Image of pole installation"
+                />
+              </TransformComponent>
+            </TransformWrapper>
           </div>
           <div className="h-full overflow-y-auto">
             <div className="flex flex-col items-start gap-2.5 px-5 pb-2.5 pt-3.5">
@@ -171,16 +189,18 @@ export const MapPopup = ({
                     Pole
                   </div>
                   <div className="font-mont text-base font-normal leading-normal text-[#5B5B5B]">
-                    {deviceData?.pole_id}
+                    {deviceData?.pole_id ?? "N/A"}
                   </div>
                   <span>•</span>
                   <div className="font-mont text-base font-normal leading-normal text-[#5B5B5B]">
-                    {stripZeros(deviceData?.device_sn ?? "")}
+                    {stripZeros(deviceData?.device_sn ?? "N/A")}
                   </div>
                 </div>
 
-                <div className="mt-[-5px] flex items-center justify-center">
-                  <MapsIcon className="text-blue-400" />
+                <div
+                  className={`mt-[-5px] flex items-center justify-center [&_path]:fill-[${assignedColor}]`}
+                >
+                  <MapsIcon />
                 </div>
               </div>
 
@@ -218,21 +238,21 @@ export const MapPopup = ({
                         Pole
                       </div>
                       <div className="text-left font-mont font-normal leading-normal text-[#474747]">
-                        {deviceData?.pole_id}
+                        {deviceData?.pole_id ?? "N/A"}
                       </div>
 
                       <div className=" font-mont font-semibold leading-normal text-[#5B5B5B]">
                         Serial{" "}
                       </div>
                       <div className="text-left font-mont font-normal leading-normal text-[#474747]">
-                        {deviceData?.device_sn}
+                        {deviceData?.device_sn ?? "N/A"}
                       </div>
 
                       <div className=" font-mont font-semibold leading-normal text-[#5B5B5B]">
                         Deployment
                       </div>
                       <div className="text-left font-mont font-normal leading-normal text-[#474747]">
-                        {deviceData?.deployment}
+                        {deviceData?.deployment ?? "N/A"}
                       </div>
 
                       <div className=" font-mont font-semibold leading-normal text-[#5B5B5B]">
@@ -246,11 +266,16 @@ export const MapPopup = ({
                         Last seen
                       </div>
                       <div className="text-left font-mont font-normal leading-normal text-[#474747]">
-                        {deviceData?.last_health_report &&
-                          format(
-                            new Date(deviceData.last_health_report),
-                            "M/dd/yyyy h:mm:ss a",
-                          )}
+                        {deviceData?.last_health_report
+                          ? formatInTimeZone(
+                              new Date(deviceData.last_health_report),
+                              timeZone,
+                              "M/dd/yyyy h:mm:ss a zzz",
+                              {
+                                locale: enUS,
+                              },
+                            )
+                          : "N/A"}
                       </div>
                     </div>
                   </div>
@@ -278,7 +303,7 @@ export const MapPopup = ({
                           <SettingIcon />
                         </div>
                         <div className="font-mont font-normal leading-normal text-[#5B5B5B]">
-                          Insulators, Transformers, Conductors
+                          N/A
                         </div>
                       </div>
                     </div>
@@ -314,11 +339,7 @@ export const MapPopup = ({
                   <div className="p-5">Not Implemented yet</div>
                 </Tabs.Content>
 
-                <Tabs.Content value="Audio">
-                  <div className="p-5">Not Implemented yet</div>
-                </Tabs.Content>
-
-                <Tabs.Content value="Frequency">
+                <Tabs.Content value="Photos">
                   <div className="p-5">Not Implemented yet</div>
                 </Tabs.Content>
               </Tabs.Root>

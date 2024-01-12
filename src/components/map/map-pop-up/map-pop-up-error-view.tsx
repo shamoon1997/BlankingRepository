@@ -9,7 +9,7 @@ export const MapPopUpErrorView = ({
   handleClose,
 }: MapPopUpLoadingViewProps) => {
   return (
-    <div className="flex h-full w-[340px] flex-col gap-0 rounded bg-white shadow-pole-view">
+    <div className="flex h-full w-[275px] flex-col gap-0 rounded bg-white shadow-pole-view">
       <div className="relative flex h-[214px] shrink-0 rounded">
         <div className="absolute right-1 top-1 flex items-center justify-center gap-2 hover:cursor-pointer">
           <MinimizeIcon
