@@ -15,6 +15,7 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 type MapPopProps = {
   selectedPoleHardwareId: string;
   isMinimized: boolean;
+  assignedColor: string;
 };
 
 const getNetworkMode = (networkMode: number | undefined) => {
@@ -41,6 +42,7 @@ const openGoogleMaps = (
 export const MapPopup = ({
   selectedPoleHardwareId,
   isMinimized,
+  assignedColor,
 }: MapPopProps) => {
   const { data, isLoading, isError, isSuccess } = useGetPoleView([
     selectedPoleHardwareId,
@@ -117,6 +119,7 @@ export const MapPopup = ({
         onClick={() => handleMaximize()}
       >
         <MapMinimizedView
+          assignedColor={assignedColor}
           selectedPoleId={stripZeros(deviceData?.device_sn ?? "")}
         />
       </div>
@@ -158,17 +161,10 @@ export const MapPopup = ({
               />
             </div>
             <TransformWrapper
-              doubleClick={{
-                step: 0.7,
-              }}
-              pinch={{
-                step: 0.5,
-              }}
+              doubleClick={{ step: 0.7 }}
+              pinch={{ step: 0.5 }}
               limitToBounds
-              wheel={{
-                smoothStep: 0.01,
-                step: 0.2,
-              }}
+              wheel={{ smoothStep: 0.01, step: 0.2 }}
             >
               <TransformComponent wrapperClass="h-full w-full shrink-0 rounded-sm object-cover">
                 <img
@@ -195,8 +191,10 @@ export const MapPopup = ({
                   </div>
                 </div>
 
-                <div className="mt-[-5px] flex items-center justify-center">
-                  <MapsIcon className="text-blue-400" />
+                <div
+                  className={`mt-[-5px] flex items-center justify-center [&_path]:fill-[${assignedColor}]`}
+                >
+                  <MapsIcon />
                 </div>
               </div>
 
