@@ -25,8 +25,8 @@ import { format, fromUnixTime } from "date-fns";
 import { toSentenceCase } from "js-convert-case";
 import React, { useState } from "react";
 import MetricsDataContents from "./metrics-data-contents";
-import { CustomTimeRanges } from "@/components/filters/calendar/custom-time-ranges";
 import { FilterCalendar } from "@/components/filters/calendar/filter-calendar";
+import { MetricCalendarCustomRange } from "../calendar";
 
 const MetricsDataTab: React.FC = () => {
   const [tabValue, setTabValue] = useState<string>("default");
@@ -101,12 +101,8 @@ const MetricsDataTab: React.FC = () => {
                 </p>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content className="min-w-[--radix-dropdown-menu-trigger-width] rounded border bg-white">
-                {/*  */}
-                {/*  */}
                 <Tabs.Root
-                  onValueChange={(e) => {
-                    setTabValue(e);
-                  }}
+                  onValueChange={(e) => setTabValue(e)}
                   value={tabValue}
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -129,7 +125,7 @@ const MetricsDataTab: React.FC = () => {
                     </Tabs.Trigger>
                   </Tabs.List>
                   <Tabs.Content value="default">
-                    <CustomTimeRanges
+                    <MetricCalendarCustomRange
                       onApply={() => {
                         //
                       }}

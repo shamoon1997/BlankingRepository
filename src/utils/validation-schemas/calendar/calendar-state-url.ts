@@ -9,6 +9,7 @@ export const validStringValues = [
   "last-6hrs",
   "last-12hrs",
   "last-24hrs",
+  "now",
 ] as const;
 
 const from = z.enum(validStringValues).or(z.coerce.number().int().min(0));
