@@ -193,11 +193,11 @@ export const MapPopup = ({
                     Pole
                   </div>
                   <div className="font-mont text-base font-normal leading-normal text-[#5B5B5B]">
-                    {deviceData?.pole_id}
+                    {deviceData?.pole_id ?? "N/A"}
                   </div>
                   <span>•</span>
                   <div className="font-mont text-base font-normal leading-normal text-[#5B5B5B]">
-                    {stripZeros(deviceData?.device_sn ?? "")}
+                    {stripZeros(deviceData?.device_sn ?? "N/A")}
                   </div>
                 </div>
 
@@ -240,21 +240,21 @@ export const MapPopup = ({
                         Pole
                       </div>
                       <div className="text-left font-mont font-normal leading-normal text-[#474747]">
-                        {deviceData?.pole_id}
+                        {deviceData?.pole_id ?? "N/A"}
                       </div>
 
                       <div className=" font-mont font-semibold leading-normal text-[#5B5B5B]">
                         Serial{" "}
                       </div>
                       <div className="text-left font-mont font-normal leading-normal text-[#474747]">
-                        {deviceData?.device_sn}
+                        {deviceData?.device_sn ?? "N/A"}
                       </div>
 
                       <div className=" font-mont font-semibold leading-normal text-[#5B5B5B]">
                         Deployment
                       </div>
                       <div className="text-left font-mont font-normal leading-normal text-[#474747]">
-                        {deviceData?.deployment}
+                        {deviceData?.deployment ?? "N/A"}
                       </div>
 
                       <div className=" font-mont font-semibold leading-normal text-[#5B5B5B]">
@@ -268,15 +268,16 @@ export const MapPopup = ({
                         Last seen
                       </div>
                       <div className="text-left font-mont font-normal leading-normal text-[#474747]">
-                        {deviceData?.last_health_report &&
-                          formatInTimeZone(
-                            new Date(deviceData.last_health_report),
-                            timeZone,
-                            "M/dd/yyyy h:mm:ss a zzz",
-                            {
-                              locale: enUS,
-                            },
-                          )}
+                        {deviceData?.last_health_report
+                          ? formatInTimeZone(
+                              new Date(deviceData.last_health_report),
+                              timeZone,
+                              "M/dd/yyyy h:mm:ss a zzz",
+                              {
+                                locale: enUS,
+                              },
+                            )
+                          : "N/A"}
                       </div>
                     </div>
                   </div>
@@ -304,7 +305,7 @@ export const MapPopup = ({
                           <SettingIcon />
                         </div>
                         <div className="font-mont font-normal leading-normal text-[#5B5B5B]">
-                          Insulators, Transformers, Conductors
+                          N/A
                         </div>
                       </div>
                     </div>

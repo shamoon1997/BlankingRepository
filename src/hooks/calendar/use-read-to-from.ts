@@ -21,6 +21,7 @@ export const useReadToFrom = () => {
         (i) => i.type === validatedCalendarUrlState.from,
       );
       if (option) {
+        // already in utc see getDates function, it's ready for the server
         const fromToDate = option.getDates();
         from = formatDate(
           fromToDate.from,
@@ -35,6 +36,7 @@ export const useReadToFrom = () => {
       typeof validatedCalendarUrlState.from === "number" &&
       typeof validatedCalendarUrlState.to === "number"
     ) {
+      //    already in utc in seconds we multiply by 1000 to get milliseconds since js uses milliseconds, it's ready for the server
       from = formatDate(
         validatedCalendarUrlState.from * 1000,
         DateFormatOptions.dateTimeFormatForSever,
