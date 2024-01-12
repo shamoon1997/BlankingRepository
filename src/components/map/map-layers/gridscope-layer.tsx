@@ -75,6 +75,10 @@ export const GridScopeLayer = () => {
         const [lng, lat] = i.geometry.coordinates;
         let color = "bg-unknown";
 
+        // Get color to place on map
+        const poleIconColor = checkIfPoleIsSelected(i.properties.hardware_id)
+          ?.assignedColor;
+
         if (i.properties.online === 0) {
           color = "bg-offline";
         } else if (i.properties.online === 1) {
@@ -118,8 +122,10 @@ export const GridScopeLayer = () => {
             <div>
               <div className="relative">
                 {checkIfPoleIsSelected(i.properties.hardware_id) && (
-                  <div className="absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center">
-                    <SelectedPoleIcon className="h-[26px] w-[26px] text-blue-400" />
+                  <div
+                    className={`absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center [&_path]:fill-[${poleIconColor}]`}
+                  >
+                    <SelectedPoleIcon className="h-[26px] w-[26px]" />
                   </div>
                 )}
                 <div

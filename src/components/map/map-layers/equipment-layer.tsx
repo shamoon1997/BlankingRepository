@@ -95,6 +95,10 @@ export const EquipmentLayer = () => {
           (equipmentOption) => equipmentOption.id === "all",
         );
 
+        // Get color to place on map
+        const poleIconColor = checkIfPoleIsSelected(i.properties.hardware_id)
+          ?.assignedColor;
+
         const areIntersecting = intersection(
           i.properties.equipment,
           // if all option is selected we intersect with the same array so all options are included then
@@ -158,8 +162,10 @@ export const EquipmentLayer = () => {
                 }
               >
                 {checkIfPoleIsSelected(i.properties.hardware_id) && (
-                  <div className="absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center">
-                    <SelectedPoleIcon className="h-[26px] w-[26px] text-blue-400" />
+                  <div
+                    className={`absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center [&_path]:fill-[${poleIconColor}]`}
+                  >
+                    <SelectedPoleIcon className="h-[26px] w-[26px]" />
                   </div>
                 )}
                 <div

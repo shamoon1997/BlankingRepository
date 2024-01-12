@@ -114,6 +114,9 @@ export const HeatMapLayer = () => {
         let color = "bg-unknown";
         const id = i.properties.hardware_id;
 
+        // Get color to place on map
+        const poleIconColor = checkIfPoleIsSelected(id)?.assignedColor;
+
         if (intervals) {
           if (validatedLayerUrlState.heatmap === "vibration") {
             const interval = getIntervalForValue(
@@ -162,8 +165,10 @@ export const HeatMapLayer = () => {
           >
             <div className="relative">
               {checkIfPoleIsSelected(i.properties.hardware_id) && (
-                <div className="absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center">
-                  <SelectedPoleIcon className="h-[26px] w-[26px] text-blue-400" />
+                <div
+                  className={`absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center [&_path]:fill-[${poleIconColor}]`}
+                >
+                  <SelectedPoleIcon className="h-[26px] w-[26px]" />
                 </div>
               )}
               <div
