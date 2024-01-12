@@ -9,6 +9,7 @@ import { CustomTimeRanges } from "@/components/filters/calendar/custom-time-rang
 import { formatInTimeZone } from "date-fns-tz";
 import enUS from "date-fns/locale/en-US";
 import { useCalendarTimeZone } from "@/state";
+import { DateFormatOptions } from "@/utils/date";
 
 const CalendarInput: React.FC = () => {
   const { validatedCalendarUrlState } = useCalendarUrlState();
@@ -21,7 +22,7 @@ const CalendarInput: React.FC = () => {
     from = formatInTimeZone(
       fromUnixTime(validatedCalendarUrlState.from),
       timeZone,
-      "MM/dd/yyyy hh:mm a",
+      DateFormatOptions.standardTime,
       { locale: enUS },
     );
   } else {
@@ -33,7 +34,7 @@ const CalendarInput: React.FC = () => {
     to = formatInTimeZone(
       fromUnixTime(validatedCalendarUrlState.to),
       timeZone,
-      "MM/dd/yyyy hh:mm a",
+      DateFormatOptions.standardTime,
       { locale: enUS },
     );
   } else {

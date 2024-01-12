@@ -1,4 +1,8 @@
-import { defaultDateDropdownOptions, formatDate } from "@/utils/date";
+import {
+  DateFormatOptions,
+  defaultDateDropdownOptions,
+  formatDate,
+} from "@/utils/date";
 import { useCalendarUrlState } from "@/hooks/calendar/use-calendar-url-state.tsx";
 import { useMemo } from "react";
 
@@ -6,7 +10,6 @@ export const useReadToFrom = () => {
   const { validatedCalendarUrlState } = useCalendarUrlState();
 
   return useMemo(() => {
-    // 24 time start of today to end of today in unix time
     let from;
     let to;
 
@@ -19,8 +22,14 @@ export const useReadToFrom = () => {
       );
       if (option) {
         const fromToDate = option.getDates();
-        from = formatDate(fromToDate.from, "yyyy-MM-dd HH:mm:ss");
-        to = formatDate(fromToDate.to, "yyyy-MM-dd HH:mm:ss");
+        from = formatDate(
+          fromToDate.from,
+          DateFormatOptions.dateTimeFormatForSever,
+        );
+        to = formatDate(
+          fromToDate.to,
+          DateFormatOptions.dateTimeFormatForSever,
+        );
       }
     } else if (
       typeof validatedCalendarUrlState.from === "number" &&
@@ -28,11 +37,11 @@ export const useReadToFrom = () => {
     ) {
       from = formatDate(
         validatedCalendarUrlState.from * 1000,
-        "yyyy-MM-dd HH:mm:ss",
+        DateFormatOptions.dateTimeFormatForSever,
       );
       to = formatDate(
         validatedCalendarUrlState.to * 1000,
-        "yyyy-MM-dd HH:mm:ss",
+        DateFormatOptions.dateTimeFormatForSever,
       );
     }
 

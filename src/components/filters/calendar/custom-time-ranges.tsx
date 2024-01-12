@@ -1,4 +1,4 @@
-import { defaultDateDropdownOptions } from "@/utils/date";
+import { DateFormatOptions, defaultDateDropdownOptions } from "@/utils/date";
 import { useState } from "react";
 import { useCalendarUrlState } from "@/hooks/calendar";
 import { useLocalStorage } from "@uidotdev/usehooks";
@@ -136,7 +136,7 @@ export const CustomTimeRanges = ({ onApply }: CustomTimeRangesProps) => {
                     {formatInTimeZone(
                       fromUnixTime(date.from),
                       timeZone,
-                      "yyyy-MM-dd HH:mm:ss",
+                      DateFormatOptions.dateTimeFormatForSever,
                       {
                         locale: enUS,
                       },
@@ -147,7 +147,7 @@ export const CustomTimeRanges = ({ onApply }: CustomTimeRangesProps) => {
                     {formatInTimeZone(
                       fromUnixTime(date.to),
                       timeZone,
-                      "yyyy-MM-dd HH:mm:ss",
+                      DateFormatOptions.dateTimeFormatForSever,
                       {
                         locale: enUS,
                       },

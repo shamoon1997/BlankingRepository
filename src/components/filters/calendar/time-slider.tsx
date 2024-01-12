@@ -3,6 +3,7 @@ import * as Slider from "@radix-ui/react-slider";
 import { formatInTimeZone } from "date-fns-tz";
 import enUS from "date-fns/locale/en-US";
 import { useCalendarTimeZone } from "@/state";
+import { DateFormatOptions } from "@/utils/date";
 
 // in seconds
 export const MAX_RANGE = 24 * 60 * 60;
@@ -34,7 +35,7 @@ export const TimeSlider = ({
           {formatInTimeZone(
             values[0] * 1000,
             timeZone,
-            "MM/dd/yyyy hh:mm a zzz",
+            DateFormatOptions.standardTimeWithTimezone,
             {
               locale: enUS,
             },
@@ -45,7 +46,7 @@ export const TimeSlider = ({
           {formatInTimeZone(
             values[1] * 1000,
             timeZone,
-            "MM/dd/yyyy hh:mm a zzz",
+            DateFormatOptions.standardTimeWithTimezone,
             {
               locale: enUS,
             },
