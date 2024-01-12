@@ -15,7 +15,7 @@ type SelectedPolesStoreType = {
   colorsList: string[];
   actions: {
     setSelectedPoleIds: (poles: SelectedPoleType[]) => void;
-    checkIfPoleIsSelected: (hardwareId: string) => boolean;
+    checkIfPoleIsSelected: (hardwareId: string) => SelectedPoleType | undefined;
     toggleAddSelectedPole: ({
       hardwareId,
       deviceSerialNumber,
@@ -32,11 +32,9 @@ const useSelectedPolesStore = create<SelectedPolesStoreType>((set, get) => ({
   actions: {
     setSelectedPoleIds: (selectedPoles) => set({ selectedPoles }),
     checkIfPoleIsSelected: (hardwareId) => {
-      return Boolean(
-        get().selectedPoles.find(
-          (selectedPoleId) =>
-            selectedPoleId.selectedPoleHardwareId === hardwareId,
-        ),
+      return get().selectedPoles.find(
+        (selectedPoleId) =>
+          selectedPoleId.selectedPoleHardwareId === hardwareId,
       );
     },
     toggleAddSelectedPole: ({ hardwareId, deviceSerialNumber }) => {
