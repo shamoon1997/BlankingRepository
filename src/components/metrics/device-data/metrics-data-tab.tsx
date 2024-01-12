@@ -25,8 +25,7 @@ import { format, fromUnixTime } from "date-fns";
 import { toSentenceCase } from "js-convert-case";
 import React, { useState } from "react";
 import MetricsDataContents from "./metrics-data-contents";
-import { FilterCalendar } from "@/components/filters/calendar/filter-calendar";
-import { MetricCalendarCustomRange } from "../calendar";
+import { MetricCalendarCustomRange, MetricDataCalendar } from "../calendar";
 
 const MetricsDataTab: React.FC = () => {
   const [tabValue, setTabValue] = useState<string>("default");
@@ -133,7 +132,7 @@ const MetricsDataTab: React.FC = () => {
                   </Tabs.Content>
                   <Tabs.Content value="custom">
                     <div className="px-[8px] py-[7px]">
-                      <FilterCalendar
+                      <MetricDataCalendar
                         onApply={() => {
                           //
                         }}
