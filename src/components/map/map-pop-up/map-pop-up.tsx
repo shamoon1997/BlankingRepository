@@ -2,15 +2,20 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { useGetPoleView } from "@/api/hooks/poles/use-get-pole-view";
 import { MapsIcon, LocationIcon, SettingIcon } from "@/assets/pole-view";
 import { MinimizeIcon, CloseIcon } from "@/assets/misc";
-import { useSelectedPolesActions, useSelectedPoles } from "@/state";
+import {
+  useSelectedPolesActions,
+  useSelectedPoles,
+  useCalendarTimeZone,
+} from "@/state";
 import { MapMinimizedView } from "@/components/map/map-minimize-view/map-minimized-view.tsx";
-import { format } from "date-fns";
 import { stripZeros } from "@/utils/strings/strip-zeros.ts";
 import { MapPopUpLoadingView } from "@/components/map/map-pop-up/map-pop-up-loading-view.tsx";
 import { MapMinimizedViewLoadingView } from "@/components/map/map-minimize-view/map-minimized-loading-view.tsx";
 import { MapPopUpErrorView } from "@/components/map/map-pop-up/map-pop-up-error-view.tsx";
 import { MapMinimizedViewErrorView } from "@/components/map/map-minimize-view/map-minimized-error-view.tsx";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { formatInTimeZone } from "date-fns-tz";
+import enUS from "date-fns/locale/en-US";
 
 type MapPopProps = {
   selectedPoleHardwareId: string;
@@ -50,7 +55,8 @@ export const MapPopup = ({
 
   const deviceData = data?.[0];
 
-  const tabs = ["Overview", "Per-Blob", "High-res", "Audio", "Frequency"];
+  const timeZone = useCalendarTimeZone();
+  const tabs = ["Overview", "Per-Blob", "High-res", "Photos"];
 
   const handleClose = () => {
     const filteredSelectedPoles = selectedPoles.filter(
@@ -145,7 +151,7 @@ export const MapPopup = ({
   if (isSuccess && !isMinimized) {
     return (
       <>
-        <div className="flex h-full w-[340px] flex-col gap-0 rounded-sm bg-white shadow-pole-view">
+        <div className="flex h-full w-[275px] flex-col gap-0 rounded-sm bg-white shadow-pole-view">
           <div className="relative flex h-[214px] shrink-0 rounded-sm">
             <div className="absolute right-1 top-1 z-[2] flex items-center justify-center gap-2 hover:cursor-pointer">
               <MinimizeIcon
@@ -263,9 +269,13 @@ export const MapPopup = ({
                       </div>
                       <div className="text-left font-mont font-normal leading-normal text-[#474747]">
                         {deviceData?.last_health_report &&
-                          format(
+                          formatInTimeZone(
                             new Date(deviceData.last_health_report),
-                            "M/dd/yyyy h:mm:ss a",
+                            timeZone,
+                            "M/dd/yyyy h:mm:ss a zzz",
+                            {
+                              locale: enUS,
+                            },
                           )}
                       </div>
                     </div>
@@ -330,11 +340,7 @@ export const MapPopup = ({
                   <div className="p-5">Not Implemented yet</div>
                 </Tabs.Content>
 
-                <Tabs.Content value="Audio">
-                  <div className="p-5">Not Implemented yet</div>
-                </Tabs.Content>
-
-                <Tabs.Content value="Frequency">
+                <Tabs.Content value="Photos">
                   <div className="p-5">Not Implemented yet</div>
                 </Tabs.Content>
               </Tabs.Root>

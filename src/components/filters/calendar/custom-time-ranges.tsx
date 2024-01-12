@@ -2,8 +2,11 @@ import { defaultDateDropdownOptions } from "@/utils/date";
 import { useState } from "react";
 import { useCalendarUrlState } from "@/hooks/calendar";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { format, fromUnixTime } from "date-fns";
+import { fromUnixTime } from "date-fns";
 import { ValidStringTimes } from "@/utils/validation-schemas";
+import { formatInTimeZone } from "date-fns-tz";
+import enUS from "date-fns/locale/en-US";
+import { useCalendarTimeZone } from "@/state";
 
 type CustomTimeRangesProps = {
   onApply: () => void;
@@ -25,6 +28,8 @@ export const CustomTimeRanges = ({ onApply }: CustomTimeRangesProps) => {
         return null;
       }
     });
+
+  const timeZone = useCalendarTimeZone();
 
   return (
     <form
@@ -128,11 +133,25 @@ export const CustomTimeRanges = ({ onApply }: CustomTimeRangesProps) => {
                 <>
                   <div>From</div>
                   <div className="flex items-center  justify-center rounded-sm bg-[#F2F2F2] p-1 text-primary-blue">
-                    {format(fromUnixTime(date.from), "yyyy-MM-dd HH:mm:ss")}
+                    {formatInTimeZone(
+                      fromUnixTime(date.from),
+                      timeZone,
+                      "yyyy-MM-dd HH:mm:ss",
+                      {
+                        locale: enUS,
+                      },
+                    )}
                   </div>
                   <div>To</div>
                   <div className="flex items-center  justify-center rounded-sm bg-[#F2F2F2] p-1 text-primary-blue">
-                    {format(fromUnixTime(date.to), "yyyy-MM-dd HH:mm:ss")}
+                    {formatInTimeZone(
+                      fromUnixTime(date.to),
+                      timeZone,
+                      "yyyy-MM-dd HH:mm:ss",
+                      {
+                        locale: enUS,
+                      },
+                    )}
                   </div>
                 </>
               </div>
@@ -147,10 +166,21 @@ export const CustomTimeRanges = ({ onApply }: CustomTimeRangesProps) => {
           selectedFromOption === null
         }
         type="submit"
-        className="flex h-7 w-full items-center justify-center rounded-[5px] bg-btn-primary text-xs font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-400"
+        className="mb-3 flex h-7 w-full items-center justify-center rounded-[5px] bg-btn-primary text-xs font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-400"
       >
         Apply Time Range
       </button>
+
+      {/*  This is constant pst america time zone for now but will be dynamic later on, the client only wants it
+      to be usa time zone for now*/}
+      <div className=" h-[0.5px]  bg-[#D9D9D9]" />
+      <div className="flex items-center gap-1 pt-[9px] text-[#161616]">
+        <p>America/Los_Angles</p>
+        <p className="text-[#16161680]">United States, PST</p>
+        <div className="ml-auto flex items-center justify-center rounded-sm bg-[#F2F2F2] p-[3px] pl-[4px] pr-[4px]">
+          PST-08:00
+        </div>
+      </div>
     </form>
   );
 };

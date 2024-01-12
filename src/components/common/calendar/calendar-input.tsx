@@ -1,22 +1,28 @@
-import {  ThickCalendarIcon, TimeIcon } from "@/assets";
+import { ThickCalendarIcon, TimeIcon } from "@/assets";
 import * as Tabs from "@radix-ui/react-tabs";
 import React, { useState } from "react";
 import { FilterCalendar } from "@/components/filters/calendar/filter-calendar.tsx";
-import { format, fromUnixTime } from "date-fns";
+import { fromUnixTime } from "date-fns";
 import { useCalendarUrlState } from "@/hooks/calendar";
 import { toSentenceCase } from "js-convert-case";
 import { CustomTimeRanges } from "@/components/filters/calendar/custom-time-ranges.tsx";
+import { formatInTimeZone } from "date-fns-tz";
+import enUS from "date-fns/locale/en-US";
+import { useCalendarTimeZone } from "@/state";
 
 const CalendarInput: React.FC = () => {
   const { validatedCalendarUrlState } = useCalendarUrlState();
   const [currentTab, setCurrentTab] = useState<"custom" | "default">("default");
   const [open, setOpen] = useState(false);
+  const timeZone = useCalendarTimeZone();
 
   let from;
   if (typeof validatedCalendarUrlState.from === "number") {
-    from = format(
+    from = formatInTimeZone(
       fromUnixTime(validatedCalendarUrlState.from),
+      timeZone,
       "MM/dd/yyyy hh:mm a",
+      { locale: enUS },
     );
   } else {
     from = toSentenceCase(validatedCalendarUrlState.from);
@@ -24,9 +30,11 @@ const CalendarInput: React.FC = () => {
 
   let to;
   if (typeof validatedCalendarUrlState.to === "number") {
-    to = format(
+    to = formatInTimeZone(
       fromUnixTime(validatedCalendarUrlState.to),
+      timeZone,
       "MM/dd/yyyy hh:mm a",
+      { locale: enUS },
     );
   } else {
     to = toSentenceCase(validatedCalendarUrlState.to);
@@ -37,7 +45,7 @@ const CalendarInput: React.FC = () => {
       {/*trigger*/}
       <div
         onClick={() => setOpen(!open)}
-        className={`flex pointer-events-auto  shrink-0 flex-col rounded border-[0.5px] border-default   bg-white font-mont tracking-[-0.5px]  shadow-dropdown `}
+        className={`pointer-events-auto flex  shrink-0 flex-col rounded border-[0.5px] border-default   bg-white font-mont tracking-[-0.5px]  shadow-dropdown `}
       >
         <div className="flex h-[38px] min-h-[38px] flex-1 cursor-pointer items-center pl-2 pr-2">
           <div className="mr-[11px] [&_svg]:h-[15px] [&_svg]:w-[15px]">

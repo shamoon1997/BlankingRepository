@@ -1,6 +1,8 @@
 import * as Slider from "@radix-ui/react-slider";
 
-import format from "date-fns/format";
+import { formatInTimeZone } from "date-fns-tz";
+import enUS from "date-fns/locale/en-US";
+import { useCalendarTimeZone } from "@/state";
 
 // in seconds
 export const MAX_RANGE = 24 * 60 * 60;
@@ -20,6 +22,7 @@ export const TimeSlider = ({
   max,
 }: TimeSliderProps) => {
   const currentRange = values[1] - values[0];
+  const timeZone = useCalendarTimeZone();
 
   return (
     <>
@@ -27,9 +30,27 @@ export const TimeSlider = ({
         Time Selector{" "}
       </p>
       <div className="flex items-center justify-between text-center text-[11px] font-semibold text-btn-primary">
-        <p>{format(values[0] * 1000, "MM/dd/yyyy hh:mm a")}</p>
+        <p>
+          {formatInTimeZone(
+            values[0] * 1000,
+            timeZone,
+            "MM/dd/yyyy hh:mm a zzz",
+            {
+              locale: enUS,
+            },
+          )}
+        </p>
         <div className="h-[1px] w-[5px] bg-black" />
-        <p>{format(values[1] * 1000, "MM/dd/yyyy hh:mm a")}</p>
+        <p>
+          {formatInTimeZone(
+            values[1] * 1000,
+            timeZone,
+            "MM/dd/yyyy hh:mm a zzz",
+            {
+              locale: enUS,
+            },
+          )}
+        </p>
       </div>
 
       <Slider.Root
