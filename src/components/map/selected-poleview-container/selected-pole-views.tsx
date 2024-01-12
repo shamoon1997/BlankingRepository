@@ -9,7 +9,7 @@ export const SelectedPoleViews = ({ selectedPoles }: SelectedPoleViewProps) => {
     <div
       className={`${
         selectedPoles.length > 0 ? "pl-3 pr-3" : ""
-      }  absolute bottom-4 top-16 z-[15] flex gap-3`}
+      }  absolute bottom-4 top-[120px] z-[15] flex gap-3`}
     >
       {selectedPoles
         .slice()

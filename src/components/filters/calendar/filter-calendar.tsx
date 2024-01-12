@@ -28,7 +28,7 @@ import {
 } from "@/components/filters/calendar/time-slider.tsx";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { getDay } from "date-fns/fp";
-import { defaultDateDropdownOptions } from "@/utils/date";
+import { DateFormatOptions, defaultDateDropdownOptions } from "@/utils/date";
 
 type FilterCalendarProps = {
   onApply: () => void;
@@ -136,10 +136,17 @@ export const FilterCalendar = ({ onApply }: FilterCalendarProps) => {
   });
 
   const [currentMonth, setCurrentMonth] = useState(
-    format(selectedDayRange.currentDay[0] * 1000, "MMMM-yyyy"),
+    format(
+      selectedDayRange.currentDay[0] * 1000,
+      DateFormatOptions.fullMonthAndYear,
+    ),
   );
 
-  const firstDayOfCurrentMonth = parse(currentMonth, "MMMM-yyyy", new Date());
+  const firstDayOfCurrentMonth = parse(
+    currentMonth,
+    DateFormatOptions.fullMonthAndYear,
+    new Date(),
+  );
 
   const [timeRange, setTimeRange] = useState<number[]>(() => {
     let from;
@@ -184,20 +191,28 @@ export const FilterCalendar = ({ onApply }: FilterCalendarProps) => {
   >("absolute-dates", []);
 
   const nextMonth = () => {
-    const parsedMonth = parse(currentMonth, "MMMM-yyyy", new Date());
+    const parsedMonth = parse(
+      currentMonth,
+      DateFormatOptions.fullMonthAndYear,
+      new Date(),
+    );
     const nextMonth = add(parsedMonth, { months: 1 });
-    setCurrentMonth(format(nextMonth, "MMMM-yyyy"));
+    setCurrentMonth(format(nextMonth, DateFormatOptions.fullMonthAndYear));
   };
 
   const prevMonth = () => {
-    const parsedMonth = parse(currentMonth, "MMMM-yyyy", new Date());
+    const parsedMonth = parse(
+      currentMonth,
+      DateFormatOptions.fullMonthAndYear,
+      new Date(),
+    );
     const prevMonth = sub(parsedMonth, { months: 1 });
-    setCurrentMonth(format(prevMonth, "MMMM-yyyy"));
+    setCurrentMonth(format(prevMonth, DateFormatOptions.fullMonthAndYear));
   };
 
   const jumpToToday = () => {
     const today = new Date();
-    setCurrentMonth(format(today, "MMMM-yyyy"));
+    setCurrentMonth(format(today, DateFormatOptions.fullMonthAndYear));
     setSelectedDayRange({
       currentDay: [
         getUnixTime(startOfDay(today)),
@@ -226,7 +241,7 @@ export const FilterCalendar = ({ onApply }: FilterCalendarProps) => {
     <>
       <div className="flex justify-between gap-2">
         <p className="font-semibold text-[#5B5B5B]">
-          {format(firstDayOfCurrentMonth, "MMMM yyyy")}
+          {format(firstDayOfCurrentMonth, DateFormatOptions.fullMonthAndYear)}
         </p>
         <div className="flex items-center gap-[5px] text-[10px]">
           <button
@@ -325,7 +340,9 @@ export const FilterCalendar = ({ onApply }: FilterCalendarProps) => {
                           `}
               key={day.toString()}
             >
-              <time dateTime={format(day, "yyyy-MM-dd")}>
+              <time
+                dateTime={format(day, DateFormatOptions.standardYearMonthDay)}
+              >
                 {format(day, "d")}
               </time>
             </button>
