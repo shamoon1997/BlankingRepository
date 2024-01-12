@@ -175,6 +175,7 @@ export const MapPopup = ({
               <TransformComponent wrapperClass="h-full w-full shrink-0 rounded-sm object-cover">
                 <img
                   /*  find the first non null url*/
+                  className={"h-full w-full shrink-0 rounded-sm object-cover"}
                   src={deviceData?.installation_photos?.find((i) => Boolean(i))}
                   alt="Image of pole installation"
                 />
