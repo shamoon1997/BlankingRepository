@@ -172,10 +172,14 @@ export const MapPopup = ({
               limitToBounds
               wheel={{ smoothStep: 0.01, step: 0.2 }}
             >
-              <TransformComponent wrapperClass="h-full w-full shrink-0 rounded-sm object-cover">
+              <TransformComponent
+                wrapperStyle={{
+                  height: 214,
+                }}
+                wrapperClass="w-full shrink-0 rounded-sm object-cover"
+              >
                 <img
                   /*  find the first non null url*/
-                  className={"h-full w-full shrink-0 rounded-sm object-cover"}
                   src={deviceData?.installation_photos?.find((i) => Boolean(i))}
                   alt="Image of pole installation"
                 />
