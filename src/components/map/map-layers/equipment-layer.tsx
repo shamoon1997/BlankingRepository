@@ -95,9 +95,7 @@ export const EquipmentLayer = () => {
           (equipmentOption) => equipmentOption.id === "all",
         );
 
-        // Get color to place on map
-        const poleIconColor = checkIfPoleIsSelected(i.properties.hardware_id)
-          ?.assignedColor;
+        const selectedPole = checkIfPoleIsSelected(i.properties.hardware_id);
 
         const areIntersecting = intersection(
           i.properties.equipment,
@@ -142,7 +140,7 @@ export const EquipmentLayer = () => {
               zIndex:
                 (hoveredPoint &&
                   hoveredPoint.hardware_id === i.properties.hardware_id) ??
-                checkIfPoleIsSelected(i.properties.hardware_id)
+                Boolean(selectedPole)
                   ? 10
                   : 0,
             }}
@@ -161,9 +159,9 @@ export const EquipmentLayer = () => {
                   })
                 }
               >
-                {checkIfPoleIsSelected(i.properties.hardware_id) && (
+                {Boolean(selectedPole) && (
                   <div
-                    className={`absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center [&_path]:fill-[${poleIconColor}]`}
+                    className={`absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center [&_path]:fill-[${selectedPole?.assignedColor}]`}
                   >
                     <SelectedPoleIcon className="h-[26px] w-[26px]" />
                   </div>
@@ -225,8 +223,7 @@ export const EquipmentLayer = () => {
                   </MapToolTipContainer>
                 )}
             </div>
-            {(validatedMapUrlState.zoom > 16 ||
-              checkIfPoleIsSelected(i.properties.hardware_id)) &&
+            {(validatedMapUrlState.zoom > 16 || Boolean(selectedPole)) &&
               !(
                 hoveredPoint &&
                 hoveredPoint.hardware_id === i.properties.hardware_id

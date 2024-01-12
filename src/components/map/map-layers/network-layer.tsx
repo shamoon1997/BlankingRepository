@@ -79,9 +79,7 @@ export const NetworkLayer = () => {
         const [lng, lat] = i.geometry.coordinates;
         let color = "bg-unknown";
 
-        // Get color to place on map
-        const poleIconColor = checkIfPoleIsSelected(i.properties.hardware_id)
-          ?.assignedColor;
+        const selectedPole = checkIfPoleIsSelected(i.properties.hardware_id);
 
         if (i.properties.network_mode === 1) {
           color = "bg-cellular";
@@ -116,15 +114,12 @@ export const NetworkLayer = () => {
                 deviceSerialNumber: i.properties.device_sn,
               })
             }
-            style={{
-              cursor: "pointer",
-              zIndex: checkIfPoleIsSelected(i.properties.hardware_id) ? 10 : 0,
-            }}
+            style={{ cursor: "pointer", zIndex: selectedPole ? 10 : 0 }}
           >
             <div className="relative">
-              {checkIfPoleIsSelected(i.properties.hardware_id) && (
+              {Boolean(selectedPole) && (
                 <div
-                  className={`absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center [&_path]:fill-[${poleIconColor}]`}
+                  className={`absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center [&_path]:fill-[${selectedPole?.assignedColor}]`}
                 >
                   <SelectedPoleIcon className="h-[26px] w-[26px]" />
                 </div>
@@ -134,8 +129,7 @@ export const NetworkLayer = () => {
               />
             </div>
 
-            {(validatedMapUrlState.zoom > 16 ||
-              checkIfPoleIsSelected(i.properties.hardware_id)) && (
+            {(validatedMapUrlState.zoom > 16 || Boolean(selectedPole)) && (
               <MapZoomedBoxContainer>
                 <div className="flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
                   <div className="flex items-center gap-[7px] font-medium">
