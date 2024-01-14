@@ -21,9 +21,8 @@ export const MetricCalendarCustomRange = ({ onApply }: Props) => {
   return (
     <form
       className=" py-[11px]"
-      onSubmit={(e) => {
-        e.preventDefault();
-
+      onChange={(e) => {
+        console.log(e.currentTarget);
         const formData = new FormData(e.currentTarget);
         const from = formData.get("custom-time");
         const to = "now";
@@ -37,11 +36,11 @@ export const MetricCalendarCustomRange = ({ onApply }: Props) => {
         }
       }}
     >
-      <ul className="grid w-[95%] grid-cols-2 gap-x-4 gap-y-1 px-[9px]">
+      <ul className="grid  grid-cols-2 place-content-center gap-x-[16px] gap-y-[14px] px-[9px] pb-[8px]">
         {metricDateCalendarOptions.map((option) => {
           return (
             <li
-              className="flex items-center gap-[10px] px-[10px] py-[5px] text-[10px]"
+              className="flex items-center gap-[10px] text-[10px]"
               key={option.title}
             >
               <input
@@ -80,19 +79,6 @@ export const MetricCalendarCustomRange = ({ onApply }: Props) => {
           <p>America/Los_Angles</p>
           <p className="text-primary-soft">United States, PST</p>
         </div>
-      </div>
-
-      <div className="px-[9px]">
-        <button
-          disabled={
-            typeof validatedCalendarUrlState.from !== "string" &&
-            selectedFromOption === null
-          }
-          type="submit"
-          className="flex h-7 w-full items-center justify-center rounded-[5px] bg-btn-primary text-xs font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-400"
-        >
-          Apply Time Range
-        </button>
       </div>
     </form>
   );
