@@ -57,6 +57,7 @@ export const BaseMap = () => {
     ) {
       return;
     }
+
     ref.current?.flyTo({
       animate: false,
       zoom: validatedMapUrlState.zoom,

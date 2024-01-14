@@ -1,4 +1,8 @@
-import { defaultDateDropdownOptions, formatDate } from "@/utils/date";
+import {
+  DateFormatOptions,
+  defaultDateDropdownOptions,
+  formatDate,
+} from "@/utils/date";
 import { useCalendarUrlState } from "@/hooks/calendar/use-calendar-url-state.tsx";
 import { useMemo } from "react";
 
@@ -6,7 +10,6 @@ export const useReadToFrom = () => {
   const { validatedCalendarUrlState } = useCalendarUrlState();
 
   return useMemo(() => {
-    // 24 time start of today to end of today in unix time
     let from;
     let to;
 
@@ -18,21 +21,29 @@ export const useReadToFrom = () => {
         (i) => i.type === validatedCalendarUrlState.from,
       );
       if (option) {
+        // already in utc see getDates function, it's ready for the server
         const fromToDate = option.getDates();
-        from = formatDate(fromToDate.from, "yyyy-MM-dd HH:mm:ss");
-        to = formatDate(fromToDate.to, "yyyy-MM-dd HH:mm:ss");
+        from = formatDate(
+          fromToDate.from,
+          DateFormatOptions.dateTimeFormatForSever,
+        );
+        to = formatDate(
+          fromToDate.to,
+          DateFormatOptions.dateTimeFormatForSever,
+        );
       }
     } else if (
       typeof validatedCalendarUrlState.from === "number" &&
       typeof validatedCalendarUrlState.to === "number"
     ) {
+      //    already in utc in seconds we multiply by 1000 to get milliseconds since js uses milliseconds, it's ready for the server
       from = formatDate(
         validatedCalendarUrlState.from * 1000,
-        "yyyy-MM-dd HH:mm:ss",
+        DateFormatOptions.dateTimeFormatForSever,
       );
       to = formatDate(
         validatedCalendarUrlState.to * 1000,
-        "yyyy-MM-dd HH:mm:ss",
+        DateFormatOptions.dateTimeFormatForSever,
       );
     }
 
