@@ -29,6 +29,7 @@ export default {
         primary: "rgba(22, 22, 22, 0.6)",
         "primary-hard": "rgba(22, 22, 22, 1.0)",
         "primary-soft": "rgba(22, 22, 22, 0.50)",
+        "custom-green": "#53B984",
       },
       borderColor: {
         default: "#5B5B5B80",

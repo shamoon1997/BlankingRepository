@@ -124,6 +124,13 @@ export const metricDateCalendarOptions: DateDropDownOptions[] = [
       };
     },
   },
+  {
+    title: "Last 12hrs",
+    getDates: () => {
+      return { from: sub(Date.now(), { hours: 12 }).getTime(), to: Date.now() };
+    },
+    type: "last-12hrs",
+  },
 
   {
     title: "Last 3hrs",
@@ -132,25 +139,20 @@ export const metricDateCalendarOptions: DateDropDownOptions[] = [
     },
     type: "last-3hrs",
   },
-  {
-    title: "Last 6hrs",
-    getDates: () => {
-      return { from: sub(Date.now(), { hours: 6 }).getTime(), to: Date.now() };
-    },
-    type: "last-6hrs",
-  },
-  {
-    title: "Last 12hrs",
-    getDates: () => {
-      return { from: sub(Date.now(), { hours: 12 }).getTime(), to: Date.now() };
-    },
-    type: "last-12hrs",
-  },
+
   {
     title: "Last 24hrs",
     getDates: () => {
       return { from: sub(Date.now(), { hours: 24 }).getTime(), to: Date.now() };
     },
     type: "last-24hrs",
+  },
+
+  {
+    title: "Last 6hrs",
+    getDates: () => {
+      return { from: sub(Date.now(), { hours: 6 }).getTime(), to: Date.now() };
+    },
+    type: "last-6hrs",
   },
 ];
