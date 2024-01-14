@@ -20,14 +20,10 @@ import {
 } from "date-fns";
 import { ChevronIcon } from "@/assets";
 import { useCalendarUrlState } from "@/hooks/calendar";
-import { useLocalStorage } from "@uidotdev/usehooks";
-import { Time } from "@/components/filters/calendar/time.tsx";
-import { MAX_RANGE } from "@/components/filters/calendar/time-slider.tsx";
-import * as Tooltip from "@radix-ui/react-tooltip";
 import { getDay } from "date-fns/fp";
-import { defaultDateDropdownOptions } from "@/utils/date";
+import { DateFormatOptions, defaultDateDropdownOptions } from "@/utils/date";
 
-type FilterCalendarProps = {
+type Props = {
   onApply: () => void;
 };
 
@@ -47,20 +43,18 @@ const generatePrevDays = (selectedDayRange: number[]): number[] => {
   // If I select 1st jan, then prev day must be 31st december
   const isMonthSame = isSameMonth(prevDay, monthDay);
 
-  if (!isMonthSame) {
-    prevDay = lastDayOfMonth(prevDay);
-  }
+  if (!isMonthSame) prevDay = lastDayOfMonth(prevDay);
 
   // start and end range of prev day
   const prevDayStartUnix = getUnixTime(startOfDay(prevDay));
   const prevDayEndUnix = getUnixTime(endOfDay(prevDay));
 
-  console.log(prevDay, prevDayEndUnix);
   return [prevDayStartUnix, prevDayEndUnix];
 };
 
-export const MetricDataCalendar = ({ onApply }: FilterCalendarProps) => {
-  const { validatedCalendarUrlState, setSearchParams } = useCalendarUrlState();
+export const MetricDataCalendar: React.FC<Props> = () => {
+  // const { validatedCalendarUrlState, setSearchParams } = useCalendarUrlState();
+  const { validatedCalendarUrlState } = useCalendarUrlState();
 
   const [selectedDayRange, setSelectedDayRange] = useState<{
     currentDay: number[];
@@ -75,12 +69,11 @@ export const MetricDataCalendar = ({ onApply }: FilterCalendarProps) => {
       const option = defaultDateDropdownOptions.find(
         (i) => i.type === validatedCalendarUrlState.from,
       );
+
       if (option) {
         const fromToDate = option.getDates();
         from = getUnixTime(fromToDate.from);
-      } else {
-        from = getUnixTime(startOfToday());
-      }
+      } else from = getUnixTime(startOfToday());
     }
 
     if (typeof validatedCalendarUrlState.to === "number") {
@@ -90,12 +83,11 @@ export const MetricDataCalendar = ({ onApply }: FilterCalendarProps) => {
       const option = defaultDateDropdownOptions.find(
         (i) => i.type === validatedCalendarUrlState.from,
       );
+
       if (option) {
         const fromToDate = option.getDates();
         to = getUnixTime(fromToDate.to);
-      } else {
-        to = getUnixTime(startOfToday());
-      }
+      } else to = getUnixTime(startOfToday());
     }
 
     const startDay = getDay(fromUnixTime(from));
@@ -103,30 +95,25 @@ export const MetricDataCalendar = ({ onApply }: FilterCalendarProps) => {
 
     const spansTwoDays = startDay !== endDay;
 
+    const startOfDayUnix = getUnixTime(startOfDay(fromUnixTime(to)));
+    const endOfDayUnix = getUnixTime(endOfDay(fromUnixTime(to)));
+
     if (spansTwoDays) {
       // 18 and 19 are the 'from' and 'to' dates, so I'm spanning two days and the current day should be 'to' and the previous day should be
       // generated from 'to' day i.e. 19 becomes the current day and 18 becomes the previous day as 'from' and 'to' dates lie in those days
+
       return {
         // the current day should be to i.e. the ending day
-        currentDay: [
-          getUnixTime(startOfDay(fromUnixTime(to))),
-          getUnixTime(endOfDay(fromUnixTime(to))),
-        ],
+        currentDay: [startOfDayUnix, endOfDayUnix],
         // and the previous day should be generated from the to day as well
-        prevDay: generatePrevDays([
-          getUnixTime(startOfDay(fromUnixTime(to))),
-          getUnixTime(endOfDay(fromUnixTime(to))),
-        ]),
+        prevDay: generatePrevDays([startOfDayUnix, endOfDayUnix]),
       };
     } else {
       return {
-        currentDay: [
-          getUnixTime(startOfDay(fromUnixTime(from))),
-          getUnixTime(endOfDay(fromUnixTime(to))),
-        ],
+        currentDay: [getUnixTime(startOfDay(fromUnixTime(from))), endOfDayUnix],
         prevDay: generatePrevDays([
           getUnixTime(startOfDay(fromUnixTime(from))),
-          getUnixTime(endOfDay(fromUnixTime(to))),
+          endOfDayUnix,
         ]),
       };
     }
@@ -138,9 +125,9 @@ export const MetricDataCalendar = ({ onApply }: FilterCalendarProps) => {
 
   const firstDayOfCurrentMonth = parse(currentMonth, "MMMM-yyyy", new Date());
 
-  const [timeRange, setTimeRange] = useState<number[]>(() => {
-    let from;
-    let to;
+  const [, setTimeRange] = useState<number[]>(() => {
+    let from, to;
+
     if (typeof validatedCalendarUrlState.from === "number") {
       // already in unix time seconds from 1970
       from = validatedCalendarUrlState.from;
@@ -148,12 +135,11 @@ export const MetricDataCalendar = ({ onApply }: FilterCalendarProps) => {
       const option = defaultDateDropdownOptions.find(
         (i) => i.type === validatedCalendarUrlState.from,
       );
+
       if (option) {
         const fromToDate = option.getDates();
         from = getUnixTime(fromToDate.from);
-      } else {
-        from = getUnixTime(startOfToday());
-      }
+      } else from = getUnixTime(startOfToday());
     }
 
     if (typeof validatedCalendarUrlState.to === "number") {
@@ -162,23 +148,15 @@ export const MetricDataCalendar = ({ onApply }: FilterCalendarProps) => {
       const option = defaultDateDropdownOptions.find(
         (i) => i.type === validatedCalendarUrlState.from,
       );
+
       if (option) {
         const fromToDate = option.getDates();
         to = getUnixTime(fromToDate.to);
-      } else {
-        to = getUnixTime(startOfToday());
-      }
+      } else to = getUnixTime(startOfToday());
     }
 
     return [from, to];
   });
-
-  const [, saveDate] = useLocalStorage<
-    {
-      from: number;
-      to: number;
-    }[]
-  >("absolute-dates", []);
 
   const nextMonth = () => {
     const parsedMonth = parse(currentMonth, "MMMM-yyyy", new Date());
@@ -196,8 +174,6 @@ export const MetricDataCalendar = ({ onApply }: FilterCalendarProps) => {
     start: startOfWeek(firstDayOfCurrentMonth),
     end: endOfWeek(endOfMonth(firstDayOfCurrentMonth)),
   });
-
-  const currentRange = timeRange[1] - timeRange[0];
 
   return (
     <>
@@ -242,14 +218,12 @@ export const MetricDataCalendar = ({ onApply }: FilterCalendarProps) => {
                 const start = getUnixTime(startOfDay(day));
                 const end = getUnixTime(endOfDay(day));
 
-                setSelectedDayRange({
-                  currentDay: [start, end],
-                  prevDay: generatePrevDays([start, end]),
-                });
+                const range = [start, end];
+                setSelectedDayRange({ currentDay: range, prevDay: range });
 
                 setTimeRange([getUnixTime(start), getUnixTime(end)]);
               }}
-              className={`flex h-[35px] w-full items-start justify-start rounded-[2px] border-[0.5px] border-solid  pl-[5px]  text-[11px] font-normal
+              className={`flex h-[22px] w-full items-start justify-start rounded-[2px] border-[0.5px] border-solid  pl-[5px]  text-[11px] font-normal
                           ${
                             (!isToday(day) &&
                               !isSameMonth(day, firstDayOfCurrentMonth)) ||
@@ -266,7 +240,7 @@ export const MetricDataCalendar = ({ onApply }: FilterCalendarProps) => {
                               selectedDayRange.currentDay[0] * 1000,
                               firstDayOfCurrentMonth,
                             )
-                              ? "border-device-data-border-blue bg-device-data-blue text-white"
+                              ? "border-device-data-border-blue bg-device-data-blue text-device-data-border-blue "
                               : " border-[#F2F2F2]"
                           }
                           
@@ -297,59 +271,17 @@ export const MetricDataCalendar = ({ onApply }: FilterCalendarProps) => {
         })}
       </div>
 
-      <Time />
+      <div className=" flex min-w-[190px] justify-between pb-[9px] pt-[10px]">
+        <p className="text-[8px]">Current time</p>
+        <p className="text-custom-green text-[8px]">
+          {format(Date.now(), DateFormatOptions.standardTime)}
+        </p>
+      </div>
 
-      <Tooltip.Provider delayDuration={0}>
-        <Tooltip.Root>
-          <Tooltip.Trigger asChild>
-            <button
-              disabled={currentRange > MAX_RANGE}
-              onClick={() => {
-                saveDate((prev) => {
-                  if (prev.length === 3) {
-                    return [
-                      {
-                        from: timeRange[0],
-                        to: timeRange[1],
-                      },
-                      ...prev.slice(0, 2),
-                    ];
-                  } else {
-                    return [
-                      {
-                        from: timeRange[0],
-                        to: timeRange[1],
-                      },
-                      ...prev,
-                    ];
-                  }
-                });
-
-                setSearchParams((params) => {
-                  params.set("from", String(timeRange[0]));
-                  params.set("to", String(timeRange[1]));
-                  return params;
-                });
-                onApply();
-              }}
-              className="flex h-7 w-full items-center justify-center rounded-[5px] bg-btn-primary text-xs font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-400"
-            >
-              Confirm
-            </button>
-          </Tooltip.Trigger>
-
-          <Tooltip.Portal>
-            {currentRange > MAX_RANGE && (
-              <Tooltip.Content
-                className="z-50 rounded border-[0.5px] border-default bg-white p-2 text-xs shadow-tooltip"
-                sideOffset={5}
-              >
-                Only a maximum range of 24 hours is allowed.
-              </Tooltip.Content>
-            )}
-          </Tooltip.Portal>
-        </Tooltip.Root>
-      </Tooltip.Provider>
+      <div className="pb-[8px] text-[8px]">
+        <p>America/Los_Angles</p>
+        <p className="text-primary-soft">United States, PST</p>
+      </div>
     </>
   );
 };
