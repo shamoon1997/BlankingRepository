@@ -82,7 +82,11 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
                   key={`selected-metrics-${i}`}
                 >
                   <div className="flex h-[25px] w-[180px] items-center overflow-hidden rounded-md border-[0.8px] border-[#CCCCCC] bg-white text-[8px]">
-                    <div className="grid h-[25px] w-[25px] place-content-center bg-[#B7B7B7] [&_path]:fill-white">
+                    <div
+                      className={`grid h-[25px] w-[25px] place-content-center bg-[${
+                        _.assignedColor ? _.assignedColor : "#B7B7B7"
+                      }] [&_path]:fill-white`}
+                    >
                       <LocationIcon />
                     </div>
 
@@ -100,6 +104,7 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
               );
             })}
 
+            {/* PLACEHOLDER */}
             {[...Array(16)]?.map((_, i) => {
               return (
                 <div
@@ -117,7 +122,9 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
                       <LocationIcon />
                     </div>
 
-                    <p className="ml-[6px] font-medium">GS124• 4024 • Lora</p>
+                    <p className="ml-[6px] font-medium">
+                      {Math.floor(1000 + Math.random() * 9000)} • Lora
+                    </p>
                   </div>
                   <button className="grid h-[25px] w-[25px] place-content-center rounded-md border-[0.8px] border-[#CCCCCC] bg-white hover:bg-slate-100">
                     <div className="grid h-[12px] w-[12px] rotate-45 place-content-center ">
