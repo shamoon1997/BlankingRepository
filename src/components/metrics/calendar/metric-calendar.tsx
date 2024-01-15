@@ -33,10 +33,28 @@ Important
 All times are set in unix seconds from 1970
 all times are read and converted to milliseconds where needed
  */
+const maskDate = (value: string) => {
+  let cleanedValue = value
+    .replace(/\D/g, "")
+    .replace(/(\d{2})(\d{0,2}).*/, "$1:$2");
+
+  const hours = parseInt(cleanedValue.slice(0, 2));
+  const minutes = parseInt(cleanedValue.slice(3));
+
+  if (hours > 23) cleanedValue = "23";
+  if (minutes > 59) cleanedValue = cleanedValue.slice(0, 3) + "59";
+
+  console.log(cleanedValue);
+
+  return cleanedValue;
+};
 
 export const MetricDataCalendar: React.FC<Props> = () => {
   // const { validatedCalendarUrlState, setSearchParams } = useCalendarUrlState();
   const { validatedCalendarUrlState } = useCalendarUrlState();
+
+  const [startTime, setStartTime] = useState("00:00");
+  const [endTime, setEndTime] = useState("23:59");
 
   const [selectedDayRange, setSelectedDayRange] = useState<DayRangeType>(() => {
     let from;
@@ -234,17 +252,22 @@ export const MetricDataCalendar: React.FC<Props> = () => {
         <div className="flex h-[13px] w-1/2 items-center gap-[5px]">
           <p>Starts</p>
           <input
+            value={startTime}
+            onChange={(e) => setStartTime(maskDate(e.target.value))}
             className="w-[40px] rounded-md border-[1px] px-[5px] py-[2.5px] outline-none focus:border-device-data-border-blue focus:text-device-data-border-blue"
             type="text"
-            defaultValue={32}
           />
         </div>
         <div className="flex h-[13px] w-1/2 items-center gap-[5px]">
           <p>Ends</p>
           <input
+            value={endTime}
+            onChange={(e) => setEndTime(maskDate(e.target.value))}
             className="w-[40px] rounded-md border-[1px] px-[5px] py-[2.5px] outline-none focus:border-device-data-border-blue focus:text-device-data-border-blue"
             type="text"
-            defaultValue={32}
+            // onBlur={() => {
+            //   console.log("YAAAAAA");
+            // }}
           />
         </div>
       </div>
