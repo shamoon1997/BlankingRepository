@@ -11,7 +11,6 @@ import {
   isSameDay,
   isSameMonth,
   isToday,
-  lastDayOfMonth,
   parse,
   startOfDay,
   startOfToday,
@@ -20,11 +19,13 @@ import {
 } from "date-fns";
 import { ChevronIcon } from "@/assets";
 import { useCalendarUrlState } from "@/hooks/calendar";
-import { getDay } from "date-fns/fp";
 import { DateFormatOptions, defaultDateDropdownOptions } from "@/utils/date";
 
-type Props = {
-  onApply: () => void;
+type Props = { onApply: () => void };
+
+type DayRangeType = {
+  currentDay: number[];
+  prevDay: number[];
 };
 
 /*
@@ -33,35 +34,14 @@ All times are set in unix seconds from 1970
 all times are read and converted to milliseconds where needed
  */
 
-const generatePrevDays = (selectedDayRange: number[]): number[] => {
-  // go back  by one day from 'from' date
-  // convert unix seconds to milliseconds
-  let prevDay = sub(selectedDayRange[0] * 1000, { hours: 24 });
-  const monthDay = new Date(selectedDayRange[0] * 1000);
-
-  // If prev day is not part of this month it must mean that prev day is the last day of the prev month
-  // If I select 1st jan, then prev day must be 31st december
-  const isMonthSame = isSameMonth(prevDay, monthDay);
-
-  if (!isMonthSame) prevDay = lastDayOfMonth(prevDay);
-
-  // start and end range of prev day
-  const prevDayStartUnix = getUnixTime(startOfDay(prevDay));
-  const prevDayEndUnix = getUnixTime(endOfDay(prevDay));
-
-  return [prevDayStartUnix, prevDayEndUnix];
-};
-
 export const MetricDataCalendar: React.FC<Props> = () => {
   // const { validatedCalendarUrlState, setSearchParams } = useCalendarUrlState();
   const { validatedCalendarUrlState } = useCalendarUrlState();
 
-  const [selectedDayRange, setSelectedDayRange] = useState<{
-    currentDay: number[];
-    prevDay: number[];
-  }>(() => {
+  const [selectedDayRange, setSelectedDayRange] = useState<DayRangeType>(() => {
     let from;
     let to;
+
     if (typeof validatedCalendarUrlState.from === "number") {
       // already in unix time seconds from 1970
       from = validatedCalendarUrlState.from;
@@ -90,33 +70,12 @@ export const MetricDataCalendar: React.FC<Props> = () => {
       } else to = getUnixTime(startOfToday());
     }
 
-    const startDay = getDay(fromUnixTime(from));
-    const endDay = getDay(fromUnixTime(to));
-
-    const spansTwoDays = startDay !== endDay;
-
     const startOfDayUnix = getUnixTime(startOfDay(fromUnixTime(to)));
     const endOfDayUnix = getUnixTime(endOfDay(fromUnixTime(to)));
 
-    if (spansTwoDays) {
-      // 18 and 19 are the 'from' and 'to' dates, so I'm spanning two days and the current day should be 'to' and the previous day should be
-      // generated from 'to' day i.e. 19 becomes the current day and 18 becomes the previous day as 'from' and 'to' dates lie in those days
+    const day = [startOfDayUnix, endOfDayUnix];
 
-      return {
-        // the current day should be to i.e. the ending day
-        currentDay: [startOfDayUnix, endOfDayUnix],
-        // and the previous day should be generated from the to day as well
-        prevDay: generatePrevDays([startOfDayUnix, endOfDayUnix]),
-      };
-    } else {
-      return {
-        currentDay: [getUnixTime(startOfDay(fromUnixTime(from))), endOfDayUnix],
-        prevDay: generatePrevDays([
-          getUnixTime(startOfDay(fromUnixTime(from))),
-          endOfDayUnix,
-        ]),
-      };
-    }
+    return { currentDay: day, prevDay: day };
   });
 
   const [currentMonth, setCurrentMonth] = useState(
