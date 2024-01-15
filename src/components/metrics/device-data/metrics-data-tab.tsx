@@ -3,7 +3,6 @@ import {
   ChevronIcon,
   MoveGraphIcon,
   PointingArrowIcon,
-  SearchIcon,
   TimeIcon,
   ZoomInIcon,
   ZoomOutIcon,
@@ -64,23 +63,17 @@ const MetricsDataTab: React.FC = () => {
     <>
       <div className="mt-[12px] flex w-full justify-between px-4">
         <div className="flex gap-x-[10px]">
-          <div className="grid h-[30px] w-[30px] cursor-pointer place-content-center rounded border-[2px] p-[10px]">
-            <SearchIcon className="h-[12px] w-[12px]" />
-          </div>
-
-          <div className="flex w-[120px] items-center justify-between rounded border-[2px] px-[10px]">
+          <div className="flex min-w-[160px] items-center justify-between rounded border-[2px] px-[10px]">
             <DeviceDataDropdown
-              // triggerIcon={
-              //   <div className="text-[10px] text-[#8B8B8B]">Device</div>
-              // }
+              triggerIcon={
+                <div className="text-[10px] text-[#8B8B8B]">Device</div>
+              }
               placeholder="Devices"
               valChangeFunc={(val) => {
                 applyMetricDeviceFilterType(val);
               }}
               options={metricsDataDevicesOptions}
             />
-            {/* <div className="text-[10px] text-[#8B8B8B]">Device</div>
-            <div className="text-[10px] font-semibold text-black">Map(#)</div> */}
           </div>
 
           <div>

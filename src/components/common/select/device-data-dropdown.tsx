@@ -38,7 +38,7 @@ const DeviceDataDropdown: React.FC<Props> = ({
         className="inline-flex h-full w-full cursor-pointer items-center justify-between rounded-md bg-white font-mont text-sm leading-none text-primary-hard outline-none data-[placeholder]:text-primary-hard"
         aria-label="dropdown"
       >
-        <div className="flex w-full items-center justify-between text-[10px] font-semibold text-black">
+        <div className="flex w-full items-center justify-between gap-[4px] pr-[4px] text-[10px] font-semibold text-black">
           {triggerIcon}
 
           <TextLimiter>

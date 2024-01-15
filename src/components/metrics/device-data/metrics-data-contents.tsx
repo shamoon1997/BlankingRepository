@@ -35,10 +35,6 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
       });
 
       console.log(finalObj);
-
-      return () => {
-        return;
-      };
     });
   }, [data]);
 
