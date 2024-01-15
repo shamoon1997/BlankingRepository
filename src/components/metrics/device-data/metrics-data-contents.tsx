@@ -1,7 +1,10 @@
 import { MetricDataresponseType } from "@/api/types/types";
 import { CrossIcon, SearchIcon } from "@/assets";
 import { LocationIcon } from "@/assets/pole-view";
-import { useMetricDataState } from "@/state/device-data/metric-data-controls.store";
+import {
+  useMetricDataActions,
+  useMetricDataState,
+} from "@/state/device-data/metric-data-controls.store";
 import React, { useEffect } from "react";
 
 type Props = {
@@ -11,6 +14,7 @@ type Props = {
 
 const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
   const metricDataState = useMetricDataState();
+  const { removeFromSelected, addToSelected } = useMetricDataActions();
 
   useEffect(() => {
     if (!data) return;
@@ -33,8 +37,6 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
       console.log(finalObj);
 
       return () => {
-        // console.clear();
-        console.log("RETURN FUNC");
         return;
       };
     });
@@ -72,8 +74,7 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
           <h3 className="mb-[3px] text-[8px]">Deployment: Birmingham (10)</h3>
 
           <div className="no-scrollbar max-h-[250px] overflow-y-scroll">
-            {/* SELECTED HERE */}
-
+            {/* SELECTED ITEMS HERE */}
             {metricDataState?.selectedMetrics?.map((_, i) => {
               return (
                 <div
@@ -84,11 +85,14 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
                     <div className="grid h-[25px] w-[25px] place-content-center bg-[#B7B7B7] [&_path]:fill-white">
                       <LocationIcon />
                     </div>
-                    {/* @ts-expect-error name might not exist */}
+
                     <p className="ml-[6px] font-medium">{_?.name}</p>
                   </div>
-                  <button className="grid h-[25px] w-[25px] place-content-center rounded-md border-[0.8px] border-[#CCCCCC] bg-white hover:bg-slate-100">
-                    <div className="grid h-[12px] w-[12px] place-content-center ">
+                  <button
+                    className="grid h-[25px] w-[25px] place-content-center rounded-md border-[0.8px] border-device-data-border-blue bg-device-data-blue  hover:bg-slate-100"
+                    onClick={() => removeFromSelected(_?.id)}
+                  >
+                    <div className="grid h-[12px] w-[12px] place-content-center [&_path]:stroke-device-data-border-blue">
                       <CrossIcon />
                     </div>
                   </button>
@@ -101,6 +105,12 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
                 <div
                   className="mb-[8px] flex items-center gap-[5px]"
                   key={`mock-metrics-${i}`}
+                  onClick={() => {
+                    addToSelected({
+                      id: `mock-metrics-${Math.random()}`,
+                      name: "GS124• 4024 • Lora",
+                    });
+                  }}
                 >
                   <div className="flex h-[25px] w-[180px] items-center overflow-hidden rounded-md border-[0.8px] border-[#CCCCCC] bg-white text-[8px]">
                     <div className="grid h-[25px] w-[25px] place-content-center bg-[#B7B7B7] [&_path]:fill-white">
