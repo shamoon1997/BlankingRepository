@@ -44,8 +44,6 @@ const maskDate = (value: string) => {
   if (hours > 23) cleanedValue = "23";
   if (minutes > 59) cleanedValue = cleanedValue.slice(0, 3) + "59";
 
-  console.log(cleanedValue);
-
   return cleanedValue;
 };
 
@@ -230,7 +228,7 @@ export const MetricDataCalendar: React.FC<Props> = () => {
                               selectedDayRange.prevDay[0] * 1000,
                               firstDayOfCurrentMonth,
                             )
-                              ? "border-device-data-border-blue bg-device-data-blue  text-white"
+                              ? "border-device-data-border-blue bg-device-data-blue  text-device-data-border-blue"
                               : " border-[#F2F2F2]"
                           }
                           
@@ -256,6 +254,12 @@ export const MetricDataCalendar: React.FC<Props> = () => {
             onChange={(e) => setStartTime(maskDate(e.target.value))}
             className="w-[40px] rounded-md border-[1px] px-[5px] py-[2.5px] outline-none focus:border-device-data-border-blue focus:text-device-data-border-blue"
             type="text"
+            onBlur={(e) => {
+              const timeRegex = /^(?:[01]\d|2[0-4]):[0-5]\d$/;
+              if (timeRegex.test(e.target.value)) {
+                setStartTime(e.target.value);
+              }
+            }}
           />
         </div>
         <div className="flex h-[13px] w-1/2 items-center gap-[5px]">
@@ -265,9 +269,12 @@ export const MetricDataCalendar: React.FC<Props> = () => {
             onChange={(e) => setEndTime(maskDate(e.target.value))}
             className="w-[40px] rounded-md border-[1px] px-[5px] py-[2.5px] outline-none focus:border-device-data-border-blue focus:text-device-data-border-blue"
             type="text"
-            // onBlur={() => {
-            //   console.log("YAAAAAA");
-            // }}
+            onBlur={(e) => {
+              const timeRegex = /^(?:[01]\d|2[0-4]):[0-5]\d$/;
+              if (timeRegex.test(e.target.value)) {
+                setEndTime(e.target.value);
+              }
+            }}
           />
         </div>
       </div>
