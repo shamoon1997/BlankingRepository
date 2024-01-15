@@ -230,6 +230,25 @@ export const MetricDataCalendar: React.FC<Props> = () => {
         })}
       </div>
 
+      <div className="flex gap-[18px] px-[7px] text-[8px]">
+        <div className="flex h-[13px] w-1/2 items-center gap-[5px]">
+          <p>Starts</p>
+          <input
+            className="w-[40px] rounded-md border-[1px] px-[5px] py-[2.5px] outline-none focus:border-device-data-border-blue focus:text-device-data-border-blue"
+            type="text"
+            defaultValue={32}
+          />
+        </div>
+        <div className="flex h-[13px] w-1/2 items-center gap-[5px]">
+          <p>Ends</p>
+          <input
+            className="w-[40px] rounded-md border-[1px] px-[5px] py-[2.5px] outline-none focus:border-device-data-border-blue focus:text-device-data-border-blue"
+            type="text"
+            defaultValue={32}
+          />
+        </div>
+      </div>
+
       <div className=" flex min-w-[190px] justify-between pb-[9px] pt-[10px]">
         <p className="text-[8px]">Current time</p>
         <p className="text-custom-green text-[8px]">
