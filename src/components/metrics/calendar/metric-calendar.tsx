@@ -17,9 +17,11 @@ import {
   startOfWeek,
   sub,
 } from "date-fns";
+import { zonedTimeToUtc } from "date-fns-tz";
 import { ChevronIcon } from "@/assets";
 import { useCalendarUrlState } from "@/hooks/calendar";
 import { DateFormatOptions, defaultDateDropdownOptions } from "@/utils/date";
+import { useCalendarTimeZone } from "@/state";
 
 type Props = { onApply: () => void };
 
@@ -50,6 +52,7 @@ const maskDate = (value: string) => {
 export const MetricDataCalendar: React.FC<Props> = () => {
   // const { validatedCalendarUrlState, setSearchParams } = useCalendarUrlState();
   const { validatedCalendarUrlState } = useCalendarUrlState();
+  const setTimeZone = useCalendarTimeZone();
 
   const [startTime, setStartTime] = useState("00:00");
   const [endTime, setEndTime] = useState("23:59");
@@ -150,6 +153,30 @@ export const MetricDataCalendar: React.FC<Props> = () => {
     end: endOfWeek(endOfMonth(firstDayOfCurrentMonth)),
   });
 
+  const setDateInURL = (day: Date) => {
+    const dateFormat = DateFormatOptions.standardDateNoTime;
+
+    const customStart = format(day, dateFormat).toString();
+    const customEnd = format(day, dateFormat).toString();
+
+    const trueTimeStart = zonedTimeToUtc(
+      customStart + `T${startTime}`,
+      setTimeZone,
+    );
+
+    const trueTimeEnd = zonedTimeToUtc(customEnd + `T${endTime}`, setTimeZone);
+
+    const start = getUnixTime(trueTimeStart);
+    const end = getUnixTime(trueTimeEnd);
+
+    console.log([start, end]);
+
+    const range = [start, end];
+    setSelectedDayRange({ currentDay: range, prevDay: range });
+
+    setTimeRange([getUnixTime(start), getUnixTime(end)]);
+  };
+
   return (
     <>
       <div className="flex justify-between gap-2">
@@ -189,15 +216,7 @@ export const MetricDataCalendar: React.FC<Props> = () => {
                 (!isToday(day) && !isSameMonth(day, firstDayOfCurrentMonth)) ||
                 day > new Date()
               }
-              onClick={() => {
-                const start = getUnixTime(startOfDay(day));
-                const end = getUnixTime(endOfDay(day));
-
-                const range = [start, end];
-                setSelectedDayRange({ currentDay: range, prevDay: range });
-
-                setTimeRange([getUnixTime(start), getUnixTime(end)]);
-              }}
+              onClick={() => setDateInURL(day)}
               className={`flex h-[22px] w-full items-start justify-start rounded-[2px] border-[0.5px] border-solid  pl-[5px]  text-[11px] font-normal
                           ${
                             (!isToday(day) &&

@@ -6,6 +6,7 @@ import { format, fromUnixTime } from "date-fns";
 import { toSentenceCase } from "js-convert-case";
 import React, { useState } from "react";
 import { MetricCalendarCustomRange, MetricDataCalendar } from "../calendar";
+import { DateFormatOptions } from "@/utils/date";
 
 const DeviceDataDateControls: React.FC = () => {
   const [tabValue, setTabValue] = useState<string>("default");
@@ -15,7 +16,7 @@ const DeviceDataDateControls: React.FC = () => {
   if (typeof validatedCalendarUrlState.from === "number") {
     from = format(
       fromUnixTime(validatedCalendarUrlState.from),
-      "MM/dd/yyyy hh:mm a",
+      DateFormatOptions.standardTime,
     );
   } else {
     from = toSentenceCase(validatedCalendarUrlState.from);
@@ -25,7 +26,7 @@ const DeviceDataDateControls: React.FC = () => {
   if (typeof validatedCalendarUrlState.to === "number") {
     to = format(
       fromUnixTime(validatedCalendarUrlState.to),
-      "MM/dd/yyyy hh:mm a",
+      DateFormatOptions.standardTime,
     );
   } else {
     to = toSentenceCase(validatedCalendarUrlState.to);
