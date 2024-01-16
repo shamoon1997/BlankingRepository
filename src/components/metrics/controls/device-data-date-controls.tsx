@@ -2,21 +2,25 @@ import { PointingArrowIcon, TimeIcon } from "@/assets";
 import { useCalendarUrlState } from "@/hooks/calendar";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tabs from "@radix-ui/react-tabs";
-import { format, fromUnixTime } from "date-fns";
+import { fromUnixTime } from "date-fns";
 import { toSentenceCase } from "js-convert-case";
 import React, { useState } from "react";
 import { MetricCalendarCustomRange, MetricDataCalendar } from "../calendar";
 import { DateFormatOptions } from "@/utils/date";
+import { formatInTimeZone } from "date-fns-tz";
+import { useCalendarTimeZone } from "@/state";
 
 const DeviceDataDateControls: React.FC = () => {
   const [tabValue, setTabValue] = useState<string>("default");
   const { validatedCalendarUrlState } = useCalendarUrlState();
+  const setTimeZone = useCalendarTimeZone();
 
   let from;
   if (typeof validatedCalendarUrlState.from === "number") {
-    from = format(
+    from = formatInTimeZone(
       fromUnixTime(validatedCalendarUrlState.from),
-      DateFormatOptions.standardTime,
+      setTimeZone,
+      DateFormatOptions.standardTime24Hr,
     );
   } else {
     from = toSentenceCase(validatedCalendarUrlState.from);
@@ -24,9 +28,10 @@ const DeviceDataDateControls: React.FC = () => {
 
   let to;
   if (typeof validatedCalendarUrlState.to === "number") {
-    to = format(
+    to = formatInTimeZone(
       fromUnixTime(validatedCalendarUrlState.to),
-      DateFormatOptions.standardTime,
+      setTimeZone,
+      DateFormatOptions.standardTime24Hr,
     );
   } else {
     to = toSentenceCase(validatedCalendarUrlState.to);
@@ -35,7 +40,7 @@ const DeviceDataDateControls: React.FC = () => {
   return (
     <>
       <DropdownMenu.Root>
-        <DropdownMenu.Trigger className="flex h-[32px] min-w-[186px] cursor-pointer items-center justify-between rounded border-[2px] px-[10px]">
+        <DropdownMenu.Trigger className="flex h-[32px] min-w-[232px] cursor-pointer items-center justify-between rounded border-[2px] px-[10px]">
           <div className="mr-[5px] [&_path]:fill-[#8B8B8B] [&_svg]:h-[10px] [&_svg]:w-[10px]">
             <TimeIcon />
           </div>

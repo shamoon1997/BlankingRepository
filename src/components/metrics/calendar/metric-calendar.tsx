@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   add,
   eachDayOfInterval,
@@ -35,6 +35,9 @@ Important
 All times are set in unix seconds from 1970
 all times are read and converted to milliseconds where needed
  */
+
+const timeRegex = /^(?:[01]\d|2[0-4]):[0-5]\d$/;
+
 const maskDate = (value: string) => {
   let cleanedValue = value
     .replace(/\D/g, "")
@@ -50,8 +53,7 @@ const maskDate = (value: string) => {
 };
 
 export const MetricDataCalendar: React.FC<Props> = () => {
-  // const { validatedCalendarUrlState, setSearchParams } = useCalendarUrlState();
-  const { validatedCalendarUrlState } = useCalendarUrlState();
+  const { validatedCalendarUrlState, setSearchParams } = useCalendarUrlState();
   const setTimeZone = useCalendarTimeZone();
 
   const [startTime, setStartTime] = useState("00:00");
@@ -153,7 +155,7 @@ export const MetricDataCalendar: React.FC<Props> = () => {
     end: endOfWeek(endOfMonth(firstDayOfCurrentMonth)),
   });
 
-  const setDateInURL = (day: Date) => {
+  const setDateInURL = (day = new Date(selectedDayRange.currentDay[0])) => {
     const dateFormat = DateFormatOptions.standardDateNoTime;
 
     const customStart = format(day, dateFormat).toString();
@@ -169,13 +171,21 @@ export const MetricDataCalendar: React.FC<Props> = () => {
     const start = getUnixTime(trueTimeStart);
     const end = getUnixTime(trueTimeEnd);
 
-    console.log([start, end]);
-
     const range = [start, end];
     setSelectedDayRange({ currentDay: range, prevDay: range });
 
     setTimeRange([getUnixTime(start), getUnixTime(end)]);
+
+    setSearchParams((params) => {
+      params.set("from", String(start));
+      params.set("to", String(end));
+      return params;
+    });
   };
+
+  useEffect(() => {
+    console.log(new Date(selectedDayRange.currentDay[0]));
+  }, [selectedDayRange]);
 
   return (
     <>
@@ -274,10 +284,13 @@ export const MetricDataCalendar: React.FC<Props> = () => {
             className="w-[40px] rounded-md border-[1px] px-[5px] py-[2.5px] outline-none focus:border-device-data-border-blue focus:text-device-data-border-blue"
             type="text"
             onBlur={(e) => {
-              const timeRegex = /^(?:[01]\d|2[0-4]):[0-5]\d$/;
               if (timeRegex.test(e.target.value)) {
                 setStartTime(e.target.value);
+                setDateInURL();
               }
+            }}
+            onKeyDown={(e) => {
+              if (e.key == "Enter" && timeRegex.test(startTime)) setDateInURL();
             }}
           />
         </div>
@@ -285,14 +298,19 @@ export const MetricDataCalendar: React.FC<Props> = () => {
           <p>Ends</p>
           <input
             value={endTime}
-            onChange={(e) => setEndTime(maskDate(e.target.value))}
+            onChange={(e) => {
+              setEndTime(maskDate(e.target.value));
+            }}
             className="w-[40px] rounded-md border-[1px] px-[5px] py-[2.5px] outline-none focus:border-device-data-border-blue focus:text-device-data-border-blue"
             type="text"
             onBlur={(e) => {
-              const timeRegex = /^(?:[01]\d|2[0-4]):[0-5]\d$/;
               if (timeRegex.test(e.target.value)) {
                 setEndTime(e.target.value);
+                setDateInURL();
               }
+            }}
+            onKeyDown={(e) => {
+              if (e.key == "Enter" && timeRegex.test(endTime)) setDateInURL();
             }}
           />
         </div>

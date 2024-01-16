@@ -16,4 +16,5 @@ export const DateFormatOptions = {
   fullMonthAndYear: "MMMM-yyyy",
   standardYearMonthDay: "yyyy-MM-dd",
   standardDateNoTime: "yyyy-MM-dd",
+  standardTime24Hr: "yyyy-MM-dd HH:mm",
 };
