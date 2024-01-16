@@ -201,32 +201,28 @@ const MetricsDataTab: React.FC = () => {
       >
         {deviceMetricsKeys.map((item) => {
           return (
-            <>
-              <Accordion.Item
-                className="bg-[#F5F5F5]  text-[12px]"
-                value={item.key}
-                key={item.key}
-              >
-                <Accordion.Trigger className="group w-full px-[12px] py-[10px]">
-                  <div className="flex items-center gap-[20px]">
-                    <div className="h-[12px] w-[12px] group-data-[state=closed]:rotate-180 group-data-[state=open]:rotate-0">
-                      <ChevronIcon />
-                    </div>
-                    <p>
-                      {item.title}
-                      <span className="ml-[15px] text-[#8A8A8A]">
-                        (1 panel)
-                      </span>
-                    </p>
+            <Accordion.Item
+              className="bg-[#F5F5F5]  text-[12px]"
+              value={item.key}
+              key={item.key}
+            >
+              <Accordion.Trigger className="group w-full px-[12px] py-[10px]">
+                <div className="flex items-center gap-[20px]">
+                  <div className="h-[12px] w-[12px] group-data-[state=closed]:rotate-180 group-data-[state=open]:rotate-0">
+                    <ChevronIcon />
                   </div>
-                </Accordion.Trigger>
-                <Accordion.Content>
-                  {/* Will be different for other keys */}
-                  <MetricsDataContents metricKey={item.key} data={data?.data} />
-                  {/* ================================ */}
-                </Accordion.Content>
-              </Accordion.Item>
-            </>
+                  <p>
+                    {item.title}
+                    <span className="ml-[15px] text-[#8A8A8A]">(1 panel)</span>
+                  </p>
+                </div>
+              </Accordion.Trigger>
+              <Accordion.Content>
+                {/* Will be different for other keys */}
+                <MetricsDataContents metricKey={item.key} data={data?.data} />
+                {/* ================================ */}
+              </Accordion.Content>
+            </Accordion.Item>
           );
         })}
       </Accordion.Root>

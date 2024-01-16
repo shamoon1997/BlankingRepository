@@ -5,21 +5,26 @@ import {
   useMetricDataActions,
   useMetricDataState,
 } from "@/state/device-data/metric-data-controls.store";
-import React, { useEffect } from "react";
+import React, { useMemo } from "react";
 
 type Props = {
   metricKey: string;
   data?: MetricDataresponseType[];
 };
 
+type GraphData = {
+  hardware_id: string;
+  time: string[];
+  values: number[] | null;
+};
+
 const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
   const metricDataState = useMetricDataState();
   const { removeFromSelected, addToSelected } = useMetricDataActions();
 
-  useEffect(() => {
-    if (!data) return;
-
-    const finalObj: any = {};
+  const dataForGraphs: Record<string, GraphData[]> = useMemo(() => {
+    if (!data) return {};
+    const finalObj: Record<string, GraphData[]> = {};
 
     data?.forEach((device) => {
       const foundChannel = device.metric_channels.find(
@@ -33,10 +38,13 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
         time: device.recorded_at,
         values: foundChannel?.channel_values ?? null,
       });
-
-      console.log(finalObj);
     });
+
+    return finalObj;
   }, [data]);
+
+  dataForGraphs;
+  // TO BE USED LATER FOR GRAPH PLOTTING
 
   return (
     <>
