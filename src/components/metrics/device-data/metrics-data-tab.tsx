@@ -1,4 +1,3 @@
-import { getMetricDataAPI } from "@/api/device-data";
 import { ChevronIcon } from "@/assets";
 import { useMetricDataActions } from "@/state/device-data/metric-data-controls.store";
 import {
@@ -6,7 +5,6 @@ import {
   metricsDataDevicesOptions,
 } from "@/utils/device-data";
 import * as Accordion from "@radix-ui/react-accordion";
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import {
   DeviceDataDateControls,
@@ -14,15 +12,18 @@ import {
   DeviceDataGraphControls,
 } from "../controls";
 import MetricsDataContents from "./metrics-data-contents";
+import { useGetHardwareMetrics } from "@/hooks/metrics";
 
 const MetricsDataTab: React.FC = () => {
   const { applyMetricDeviceFilterType } = useMetricDataActions();
 
-  const { data } = useQuery({
-    queryKey: ["metric-data"],
-    queryFn: async () => {
-      return getMetricDataAPI();
-    },
+  const { data } = useGetHardwareMetrics({
+    hardware_ids: [
+      "3f0017000c5030415738382000000001",
+      "0f003c000e5030475837322000000001",
+    ],
+    t1: "2023-11-24 21:00:00",
+    t2: "2023-11-24 21:30:00",
   });
 
   return (
