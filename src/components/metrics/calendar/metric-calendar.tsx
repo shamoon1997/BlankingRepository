@@ -165,7 +165,7 @@ export const MetricDataCalendar: React.FC<Props> = () => {
     });
   };
 
-  const dateStringForApi = useMemo(() => {
+  const datesToQuery = useMemo(() => {
     const format = DateFormatOptions.dateTimeFormatForSever;
 
     const start = formatInTimeZone(selectedDay[0] * 1000, timezone, format);
@@ -174,7 +174,7 @@ export const MetricDataCalendar: React.FC<Props> = () => {
     return { start, end };
   }, [selectedDay, timezone]);
 
-  dateStringForApi;
+  datesToQuery;
 
   // const { data } = useGetDeploymentMetrics({
   //   t1: dateStringForApi.start,

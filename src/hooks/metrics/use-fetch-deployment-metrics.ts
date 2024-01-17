@@ -1,7 +1,7 @@
 import { getDeploymentMetricDataAPI } from "@/api/device-data";
 import { useQuery } from "@tanstack/react-query";
 
-export interface DeploymentMetricArgs {
+interface DeploymentMetricArgs {
   deployment?: string;
   t1: string;
   t2: string;

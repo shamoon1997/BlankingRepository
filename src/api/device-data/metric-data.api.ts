@@ -7,7 +7,7 @@ import { MetricDataresponseType } from "../types/types";
 export const getMetricDataAPI = (): Promise<
   AxiosResponse<MetricDataresponseType[]>
 > => {
-  return API.post(ApiResources.getMetricData, {
+  return API.post(ApiResources.getHardwareMetricData, {
     hardware_ids: [
       "3f0017000c5030415738382000000001",
       "0f003c000e5030475837322000000001",
@@ -17,10 +17,26 @@ export const getMetricDataAPI = (): Promise<
   });
 };
 
+type HardwareMetricDataPayload = {
+  hardware_ids: string[];
+  t1: string;
+  t2: string;
+};
+
 type DeploymentMetricDataPayload = {
   deployment: string;
   t1: string;
   t2: string;
+};
+
+export const getHardwareMetricDataAPI = ({
+  hardware_ids,
+  t1,
+  t2,
+}: HardwareMetricDataPayload): Promise<
+  AxiosResponse<MetricDataresponseType[]>
+> => {
+  return API.post(ApiResources.getHardwareMetricData, { hardware_ids, t1, t2 });
 };
 
 export const getDeploymentMetricDataAPI = ({

@@ -19,7 +19,7 @@ export const ApiResources = {
   getPoleView: "/poleview",
 
   // Device Data here:
-  getMetricData: "/device_data/metric_data",
+  getHardwareMetricData: "/device_data/metric_data",
   getDeploymentMetricData: "/device_data/metric_data_by_deployment",
 };
 
