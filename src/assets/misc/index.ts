@@ -22,6 +22,8 @@ import ReadingLockIcon from "./readings-lock.svg";
 import ForwardArrowIcon from "./forward-arrow.svg";
 import PlayAudioIcon from "./play-audio.svg";
 import PauseAudioIcon from "./pause-audio.svg";
+import LinkOpenerIcon from "./link-opener.svg";
+import ImageMissingIcon from "./image-missing.svg";
 
 export {
   ChevronIcon,
@@ -48,4 +50,6 @@ export {
   ForwardArrowIcon,
   PlayAudioIcon,
   PauseAudioIcon,
+  LinkOpenerIcon,
+  ImageMissingIcon,
 };
