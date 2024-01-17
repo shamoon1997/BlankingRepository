@@ -2,24 +2,20 @@ import { PointingArrowIcon, TimeIcon } from "@/assets";
 import { useCalendarUrlState } from "@/hooks/calendar";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tabs from "@radix-ui/react-tabs";
-import { fromUnixTime } from "date-fns";
+import { format, fromUnixTime } from "date-fns";
 import { toSentenceCase } from "js-convert-case";
 import React, { useState } from "react";
 import { MetricCalendarCustomRange, MetricDataCalendar } from "../calendar";
 import { DateFormatOptions } from "@/utils/date";
-import { formatInTimeZone } from "date-fns-tz";
-import { useCalendarTimeZone } from "@/state";
 
 const DeviceDataDateControls: React.FC = () => {
   const [tabValue, setTabValue] = useState<string>("default");
   const { validatedCalendarUrlState } = useCalendarUrlState();
-  const setTimeZone = useCalendarTimeZone();
 
   let from;
   if (typeof validatedCalendarUrlState.from === "number") {
-    from = formatInTimeZone(
-      fromUnixTime(validatedCalendarUrlState.from),
-      setTimeZone,
+    from = format(
+      validatedCalendarUrlState.from * 1000,
       DateFormatOptions.standardTime24Hr,
     );
   } else {
@@ -28,9 +24,8 @@ const DeviceDataDateControls: React.FC = () => {
 
   let to;
   if (typeof validatedCalendarUrlState.to === "number") {
-    to = formatInTimeZone(
+    to = format(
       fromUnixTime(validatedCalendarUrlState.to),
-      setTimeZone,
       DateFormatOptions.standardTime24Hr,
     );
   } else {

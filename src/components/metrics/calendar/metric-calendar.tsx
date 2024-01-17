@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   add,
   eachDayOfInterval,
@@ -17,7 +17,7 @@ import {
   startOfWeek,
   sub,
 } from "date-fns";
-import { zonedTimeToUtc } from "date-fns-tz";
+import { zonedTimeToUtc, utcToZonedTime } from "date-fns-tz";
 import { ChevronIcon } from "@/assets";
 import { useCalendarUrlState } from "@/hooks/calendar";
 import { DateFormatOptions, defaultDateDropdownOptions } from "@/utils/date";
@@ -27,7 +27,6 @@ type Props = { onApply: () => void };
 
 type DayRangeType = {
   currentDay: number[];
-  prevDay: number[];
 };
 
 /*
@@ -91,12 +90,12 @@ export const MetricDataCalendar: React.FC<Props> = () => {
       } else to = getUnixTime(startOfToday());
     }
 
-    const startOfDayUnix = getUnixTime(startOfDay(fromUnixTime(to)));
+    const startOfDayUnix = getUnixTime(startOfDay(fromUnixTime(from)));
     const endOfDayUnix = getUnixTime(endOfDay(fromUnixTime(to)));
 
     const day = [startOfDayUnix, endOfDayUnix];
 
-    return { currentDay: day, prevDay: day };
+    return { currentDay: day };
   });
 
   const [currentMonth, setCurrentMonth] = useState(
@@ -104,39 +103,6 @@ export const MetricDataCalendar: React.FC<Props> = () => {
   );
 
   const firstDayOfCurrentMonth = parse(currentMonth, "MMMM-yyyy", new Date());
-
-  const [, setTimeRange] = useState<number[]>(() => {
-    let from, to;
-
-    if (typeof validatedCalendarUrlState.from === "number") {
-      // already in unix time seconds from 1970
-      from = validatedCalendarUrlState.from;
-    } else {
-      const option = defaultDateDropdownOptions.find(
-        (i) => i.type === validatedCalendarUrlState.from,
-      );
-
-      if (option) {
-        const fromToDate = option.getDates();
-        from = getUnixTime(fromToDate.from);
-      } else from = getUnixTime(startOfToday());
-    }
-
-    if (typeof validatedCalendarUrlState.to === "number") {
-      to = validatedCalendarUrlState.to;
-    } else {
-      const option = defaultDateDropdownOptions.find(
-        (i) => i.type === validatedCalendarUrlState.from,
-      );
-
-      if (option) {
-        const fromToDate = option.getDates();
-        to = getUnixTime(fromToDate.to);
-      } else to = getUnixTime(startOfToday());
-    }
-
-    return [from, to];
-  });
 
   const nextMonth = () => {
     const parsedMonth = parse(currentMonth, "MMMM-yyyy", new Date());
@@ -155,7 +121,9 @@ export const MetricDataCalendar: React.FC<Props> = () => {
     end: endOfWeek(endOfMonth(firstDayOfCurrentMonth)),
   });
 
-  const setDateInURL = (day = new Date(selectedDayRange.currentDay[0])) => {
+  const setDateInURL = (
+    day = new Date(selectedDayRange.currentDay[0] * 1000),
+  ) => {
     const dateFormat = DateFormatOptions.standardDateNoTime;
 
     const customStart = format(day, dateFormat).toString();
@@ -172,9 +140,7 @@ export const MetricDataCalendar: React.FC<Props> = () => {
     const end = getUnixTime(trueTimeEnd);
 
     const range = [start, end];
-    setSelectedDayRange({ currentDay: range, prevDay: range });
-
-    setTimeRange([getUnixTime(start), getUnixTime(end)]);
+    setSelectedDayRange({ currentDay: range });
 
     setSearchParams((params) => {
       params.set("from", String(start));
@@ -183,9 +149,29 @@ export const MetricDataCalendar: React.FC<Props> = () => {
     });
   };
 
-  useEffect(() => {
-    console.log(new Date(selectedDayRange.currentDay[0]));
-  }, [selectedDayRange]);
+  const setTimeInURL = (time: string, type: "to" | "from") => {
+    const dateFormat = DateFormatOptions.standardDateNoTime;
+    let currentTimestamp: number;
+    if (type === "from") currentTimestamp = selectedDayRange.currentDay[0];
+    else currentTimestamp = selectedDayRange.currentDay[1];
+
+    const formattedDate = format(
+      currentTimestamp * 1000,
+      dateFormat,
+    ).toString();
+
+    const unixTimeToUTC = zonedTimeToUtc(
+      formattedDate + `T${time}`,
+      setTimeZone,
+    );
+
+    const date = utcToZonedTime(unixTimeToUTC, setTimeZone);
+
+    setSearchParams((params) => {
+      params.set(type, String(getUnixTime(new Date(date))));
+      return params;
+    });
+  };
 
   return (
     <>
@@ -247,23 +233,6 @@ export const MetricDataCalendar: React.FC<Props> = () => {
                               ? "border-device-data-border-blue bg-device-data-blue text-device-data-border-blue "
                               : " border-[#F2F2F2]"
                           }
-                          
-                          ${
-                            isSameDay(
-                              day,
-                              selectedDayRange.prevDay[0] * 1000,
-                            ) &&
-                            isSameMonth(
-                              selectedDayRange.prevDay[0] * 1000,
-                              firstDayOfCurrentMonth,
-                            )
-                              ? "border-device-data-border-blue bg-device-data-blue  text-device-data-border-blue"
-                              : " border-[#F2F2F2]"
-                          }
-                          
-                          
-                         
-                       
                           `}
               key={day.toString()}
             >
@@ -284,14 +253,15 @@ export const MetricDataCalendar: React.FC<Props> = () => {
             className="w-[40px] rounded-md border-[1px] px-[5px] py-[2.5px] outline-none focus:border-device-data-border-blue focus:text-device-data-border-blue"
             type="text"
             onBlur={(e) => {
-              if (timeRegex.test(e.target.value)) {
-                setStartTime(e.target.value);
-                setDateInURL();
+              const { value } = e.target;
+              if (timeRegex.test(value)) {
+                setStartTime(value);
+                setTimeInURL(value, "from");
               }
             }}
-            onKeyDown={(e) => {
-              if (e.key == "Enter" && timeRegex.test(startTime)) setDateInURL();
-            }}
+            // onKeyDown={(e) => {
+            //   if (e.key == "Enter" && timeRegex.test(startTime)) setDateInURL();
+            // }}
           />
         </div>
         <div className="flex h-[13px] w-1/2 items-center gap-[5px]">
@@ -304,21 +274,22 @@ export const MetricDataCalendar: React.FC<Props> = () => {
             className="w-[40px] rounded-md border-[1px] px-[5px] py-[2.5px] outline-none focus:border-device-data-border-blue focus:text-device-data-border-blue"
             type="text"
             onBlur={(e) => {
-              if (timeRegex.test(e.target.value)) {
-                setEndTime(e.target.value);
-                setDateInURL();
+              const { value } = e.target;
+              if (timeRegex.test(value)) {
+                setEndTime(value);
+                setTimeInURL(value, "to");
               }
             }}
-            onKeyDown={(e) => {
-              if (e.key == "Enter" && timeRegex.test(endTime)) setDateInURL();
-            }}
+            // onKeyDown={(e) => {
+            //   if (e.key == "Enter" && timeRegex.test(endTime)) setDateInURL();
+            // }}
           />
         </div>
       </div>
 
       <div className=" flex min-w-[190px] justify-between pb-[9px] pt-[10px]">
         <p className="text-[8px]">Current time</p>
-        <p className="text-custom-green text-[8px]">
+        <p className="text-[8px] text-custom-green">
           {format(Date.now(), DateFormatOptions.standardTime)}
         </p>
       </div>
