@@ -1,8 +1,8 @@
 import { ChevronIcon } from "@/assets";
 import * as Select from "@radix-ui/react-select";
 import React, { ReactNode } from "react";
-import SelectItem from "./select-item";
-import { TextLimiter } from "..";
+import SelectItem from "../../common/select/select-item";
+import { TextLimiter } from "../../common";
 
 type Props = {
   placeholder?: string;

@@ -1,6 +1,5 @@
 import { getMetricDataAPI } from "@/api/device-data";
 import { ChevronIcon } from "@/assets";
-import DeviceDataDropdown from "@/components/common/select/device-data-dropdown";
 import { useMetricDataActions } from "@/state/device-data/metric-data-controls.store";
 import {
   deviceMetricsKeys,
@@ -9,7 +8,11 @@ import {
 import * as Accordion from "@radix-ui/react-accordion";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { DeviceDataDateControls, DeviceDataGraphControls } from "../controls";
+import {
+  DeviceDataDateControls,
+  DeviceDataDropdown,
+  DeviceDataGraphControls,
+} from "../controls";
 import MetricsDataContents from "./metrics-data-contents";
 
 const MetricsDataTab: React.FC = () => {
