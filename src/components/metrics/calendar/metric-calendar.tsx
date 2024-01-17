@@ -17,7 +17,7 @@ import {
   startOfWeek,
   sub,
 } from "date-fns";
-import { zonedTimeToUtc, utcToZonedTime } from "date-fns-tz";
+import { zonedTimeToUtc, formatInTimeZone } from "date-fns-tz";
 import { ChevronIcon } from "@/assets";
 import { useCalendarUrlState } from "@/hooks/calendar";
 import { DateFormatOptions, defaultDateDropdownOptions } from "@/utils/date";
@@ -53,7 +53,7 @@ const maskDate = (value: string) => {
 
 export const MetricDataCalendar: React.FC<Props> = () => {
   const { validatedCalendarUrlState, setSearchParams } = useCalendarUrlState();
-  const setTimeZone = useCalendarTimeZone();
+  const timezone = useCalendarTimeZone();
 
   const [startTime, setStartTime] = useState("00:00");
   const [endTime, setEndTime] = useState("23:59");
@@ -121,20 +121,16 @@ export const MetricDataCalendar: React.FC<Props> = () => {
     end: endOfWeek(endOfMonth(firstDayOfCurrentMonth)),
   });
 
-  const setDateInURL = (
-    day = new Date(selectedDayRange.currentDay[0] * 1000),
-  ) => {
+  const setDateInURL = (day: Date) => {
     const dateFormat = DateFormatOptions.standardDateNoTime;
-
-    const customStart = format(day, dateFormat).toString();
-    const customEnd = format(day, dateFormat).toString();
+    const dateSelected = format(day, dateFormat);
 
     const trueTimeStart = zonedTimeToUtc(
-      customStart + `T${startTime}`,
-      setTimeZone,
+      dateSelected + `T${startTime}`,
+      timezone,
     );
 
-    const trueTimeEnd = zonedTimeToUtc(customEnd + `T${endTime}`, setTimeZone);
+    const trueTimeEnd = zonedTimeToUtc(dateSelected + `T${endTime}`, timezone);
 
     const start = getUnixTime(trueTimeStart);
     const end = getUnixTime(trueTimeEnd);
@@ -150,25 +146,33 @@ export const MetricDataCalendar: React.FC<Props> = () => {
   };
 
   const setTimeInURL = (time: string, type: "to" | "from") => {
+    const { currentDay } = selectedDayRange;
     const dateFormat = DateFormatOptions.standardDateNoTime;
     let currentTimestamp: number;
-    if (type === "from") currentTimestamp = selectedDayRange.currentDay[0];
-    else currentTimestamp = selectedDayRange.currentDay[1];
+    if (type === "from") currentTimestamp = currentDay[0] * 1000;
+    else currentTimestamp = currentDay[1] * 1000;
 
-    const formattedDate = format(
-      currentTimestamp * 1000,
+    const formattedDate = formatInTimeZone(
+      currentTimestamp,
+      timezone,
       dateFormat,
-    ).toString();
-
-    const unixTimeToUTC = zonedTimeToUtc(
-      formattedDate + `T${time}`,
-      setTimeZone,
     );
 
-    const date = utcToZonedTime(unixTimeToUTC, setTimeZone);
+    const theirTimeToMyTime = zonedTimeToUtc(
+      formattedDate + `T${time}`,
+      timezone,
+    );
+
+    const timeInUnix = format(new Date(theirTimeToMyTime), "t");
+
+    const newArray = [...selectedDayRange.currentDay];
+    if (type === "from") newArray[0] = +timeInUnix;
+    if (type === "to") newArray[1] = +timeInUnix;
+
+    setSelectedDayRange(() => ({ currentDay: newArray }));
 
     setSearchParams((params) => {
-      params.set(type, String(getUnixTime(new Date(date))));
+      params.set(type, String(timeInUnix));
       return params;
     });
   };
@@ -259,9 +263,10 @@ export const MetricDataCalendar: React.FC<Props> = () => {
                 setTimeInURL(value, "from");
               }
             }}
-            // onKeyDown={(e) => {
-            //   if (e.key == "Enter" && timeRegex.test(startTime)) setDateInURL();
-            // }}
+            onKeyDown={(e) => {
+              if (e.key == "Enter" && timeRegex.test(startTime))
+                setTimeInURL(startTime, "from");
+            }}
           />
         </div>
         <div className="flex h-[13px] w-1/2 items-center gap-[5px]">
@@ -280,9 +285,10 @@ export const MetricDataCalendar: React.FC<Props> = () => {
                 setTimeInURL(value, "to");
               }
             }}
-            // onKeyDown={(e) => {
-            //   if (e.key == "Enter" && timeRegex.test(endTime)) setDateInURL();
-            // }}
+            onKeyDown={(e) => {
+              if (e.key == "Enter" && timeRegex.test(endTime))
+                setTimeInURL(endTime, "to");
+            }}
           />
         </div>
       </div>
