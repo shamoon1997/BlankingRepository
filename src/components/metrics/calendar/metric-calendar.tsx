@@ -26,10 +26,6 @@ import { useCalendarTimeZone } from "@/state";
 
 type Props = { onApply: () => void };
 
-type DayRangeType = {
-  currentDay: number[];
-};
-
 // To make sure time entered is in HH:mm format
 const timeRegex = /^(?:[01]\d|2[0-4]):[0-5]\d$/;
 
@@ -54,7 +50,7 @@ export const MetricDataCalendar: React.FC<Props> = () => {
   const [startTime, setStartTime] = useState("00:00");
   const [endTime, setEndTime] = useState("23:59");
 
-  const [selectedDayRange, setSelectedDayRange] = useState<DayRangeType>(() => {
+  const [selectedDay, setSelectedDay] = useState<number[]>(() => {
     let from;
     let to;
 
@@ -89,13 +85,11 @@ export const MetricDataCalendar: React.FC<Props> = () => {
     const startOfDayUnix = getUnixTime(startOfDay(fromUnixTime(from)));
     const endOfDayUnix = getUnixTime(endOfDay(fromUnixTime(to)));
 
-    const day = [startOfDayUnix, endOfDayUnix];
-
-    return { currentDay: day };
+    return [startOfDayUnix, endOfDayUnix];
   });
 
   const [currentMonth, setCurrentMonth] = useState(
-    format(selectedDayRange.currentDay[0] * 1000, "MMMM-yyyy"),
+    format(selectedDay[0] * 1000, "MMMM-yyyy"),
   );
 
   const firstDayOfCurrentMonth = parse(currentMonth, "MMMM-yyyy", new Date());
@@ -131,8 +125,7 @@ export const MetricDataCalendar: React.FC<Props> = () => {
     const start = getUnixTime(trueTimeStart);
     const end = getUnixTime(trueTimeEnd);
 
-    const range = [start, end];
-    setSelectedDayRange({ currentDay: range });
+    setSelectedDay([start, end]);
 
     setSearchParams((params) => {
       params.set("from", String(start));
@@ -142,11 +135,10 @@ export const MetricDataCalendar: React.FC<Props> = () => {
   };
 
   const setTimeInURL = (time: string, type: "to" | "from") => {
-    const { currentDay } = selectedDayRange;
     const dateFormat = DateFormatOptions.standardDateNoTime;
     let currentTimestamp: number;
-    if (type === "from") currentTimestamp = currentDay[0] * 1000;
-    else currentTimestamp = currentDay[1] * 1000;
+    if (type === "from") currentTimestamp = selectedDay[0] * 1000;
+    else currentTimestamp = selectedDay[1] * 1000;
 
     const formattedDate = formatInTimeZone(
       currentTimestamp,
@@ -161,11 +153,11 @@ export const MetricDataCalendar: React.FC<Props> = () => {
 
     const timeInUnix = format(new Date(theirTimeToMyTime), "t");
 
-    const newArray = [...selectedDayRange.currentDay];
+    const newArray = [...selectedDay];
     if (type === "from") newArray[0] = +timeInUnix;
     if (type === "to") newArray[1] = +timeInUnix;
 
-    setSelectedDayRange(() => ({ currentDay: newArray }));
+    setSelectedDay(newArray);
 
     setSearchParams((params) => {
       params.set(type, String(timeInUnix));
@@ -174,14 +166,13 @@ export const MetricDataCalendar: React.FC<Props> = () => {
   };
 
   const dateStringForApi = useMemo(() => {
-    const { currentDay } = selectedDayRange;
     const format = DateFormatOptions.dateTimeFormatForSever;
 
-    const start = formatInTimeZone(currentDay[0] * 1000, timezone, format);
-    const end = formatInTimeZone(currentDay[1] * 1000, timezone, format);
+    const start = formatInTimeZone(selectedDay[0] * 1000, timezone, format);
+    const end = formatInTimeZone(selectedDay[1] * 1000, timezone, format);
 
     return { start, end };
-  }, [selectedDayRange, timezone]);
+  }, [selectedDay, timezone]);
 
   dateStringForApi;
 
@@ -239,12 +230,9 @@ export const MetricDataCalendar: React.FC<Props> = () => {
                               : ""
                           }
                           ${
-                            isSameDay(
-                              day,
-                              selectedDayRange.currentDay[0] * 1000,
-                            ) &&
+                            isSameDay(day, selectedDay[0] * 1000) &&
                             isSameMonth(
-                              selectedDayRange.currentDay[0] * 1000,
+                              selectedDay[0] * 1000,
                               firstDayOfCurrentMonth,
                             )
                               ? "border-device-data-border-blue bg-device-data-blue text-device-data-border-blue "
@@ -309,7 +297,11 @@ export const MetricDataCalendar: React.FC<Props> = () => {
       <div className=" flex min-w-[190px] justify-between pb-[9px] pt-[10px]">
         <p className="text-[8px]">Current time</p>
         <p className="text-[8px] text-custom-green">
-          {format(Date.now(), DateFormatOptions.standardTime)}
+          {formatInTimeZone(
+            Date.now(),
+            timezone,
+            DateFormatOptions.standardTime,
+          )}
         </p>
       </div>
 
