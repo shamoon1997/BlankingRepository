@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   add,
   eachDayOfInterval,
@@ -22,6 +22,7 @@ import { ChevronIcon } from "@/assets";
 import { useCalendarUrlState } from "@/hooks/calendar";
 import { DateFormatOptions, defaultDateDropdownOptions } from "@/utils/date";
 import { useCalendarTimeZone } from "@/state";
+// import { useGetDeploymentMetrics } from "@/hooks/metrics";
 
 type Props = { onApply: () => void };
 
@@ -29,12 +30,7 @@ type DayRangeType = {
   currentDay: number[];
 };
 
-/*
-Important
-All times are set in unix seconds from 1970
-all times are read and converted to milliseconds where needed
- */
-
+// To make sure time entered is in HH:mm format
 const timeRegex = /^(?:[01]\d|2[0-4]):[0-5]\d$/;
 
 const maskDate = (value: string) => {
@@ -176,6 +172,23 @@ export const MetricDataCalendar: React.FC<Props> = () => {
       return params;
     });
   };
+
+  const dateStringForApi = useMemo(() => {
+    const { currentDay } = selectedDayRange;
+    const format = DateFormatOptions.dateTimeFormatForSever;
+
+    const start = formatInTimeZone(currentDay[0] * 1000, timezone, format);
+    const end = formatInTimeZone(currentDay[1] * 1000, timezone, format);
+
+    return { start, end };
+  }, [selectedDayRange, timezone]);
+
+  dateStringForApi;
+
+  // const { data } = useGetDeploymentMetrics({
+  //   t1: dateStringForApi.start,
+  //   t2: dateStringForApi.end,
+  // });
 
   return (
     <>

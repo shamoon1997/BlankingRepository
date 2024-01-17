@@ -16,3 +16,19 @@ export const getMetricDataAPI = (): Promise<
     t2: "2023-11-24 21:30:00",
   });
 };
+
+type DeploymentMetricDataPayload = {
+  deployment: string;
+  t1: string;
+  t2: string;
+};
+
+export const getDeploymentMetricDataAPI = ({
+  deployment,
+  t1,
+  t2,
+}: DeploymentMetricDataPayload): Promise<
+  AxiosResponse<MetricDataresponseType[]>
+> => {
+  return API.post(ApiResources.getDeploymentMetricData, { deployment, t1, t2 });
+};
