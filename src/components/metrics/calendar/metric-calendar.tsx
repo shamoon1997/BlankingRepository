@@ -19,7 +19,7 @@ import {
   startOfWeek,
   sub,
 } from "date-fns";
-import { formatInTimeZone, zonedTimeToUtc } from "date-fns-tz";
+import { formatInTimeZone, utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
 import { useMemo, useState } from "react";
 
 type Props = { onApply: () => void };
@@ -88,7 +88,7 @@ export const MetricDataCalendar: React.FC<Props> = () => {
   });
 
   const [currentMonth, setCurrentMonth] = useState(
-    format(selectedDay[0] * 1000, "MMMM-yyyy"),
+    formatInTimeZone(selectedDay[0] * 1000, timezone, "MMMM-yyyy"),
   );
 
   const firstDayOfCurrentMonth = parse(currentMonth, "MMMM-yyyy", new Date());
@@ -106,11 +106,8 @@ export const MetricDataCalendar: React.FC<Props> = () => {
   };
 
   const daysOfThisMonth = eachDayOfInterval({
-    start: zonedTimeToUtc(startOfWeek(firstDayOfCurrentMonth), timezone),
-    end: zonedTimeToUtc(
-      endOfWeek(endOfMonth(firstDayOfCurrentMonth)),
-      timezone,
-    ),
+    start: startOfWeek(firstDayOfCurrentMonth),
+    end: endOfWeek(endOfMonth(firstDayOfCurrentMonth)),
   });
 
   const setDateInURL = (day: number) => {
@@ -178,10 +175,10 @@ export const MetricDataCalendar: React.FC<Props> = () => {
 
   datesToQuery;
 
-  const { data } = useGetDeploymentMetrics({
-    t1: datesToQuery.start,
-    t2: datesToQuery.end,
-  });
+  // const { data } = useGetDeploymentMetrics({
+  //   t1: datesToQuery.start,
+  //   t2: datesToQuery.end,
+  // });
 
   return (
     <>
@@ -218,27 +215,32 @@ export const MetricDataCalendar: React.FC<Props> = () => {
         {daysOfThisMonth.map((day) => {
           const selectedUnix = selectedDay[0] * 1000;
 
-          // sub is a hacky solution for highlighting selected date on calendar
-          // can't find another way for now sadly
-          const modifiedSelectedDate = sub(
-            zonedTimeToUtc(selectedUnix, timezone),
-            { days: 1 },
-          );
-          const modifiedDay = zonedTimeToUtc(day, timezone);
-          const modified1stDayCurMonth = zonedTimeToUtc(
-            firstDayOfCurrentMonth,
-            timezone,
-          );
-
           // BOOLEANS  =========================
           const shouldDisable =
             (!isToday(day) && !isSameMonth(day, firstDayOfCurrentMonth)) ||
             day > new Date();
 
           const dayIsSelected =
-            isSameDay(modifiedDay, modifiedSelectedDate) &&
-            isSameMonth(modifiedSelectedDate, modified1stDayCurMonth);
+            format(day, "dd") === format(selectedUnix, "dd") &&
+            format(day, "MM") === format(selectedUnix, "MM");
           // ===================================
+
+          if (dayIsSelected) {
+            console.clear();
+            console.log(format(getUnixTime(day) * 1000, "dd/MM/yyyy HH:mm"));
+            console.log(
+              format(utcToZonedTime(day, timezone), "dd/MM/yyyy HH:mm"),
+            );
+            console.log(
+              format(
+                utcToZonedTime(selectedUnix, timezone),
+                "dd/MM/yyyy HH:mm",
+              ),
+            );
+            console.log(
+              formatInTimeZone(selectedUnix, timezone, "dd/MM/yyyy HH:mm"),
+            );
+          }
 
           return (
             <button
@@ -256,9 +258,7 @@ export const MetricDataCalendar: React.FC<Props> = () => {
                           `}
               key={day.toString()}
             >
-              <time dateTime={format(day, "yyyy-MM-dd")}>
-                {format(day, "d")}
-              </time>
+              <time>{format(day, "d")}</time>
             </button>
           );
         })}
