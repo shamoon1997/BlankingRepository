@@ -12,10 +12,10 @@ import {
 } from "@/state/device-data/metric-data-controls.store";
 
 const graphControlsBtns = [
-  { value: "1", icon: <ZoomInIcon /> },
-  { value: "2", icon: <ZoomOutIcon /> },
-  { value: "3", icon: <MoveGraphIcon /> },
-  { value: "4", icon: <ZoomSectionIcon /> },
+  { value: "zoomIn", icon: <ZoomInIcon /> },
+  { value: "zoomOut", icon: <ZoomOutIcon /> },
+  { value: "moveGraph", icon: <MoveGraphIcon /> },
+  { value: "zoomSection", icon: <ZoomSectionIcon /> },
 ];
 
 const DeviceDataGraphControls: React.FC = () => {
