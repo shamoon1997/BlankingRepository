@@ -106,13 +106,16 @@ export const MetricDataCalendar: React.FC<Props> = () => {
   };
 
   const daysOfThisMonth = eachDayOfInterval({
-    start: startOfWeek(firstDayOfCurrentMonth),
-    end: endOfWeek(endOfMonth(firstDayOfCurrentMonth)),
+    start: zonedTimeToUtc(startOfWeek(firstDayOfCurrentMonth), timezone),
+    end: zonedTimeToUtc(
+      endOfWeek(endOfMonth(firstDayOfCurrentMonth)),
+      timezone,
+    ),
   });
 
-  const setDateInURL = (day: Date) => {
+  const setDateInURL = (day: number) => {
     const dateFormat = DateFormatOptions.standardDateNoTime;
-    const dateSelected = format(day, dateFormat);
+    const dateSelected = format(day * 1000, dateFormat);
 
     const trueTimeStart = zonedTimeToUtc(
       dateSelected + `T${startTime}`,
@@ -213,22 +216,36 @@ export const MetricDataCalendar: React.FC<Props> = () => {
       </div>
       <div className="mb-4 grid grid-cols-7 gap-x-[4px] gap-y-[3px]">
         {daysOfThisMonth.map((day) => {
-          const selectedDate = selectedDay[0] * 1000;
+          const selectedUnix = selectedDay[0] * 1000;
 
-          // BOOLEANS HERE =====================
+          // sub is a hacky solution for highlighting selected date on calendar
+          // can't find another way for now sadly
+          const modifiedSelectedDate = sub(
+            zonedTimeToUtc(selectedUnix, timezone),
+            { days: 1 },
+          );
+          const modifiedDay = zonedTimeToUtc(day, timezone);
+          const modified1stDayCurMonth = zonedTimeToUtc(
+            firstDayOfCurrentMonth,
+            timezone,
+          );
+
+          // BOOLEANS  =========================
           const shouldDisable =
             (!isToday(day) && !isSameMonth(day, firstDayOfCurrentMonth)) ||
             day > new Date();
 
           const dayIsSelected =
-            isSameDay(day, selectedDate) &&
-            isSameMonth(selectedDate, firstDayOfCurrentMonth);
+            isSameDay(modifiedDay, modifiedSelectedDate) &&
+            isSameMonth(modifiedSelectedDate, modified1stDayCurMonth);
           // ===================================
 
           return (
             <button
               disabled={shouldDisable}
-              onClick={() => setDateInURL(day)}
+              onClick={() => {
+                setDateInURL(getUnixTime(zonedTimeToUtc(day, timezone)));
+              }}
               className={`flex h-[22px] w-full items-start justify-start rounded-[2px] border-[0.5px] border-solid  pl-[5px]  text-[11px] font-normal
                           ${shouldDisable && "cursor-not-allowed text-gray-300"}
                           ${
