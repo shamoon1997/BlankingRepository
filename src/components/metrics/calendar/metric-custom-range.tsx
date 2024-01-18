@@ -22,7 +22,6 @@ export const MetricCalendarCustomRange = ({ onApply }: Props) => {
     <form
       className=" py-[11px]"
       onChange={(e) => {
-        console.log(e.currentTarget);
         const formData = new FormData(e.currentTarget);
         const from = formData.get("custom-time");
         const to = "now";
@@ -70,7 +69,7 @@ export const MetricCalendarCustomRange = ({ onApply }: Props) => {
       <div className="px-[9px]">
         <div className="flex justify-between pb-[9px] pt-[10px]">
           <p className="text-[8px]">Current time</p>
-          <p className="text-custom-green text-[8px]">
+          <p className="text-[8px] text-custom-green">
             {format(Date.now(), DateFormatOptions.standardTime)}
           </p>
         </div>

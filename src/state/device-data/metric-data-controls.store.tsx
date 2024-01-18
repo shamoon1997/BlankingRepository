@@ -6,12 +6,13 @@ type SelectedMetricType = { name: string; id: string; assignedColor?: string };
 type FilterStoreType = {
   metricDeviceFilter: string;
   colorsList: string[];
-  mapControl: string;
+  graphControl: string;
   selectedMetrics: SelectedMetricType[]; // Since we're not sure what to store in the selected yet
   actions: {
     applyMetricDeviceFilterType: (val: string) => void;
     removeFromSelected: (id: string) => void;
     addToSelected: (metric: SelectedMetricType) => void;
+    setGraphControl: (val: string) => void;
   };
 };
 
@@ -35,7 +36,7 @@ const MAX_DEVICES = 3;
 const useMetricDataStore = create<FilterStoreType>((set, get) => ({
   metricDeviceFilter: "",
   colorsList: [...mapIconColors],
-  mapControl: "",
+  graphControl: "",
   selectedMetrics: [
     { id: "1", name: "GS234• 4024 • Lora", assignedColor: mapIconColors[0] },
     {
@@ -87,6 +88,10 @@ const useMetricDataStore = create<FilterStoreType>((set, get) => ({
       const colorArrayShift = shiftLeft([...get().colorsList]);
       set((state) => ({ ...state, colorsList: colorArrayShift }));
       // ==============================================
+    },
+
+    setGraphControl: (val) => {
+      set({ graphControl: val });
     },
   },
 }));
