@@ -11,7 +11,6 @@ import {
   endOfWeek,
   format,
   getUnixTime,
-  isSameDay,
   isSameMonth,
   isToday,
   parse,
@@ -19,7 +18,7 @@ import {
   startOfWeek,
   sub,
 } from "date-fns";
-import { formatInTimeZone, utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
+import { formatInTimeZone, zonedTimeToUtc } from "date-fns-tz";
 import { useMemo, useState } from "react";
 
 type Props = { onApply: () => void };
@@ -175,10 +174,10 @@ export const MetricDataCalendar: React.FC<Props> = () => {
 
   datesToQuery;
 
-  // const { data } = useGetDeploymentMetrics({
-  //   t1: datesToQuery.start,
-  //   t2: datesToQuery.end,
-  // });
+  const { data } = useGetDeploymentMetrics({
+    t1: datesToQuery.start,
+    t2: datesToQuery.end,
+  });
 
   return (
     <>
@@ -221,26 +220,10 @@ export const MetricDataCalendar: React.FC<Props> = () => {
             day > new Date();
 
           const dayIsSelected =
-            format(day, "dd") === format(selectedUnix, "dd") &&
+            format(day, "d") ===
+              formatInTimeZone(selectedUnix, timezone, "d") &&
             format(day, "MM") === format(selectedUnix, "MM");
           // ===================================
-
-          if (dayIsSelected) {
-            console.clear();
-            console.log(format(getUnixTime(day) * 1000, "dd/MM/yyyy HH:mm"));
-            console.log(
-              format(utcToZonedTime(day, timezone), "dd/MM/yyyy HH:mm"),
-            );
-            console.log(
-              format(
-                utcToZonedTime(selectedUnix, timezone),
-                "dd/MM/yyyy HH:mm",
-              ),
-            );
-            console.log(
-              formatInTimeZone(selectedUnix, timezone, "dd/MM/yyyy HH:mm"),
-            );
-          }
 
           return (
             <button
