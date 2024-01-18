@@ -213,30 +213,29 @@ export const MetricDataCalendar: React.FC<Props> = () => {
       </div>
       <div className="mb-4 grid grid-cols-7 gap-x-[4px] gap-y-[3px]">
         {daysOfThisMonth.map((day) => {
+          const selectedDate = selectedDay[0] * 1000;
+
+          // BOOLEANS HERE =====================
+          const shouldDisable =
+            (!isToday(day) && !isSameMonth(day, firstDayOfCurrentMonth)) ||
+            day > new Date();
+
+          const dayIsSelected =
+            isSameDay(day, selectedDate) &&
+            isSameMonth(selectedDate, firstDayOfCurrentMonth);
+          // ===================================
+
           return (
             <button
-              disabled={
-                (!isToday(day) && !isSameMonth(day, firstDayOfCurrentMonth)) ||
-                day > new Date()
-              }
+              disabled={shouldDisable}
               onClick={() => setDateInURL(day)}
               className={`flex h-[22px] w-full items-start justify-start rounded-[2px] border-[0.5px] border-solid  pl-[5px]  text-[11px] font-normal
+                          ${shouldDisable && "cursor-not-allowed text-gray-300"}
                           ${
-                            (!isToday(day) &&
-                              !isSameMonth(day, firstDayOfCurrentMonth)) ||
-                            day > new Date()
-                              ? "cursor-not-allowed text-gray-300"
-                              : ""
+                            dayIsSelected &&
+                            "border-device-data-border-blue bg-device-data-blue text-device-data-border-blue "
                           }
-                          ${
-                            isSameDay(day, selectedDay[0] * 1000) &&
-                            isSameMonth(
-                              selectedDay[0] * 1000,
-                              firstDayOfCurrentMonth,
-                            )
-                              ? "border-device-data-border-blue bg-device-data-blue text-device-data-border-blue "
-                              : " border-[#F2F2F2]"
-                          }
+                          ${!dayIsSelected && "border-[#F2F2F2]"}
                           `}
               key={day.toString()}
             >
@@ -299,13 +298,13 @@ export const MetricDataCalendar: React.FC<Props> = () => {
           {formatInTimeZone(
             Date.now(),
             timezone,
-            DateFormatOptions.standardTime,
+            DateFormatOptions.standardTime24Hr,
           )}
         </p>
       </div>
 
       <div className="pb-[8px] text-[8px]">
-        <p>America/Los_Angles</p>
+        <p>{timezone}</p>
         <p className="text-primary-soft">United States, PST</p>
       </div>
     </>
