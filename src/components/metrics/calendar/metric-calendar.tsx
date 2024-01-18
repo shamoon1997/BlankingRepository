@@ -1,28 +1,26 @@
-import { useMemo, useState } from "react";
+import { ChevronIcon } from "@/assets";
+import { useCalendarUrlState } from "@/hooks/calendar";
+import { useGetDeploymentMetrics } from "@/hooks/metrics";
+import { useCalendarTimeZone } from "@/state";
+import { DateFormatOptions, defaultDateDropdownOptions } from "@/utils/date";
 import {
   add,
   eachDayOfInterval,
-  endOfDay,
   endOfMonth,
+  endOfToday,
   endOfWeek,
   format,
   getUnixTime,
-  fromUnixTime,
   isSameDay,
   isSameMonth,
   isToday,
   parse,
-  startOfDay,
   startOfToday,
   startOfWeek,
   sub,
 } from "date-fns";
-import { zonedTimeToUtc, formatInTimeZone } from "date-fns-tz";
-import { ChevronIcon } from "@/assets";
-import { useCalendarUrlState } from "@/hooks/calendar";
-import { DateFormatOptions, defaultDateDropdownOptions } from "@/utils/date";
-import { useCalendarTimeZone } from "@/state";
-// import { useGetDeploymentMetrics } from "@/hooks/metrics";
+import { formatInTimeZone, zonedTimeToUtc } from "date-fns-tz";
+import { useMemo, useState } from "react";
 
 type Props = { onApply: () => void };
 
@@ -65,7 +63,9 @@ export const MetricDataCalendar: React.FC<Props> = () => {
       if (option) {
         const fromToDate = option.getDates();
         from = getUnixTime(fromToDate.from);
-      } else from = getUnixTime(startOfToday());
+      } else {
+        from = getUnixTime(zonedTimeToUtc(startOfToday(), timezone));
+      }
     }
 
     if (typeof validatedCalendarUrlState.to === "number") {
@@ -79,13 +79,12 @@ export const MetricDataCalendar: React.FC<Props> = () => {
       if (option) {
         const fromToDate = option.getDates();
         to = getUnixTime(fromToDate.to);
-      } else to = getUnixTime(startOfToday());
+      } else {
+        to = getUnixTime(zonedTimeToUtc(endOfToday(), timezone));
+      }
     }
 
-    const startOfDayUnix = getUnixTime(startOfDay(fromUnixTime(from)));
-    const endOfDayUnix = getUnixTime(endOfDay(fromUnixTime(to)));
-
-    return [startOfDayUnix, endOfDayUnix];
+    return [from, to];
   });
 
   const [currentMonth, setCurrentMonth] = useState(
@@ -176,10 +175,10 @@ export const MetricDataCalendar: React.FC<Props> = () => {
 
   datesToQuery;
 
-  // const { data } = useGetDeploymentMetrics({
-  //   t1: dateStringForApi.start,
-  //   t2: dateStringForApi.end,
-  // });
+  const { data } = useGetDeploymentMetrics({
+    t1: datesToQuery.start,
+    t2: datesToQuery.end,
+  });
 
   return (
     <>

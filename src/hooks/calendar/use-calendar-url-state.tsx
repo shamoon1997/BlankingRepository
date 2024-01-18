@@ -1,10 +1,13 @@
+import { useCalendarTimeZone } from "@/state";
+import { CalendarUrlStateSchema } from "@/utils/validation-schemas";
+import { endOfToday, getUnixTime, startOfToday } from "date-fns";
+import { zonedTimeToUtc } from "date-fns-tz";
 import queryString from "query-string";
 import { useSearchParams } from "react-router-dom";
-import { endOfToday, getUnixTime, startOfToday } from "date-fns";
-import { CalendarUrlStateSchema } from "@/utils/validation-schemas";
 
 const useCalendarUrlState = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const timezone = useCalendarTimeZone();
   const calendarUrlState = queryString.parse(searchParams.toString());
   const validatedCalendarUrlState =
     CalendarUrlStateSchema.safeParse(calendarUrlState);
@@ -14,8 +17,8 @@ const useCalendarUrlState = () => {
     return {
       setSearchParams,
       validatedCalendarUrlState: {
-        from: getUnixTime(startOfToday()),
-        to: getUnixTime(endOfToday()),
+        from: getUnixTime(zonedTimeToUtc(startOfToday(), timezone)),
+        to: getUnixTime(zonedTimeToUtc(endOfToday(), timezone)),
       },
     };
   } else {
@@ -26,4 +29,4 @@ const useCalendarUrlState = () => {
   }
 };
 
-export { useCalendarUrlState, CalendarUrlStateSchema };
+export { CalendarUrlStateSchema, useCalendarUrlState };
