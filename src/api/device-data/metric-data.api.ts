@@ -19,7 +19,11 @@ export const getHardwareMetricDataAPI = async ({
   t1,
   t2,
 }: HardwareMetricDataPayload): Promise<MetricDataresponseType[]> => {
-  return API.post(ApiResources.getHardwareMetricData, { hardware_ids, t1, t2 })
+  return API.post(
+    ApiResources.getHardwareMetricData,
+    { hardware_ids, t1, t2 },
+    { responseType: "arraybuffer" },
+  )
     .then((response) => {
       const res = decompressSync(new Uint8Array(response.data));
       const origText = strFromU8(res);
