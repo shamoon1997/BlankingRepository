@@ -1,20 +1,18 @@
 import { ChevronIcon } from "@/assets";
-import { useCalendarUrlState } from "@/hooks/calendar";
+import { useCalendarUrlState, useMetricReadToFrom } from "@/hooks/calendar";
 import { useGetDeploymentMetrics } from "@/hooks/metrics";
 import { useCalendarTimeZone } from "@/state";
-import { DateFormatOptions, defaultDateDropdownOptions } from "@/utils/date";
+import { DateFormatOptions } from "@/utils/date";
 import {
   add,
   eachDayOfInterval,
   endOfMonth,
-  endOfToday,
   endOfWeek,
   format,
   getUnixTime,
   isSameMonth,
   isToday,
   parse,
-  startOfToday,
   startOfWeek,
   sub,
 } from "date-fns";
@@ -41,50 +39,14 @@ const maskDate = (value: string) => {
 };
 
 export const MetricDataCalendar: React.FC<Props> = () => {
-  const { validatedCalendarUrlState, setSearchParams } = useCalendarUrlState();
+  const { setSearchParams } = useCalendarUrlState();
+  const { to, from } = useMetricReadToFrom();
   const timezone = useCalendarTimeZone();
 
   const [startTime, setStartTime] = useState("00:00");
   const [endTime, setEndTime] = useState("23:59");
 
-  const [selectedDay, setSelectedDay] = useState<number[]>(() => {
-    let from;
-    let to;
-
-    if (typeof validatedCalendarUrlState.from === "number") {
-      // already in unix time seconds from 1970
-      from = validatedCalendarUrlState.from;
-    } else {
-      const option = defaultDateDropdownOptions.find(
-        (i) => i.type === validatedCalendarUrlState.from,
-      );
-
-      if (option) {
-        const fromToDate = option.getDates();
-        from = getUnixTime(fromToDate.from);
-      } else {
-        from = getUnixTime(zonedTimeToUtc(startOfToday(), timezone));
-      }
-    }
-
-    if (typeof validatedCalendarUrlState.to === "number") {
-      to = validatedCalendarUrlState.to;
-    } else {
-      // TODO: convert from to strings to their corresponding date objects
-      const option = defaultDateDropdownOptions.find(
-        (i) => i.type === validatedCalendarUrlState.from,
-      );
-
-      if (option) {
-        const fromToDate = option.getDates();
-        to = getUnixTime(fromToDate.to);
-      } else {
-        to = getUnixTime(zonedTimeToUtc(endOfToday(), timezone));
-      }
-    }
-
-    return [from, to];
-  });
+  const [selectedDay, setSelectedDay] = useState<number[]>([from, to]);
 
   const [currentMonth, setCurrentMonth] = useState(
     formatInTimeZone(selectedDay[0] * 1000, timezone, "MMMM-yyyy"),
