@@ -1,36 +1,25 @@
 import { PointingArrowIcon, TimeIcon } from "@/assets";
-import { useCalendarUrlState } from "@/hooks/calendar";
+import { useMetricReadToFrom } from "@/hooks/calendar";
+import { useCalendarTimeZone } from "@/state";
+import { DateFormatOptions } from "@/utils/date";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tabs from "@radix-ui/react-tabs";
-import { format, fromUnixTime } from "date-fns";
-import { toSentenceCase } from "js-convert-case";
+import { format } from "date-fns";
+import { utcToZonedTime } from "date-fns-tz";
 import React, { useState } from "react";
 import { MetricCalendarCustomRange, MetricDataCalendar } from "../calendar";
-import { DateFormatOptions } from "@/utils/date";
 
 const DeviceDataDateControls: React.FC = () => {
   const [tabValue, setTabValue] = useState<string>("default");
-  const { validatedCalendarUrlState } = useCalendarUrlState();
+  const { from, to } = useMetricReadToFrom();
+  const timezone = useCalendarTimeZone();
 
-  let from;
-  if (typeof validatedCalendarUrlState.from === "number") {
-    from = format(
-      validatedCalendarUrlState.from * 1000,
-      DateFormatOptions.standardTime24Hr,
+  const getFormat = (timeStamp: number, timeZone = timezone) => {
+    return format(
+      utcToZonedTime(timeStamp * 1000, timeZone),
+      DateFormatOptions.ddMMyyyy24Hr,
     );
-  } else {
-    from = toSentenceCase(validatedCalendarUrlState.from);
-  }
-
-  let to;
-  if (typeof validatedCalendarUrlState.to === "number") {
-    to = format(
-      fromUnixTime(validatedCalendarUrlState.to),
-      DateFormatOptions.standardTime24Hr,
-    );
-  } else {
-    to = toSentenceCase(validatedCalendarUrlState.to);
-  }
+  };
 
   return (
     <>
@@ -39,11 +28,15 @@ const DeviceDataDateControls: React.FC = () => {
           <div className="mr-[5px] [&_path]:fill-[#8B8B8B] [&_svg]:h-[10px] [&_svg]:w-[10px]">
             <TimeIcon />
           </div>
-          <p className="text-[10px] text-[#8B8B8B]">{from ?? "DD/MM/YYYY"}</p>
+          <p className="text-[10px] text-[#8B8B8B]">
+            {getFormat(from) ?? "DD/MM/YYYY"}
+          </p>
           <div className="mx-[9px] [&_svg]:h-[10px] [&_svg]:w-[10px]">
             <PointingArrowIcon />
           </div>
-          <p className="text-[10px] text-[#8B8B8B]">{to ?? "DD/MM/YYYY"}</p>
+          <p className="text-[10px] text-[#8B8B8B]">
+            {getFormat(to) ?? "DD/MM/YYYY"}
+          </p>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content className="min-w-[--radix-dropdown-menu-trigger-width] rounded border bg-white">
           <Tabs.Root
