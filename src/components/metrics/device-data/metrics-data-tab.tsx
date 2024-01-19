@@ -17,7 +17,7 @@ import { useGetHardwareMetrics } from "@/hooks/metrics";
 const MetricsDataTab: React.FC = () => {
   const { applyMetricDeviceFilterType } = useMetricDataActions();
 
-  const { data } = useGetHardwareMetrics({
+  const { data, isLoading, isError, isFetched } = useGetHardwareMetrics({
     hardware_ids: [
       "3f0017000c5030415738382000000001",
       "0f003c000e5030475837322000000001",
@@ -26,30 +26,22 @@ const MetricsDataTab: React.FC = () => {
     t2: "2023-11-24 21:30:00",
   });
 
+  const icon = <div className="text-[10px] text-[#8B8B8B]">Device</div>;
+
   return (
     <>
       <div className="mt-[12px] flex w-full justify-between px-4">
         <div className="flex gap-x-[10px]">
           <div className="flex min-w-[160px] flex-row-reverse items-center justify-between rounded border-[2px] px-[10px]">
             <DeviceDataDropdown
-              triggerIcon={
-                <div className="text-[10px] text-[#8B8B8B]">Device</div>
-              }
+              triggerIcon={icon}
               placeholder="Devices"
-              valChangeFunc={(val) => {
-                applyMetricDeviceFilterType(val);
-              }}
+              valChangeFunc={(val) => applyMetricDeviceFilterType(val)}
               options={metricsDataDevicesOptions}
             />
           </div>
-
-          <div>
-            <DeviceDataDateControls />
-          </div>
-
-          <div>
-            <DeviceDataGraphControls />
-          </div>
+          <DeviceDataDateControls />
+          <DeviceDataGraphControls />
         </div>
 
         <button className="grid h-[32px] w-[130px] place-content-center rounded-sm bg-[#EDEDED] text-[8px]">
@@ -66,6 +58,21 @@ const MetricsDataTab: React.FC = () => {
         type="multiple"
       >
         {deviceMetricsKeys.map((item) => {
+          // There's no alternate way to find panels due to API schema
+          //  Had to choose O(n^2)
+          const amountOfPanels = () => {
+            let length = 0;
+            data?.map((i) => {
+              const foundChannel = i.metric_channels.find(
+                ({ channel_name }) => channel_name === item.key,
+              )?.channel_values?.length;
+
+              if (foundChannel && foundChannel > 0) length++;
+            });
+
+            return length;
+          };
+
           return (
             <Accordion.Item
               className="bg-[#F5F5F5]  text-[12px]"
@@ -79,13 +86,17 @@ const MetricsDataTab: React.FC = () => {
                   </div>
                   <p>
                     {item.title}
-                    <span className="ml-[15px] text-[#8A8A8A]">(1 panel)</span>
+                    <span className="ml-[15px] text-[#8A8A8A]">
+                      {isLoading && "Loading..."}
+                      {isError && "Error"}
+                      {isFetched && !isError && `(${amountOfPanels()} panel)`}
+                    </span>
                   </p>
                 </div>
               </Accordion.Trigger>
               <Accordion.Content>
                 {/* Will be different for other keys */}
-                <MetricsDataContents metricKey={item.key} data={data?.data} />
+                <MetricsDataContents metricKey={item.key} data={data} />
                 {/* ================================ */}
               </Accordion.Content>
             </Accordion.Item>
