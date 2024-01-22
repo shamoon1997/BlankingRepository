@@ -3,29 +3,30 @@ import * as Select from "@radix-ui/react-select";
 import React, { ReactNode } from "react";
 import SelectItem from "../../common/select/select-item";
 import { TextLimiter } from "../../common";
+import { useSelectedPoles } from "@/state";
 
 type Props = {
   placeholder?: string;
   triggerIcon?: ReactNode;
-  options: {
-    value: string;
-    child: string | React.JSX.Element;
-    icon?: React.JSX.Element;
-  }[];
   valChangeFunc: (val: string) => void;
 };
 
 const DeviceDataDropdown: React.FC<Props> = ({
   placeholder = "placeholder...",
   triggerIcon,
-  options,
 }) => {
-  if (options.length === 0) {
-    console.error(
-      "Select Dropdown: options length is 0, it must contain at least 1 item.",
-    );
-    return null;
-  }
+  const selectedPoles = useSelectedPoles();
+
+  const metricsDataDevicesOptions = [
+    {
+      value: "map-view",
+      child: (
+        <Select.ItemText>
+          <div>Map View ({selectedPoles.length})</div>
+        </Select.ItemText>
+      ),
+    },
+  ];
 
   return (
     <Select.Root
@@ -59,7 +60,7 @@ const DeviceDataDropdown: React.FC<Props> = ({
         >
           <Select.Viewport className="p-2">
             <Select.Group className="flex flex-col gap-1">
-              {options?.map((item) => {
+              {metricsDataDevicesOptions?.map((item) => {
                 return (
                   <SelectItem
                     className="flex cursor-pointer rounded-[5px] border-none p-2 text-[11px] outline-none hover:bg-[#F2F2F2] data-[state=checked]:bg-[#F7F7F7]"

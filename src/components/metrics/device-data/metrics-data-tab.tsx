@@ -1,9 +1,7 @@
 import { ChevronIcon } from "@/assets";
+import { useGetHardwareMetrics } from "@/hooks/metrics";
 import { useMetricDataActions } from "@/state/device-data/metric-data-controls.store";
-import {
-  deviceMetricsKeys,
-  // metricsDataDevicesOptions,
-} from "@/utils/device-data";
+import { deviceMetricsKeys } from "@/utils/device-data";
 import * as Accordion from "@radix-ui/react-accordion";
 import React from "react";
 import {
@@ -12,9 +10,6 @@ import {
   DeviceDataGraphControls,
 } from "../controls";
 import MetricsDataContents from "./metrics-data-contents";
-import { useGetHardwareMetrics } from "@/hooks/metrics";
-import * as Select from "@radix-ui/react-select";
-import { useSelectedPoles } from "@/state";
 
 const MetricsDataTab: React.FC = () => {
   const { applyMetricDeviceFilterType } = useMetricDataActions();
@@ -30,19 +25,6 @@ const MetricsDataTab: React.FC = () => {
 
   const icon = <div className="text-[10px] text-[#8B8B8B]">Device</div>;
 
-  const selectedPoles = useSelectedPoles();
-
-  const metricsDataDevicesOptions = [
-    {
-      value: "map-view",
-      child: (
-        <Select.ItemText>
-          <div>Map View ({selectedPoles.length})</div>
-        </Select.ItemText>
-      ),
-    },
-  ];
-
   return (
     <>
       <div className="mt-[12px] flex w-full justify-between px-4">
@@ -52,7 +34,6 @@ const MetricsDataTab: React.FC = () => {
               triggerIcon={icon}
               placeholder="Devices"
               valChangeFunc={(val) => applyMetricDeviceFilterType(val)}
-              options={metricsDataDevicesOptions}
             />
           </div>
           <DeviceDataDateControls />
