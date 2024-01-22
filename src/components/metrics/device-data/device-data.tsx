@@ -1,6 +1,6 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState } from "react";
-import MetricsDataTab from "./metrics-data-tab";
+import MetricsDataTab from "./metric-data/metrics-data-tab";
 
 const tabOptionsList: { title: string; key: string }[] = [
   { title: "Metric Data", key: "metric" },

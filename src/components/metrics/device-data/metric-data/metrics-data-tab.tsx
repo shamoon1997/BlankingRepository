@@ -1,4 +1,4 @@
-import { ChevronIcon, ExfilIcon } from "@/assets";
+import { ChevronIcon } from "@/assets";
 import { useGetHardwareMetrics } from "@/hooks/metrics";
 import {
   useMetricDataActions,
@@ -11,7 +11,8 @@ import {
   DeviceDataDateControls,
   DeviceDataDropdown,
   DeviceDataGraphControls,
-} from "../controls";
+} from "../../controls";
+import ExfilBlobBtn from "./exfil-btn";
 import MetricsDataContents from "./metrics-data-contents";
 
 const MetricsDataTab: React.FC = () => {
@@ -45,27 +46,7 @@ const MetricsDataTab: React.FC = () => {
           <DeviceDataDateControls />
           <DeviceDataGraphControls />
         </div>
-
-        <button
-          onClick={() => console.log(metricDataState.selectedMetrics)}
-          disabled={noDeviceSelected}
-          className="place-content-centerz grid h-[32px] w-[130px] rounded-sm bg-sidebar text-[8px] disabled:bg-[#EDEDED]"
-        >
-          <div className="flex h-full w-full items-center justify-center gap-[5px]">
-            <span
-              className={
-                noDeviceSelected
-                  ? "[&_path]:!fill-sidebar"
-                  : "[&_path]:!fill-white"
-              }
-            >
-              <ExfilIcon />
-            </span>
-            <p className={noDeviceSelected ? "text-sidebar" : "text-white"}>
-              Exfil Per-Blob
-            </p>
-          </div>
-        </button>
+        <ExfilBlobBtn disabled={noDeviceSelected} />
       </div>
 
       <div className="mt-[12px] h-[0.5px] w-full bg-[#D9D9D9]" />
