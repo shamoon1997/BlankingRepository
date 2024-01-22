@@ -1,6 +1,9 @@
-import { ChevronIcon } from "@/assets";
+import { ChevronIcon, ExfilIcon } from "@/assets";
 import { useGetHardwareMetrics } from "@/hooks/metrics";
-import { useMetricDataActions } from "@/state/device-data/metric-data-controls.store";
+import {
+  useMetricDataActions,
+  useMetricDataState,
+} from "@/state/device-data/metric-data-controls.store";
 import { deviceMetricsKeys } from "@/utils/device-data";
 import * as Accordion from "@radix-ui/react-accordion";
 import React from "react";
@@ -12,6 +15,7 @@ import {
 import MetricsDataContents from "./metrics-data-contents";
 
 const MetricsDataTab: React.FC = () => {
+  const metricDataState = useMetricDataState();
   const { applyMetricDeviceFilterType } = useMetricDataActions();
 
   const { data, isLoading, isError, isFetched } = useGetHardwareMetrics({
@@ -24,6 +28,8 @@ const MetricsDataTab: React.FC = () => {
   });
 
   const icon = <div className="text-[10px] text-[#8B8B8B]">Device</div>;
+
+  const noDeviceSelected = metricDataState.selectedMetrics.length === 0;
 
   return (
     <>
@@ -40,8 +46,25 @@ const MetricsDataTab: React.FC = () => {
           <DeviceDataGraphControls />
         </div>
 
-        <button className="grid h-[32px] w-[130px] place-content-center rounded-sm bg-[#EDEDED] text-[8px]">
-          Exfil Per-Blob
+        <button
+          onClick={() => console.log(metricDataState.selectedMetrics)}
+          disabled={noDeviceSelected}
+          className="place-content-centerz grid h-[32px] w-[130px] rounded-sm bg-sidebar text-[8px] disabled:bg-[#EDEDED]"
+        >
+          <div className="flex h-full w-full items-center justify-center gap-[5px]">
+            <span
+              className={
+                noDeviceSelected
+                  ? "[&_path]:!fill-sidebar"
+                  : "[&_path]:!fill-white"
+              }
+            >
+              <ExfilIcon />
+            </span>
+            <p className={noDeviceSelected ? "text-sidebar" : "text-white"}>
+              Exfil Per-Blob
+            </p>
+          </div>
         </button>
       </div>
 
@@ -51,7 +74,8 @@ const MetricsDataTab: React.FC = () => {
 
       <Accordion.Root
         className="mt-[15px] flex w-full flex-col gap-[10px] rounded-md  px-4"
-        type="multiple"
+        type="single"
+        collapsible
       >
         {deviceMetricsKeys.map((item) => {
           // There's no alternate way to find panels due to API schema
