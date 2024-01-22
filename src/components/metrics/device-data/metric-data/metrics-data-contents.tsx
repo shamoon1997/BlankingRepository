@@ -1,5 +1,5 @@
 import { MetricDataresponseType } from "@/api/types/types";
-import { CrossIcon, SearchIcon } from "@/assets";
+import { CrossIcon, ExfilIcon, SearchIcon } from "@/assets";
 import { LocationIcon } from "@/assets/pole-view";
 import {
   useMetricDataActions,
@@ -20,7 +20,8 @@ type GraphData = {
 
 const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
   const metricDataState = useMetricDataState();
-  const { removeFromSelected, addToSelected } = useMetricDataActions();
+  const { removeFromSelected, addToSelected, toggleReadyForExfil } =
+    useMetricDataActions();
 
   const dataForGraphs: Record<string, GraphData[]> = useMemo(() => {
     if (!data) return {};
@@ -74,6 +75,42 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
               </div>
             </button>
           </div>
+
+          {metricDataState.readyForExfil.length > 0 && (
+            <h3 className="mb-[3px] text-[8px]">
+              Exfil Per-blob {metricDataState.readyForExfil.length}
+            </h3>
+          )}
+
+          {metricDataState.readyForExfil.length > 0 &&
+            metricDataState.readyForExfil.map((_, i) => {
+              const bgColor = _.assignedColor ? _.assignedColor : "#B7B7B7";
+
+              return (
+                <div
+                  className="mb-[8px] flex items-center gap-[5px]"
+                  key={`ready-for-exfil-metrics-${i}`}
+                >
+                  <div className="flex h-[25px] w-[180px] items-center overflow-hidden rounded-md border-[0.8px] border-[#CCCCCC] bg-white text-[8px]">
+                    <div
+                      className={`grid h-[25px] w-[25px] place-content-center bg-[${bgColor}] [&_path]:!fill-white`}
+                    >
+                      <ExfilIcon />
+                    </div>
+
+                    <p className="ml-[6px] font-medium">{_?.name}</p>
+                  </div>
+                  <button
+                    className="grid h-[25px] w-[25px] place-content-center rounded-md border-[0.8px] border-device-data-border-blue bg-device-data-blue  hover:bg-slate-100"
+                    onClick={() => toggleReadyForExfil(_)}
+                  >
+                    <div className="grid h-[12px] w-[12px] place-content-center [&_path]:stroke-device-data-border-blue">
+                      <CrossIcon />
+                    </div>
+                  </button>
+                </div>
+              );
+            })}
 
           <h3 className="mb-[3px] text-[8px]">Deployment: Birmingham (10)</h3>
 

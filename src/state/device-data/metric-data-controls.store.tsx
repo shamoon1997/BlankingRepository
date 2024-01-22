@@ -7,12 +7,14 @@ type FilterStoreType = {
   metricDeviceFilter: string;
   colorsList: string[];
   graphControl: string;
+  readyForExfil: SelectedMetricType[]; // Since we're not sure what to store in the selected yet
   selectedMetrics: SelectedMetricType[]; // Since we're not sure what to store in the selected yet
   actions: {
     applyMetricDeviceFilterType: (val: string) => void;
     removeFromSelected: (id: string) => void;
     addToSelected: (metric: SelectedMetricType) => void;
     setGraphControl: (val: string) => void;
+    toggleReadyForExfil: (item: SelectedMetricType) => void;
   };
 };
 
@@ -35,8 +37,11 @@ const spliceAndUnshift = (arr: string[], colorToSplice?: string): string[] => {
 const MAX_DEVICES = 3;
 const useMetricDataStore = create<FilterStoreType>((set, get) => ({
   metricDeviceFilter: "",
+
   colorsList: [...mapIconColors],
+
   graphControl: "",
+
   selectedMetrics: [
     { id: "1", name: "GS234• 4024 • Lora", assignedColor: mapIconColors[0] },
     {
@@ -44,6 +49,10 @@ const useMetricDataStore = create<FilterStoreType>((set, get) => ({
       name: "GS345• 4024 • Cellular",
       assignedColor: mapIconColors[2],
     },
+    { id: "3", name: "GS456• 4024 • Network", assignedColor: mapIconColors[3] },
+  ],
+
+  readyForExfil: [
     { id: "3", name: "GS456• 4024 • Network", assignedColor: mapIconColors[3] },
   ],
 
@@ -92,6 +101,26 @@ const useMetricDataStore = create<FilterStoreType>((set, get) => ({
 
     setGraphControl: (val) => {
       set({ graphControl: val });
+    },
+
+    toggleReadyForExfil: (item) => {
+      const device = get().readyForExfil.find(
+        (selected) => selected.id === item.id,
+      );
+
+      if (device) {
+        const filtered = get().readyForExfil.filter(
+          (selected) => selected.id !== item.id,
+        );
+        set({ readyForExfil: filtered });
+      }
+      if (!device) {
+        const added = [...get().readyForExfil];
+        added.push(item);
+        set({ readyForExfil: added });
+      }
+
+      return;
     },
   },
 }));

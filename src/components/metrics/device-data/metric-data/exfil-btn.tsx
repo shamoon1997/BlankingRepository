@@ -15,7 +15,6 @@ const ExfilBlobBtn: React.FC<Props> = ({ disabled }) => {
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger disabled={disabled}>
           <button
-            onClick={() => console.log(metricDataState.selectedMetrics)}
             disabled={disabled}
             className="place-content-centerz grid h-[32px] w-[130px] rounded-sm bg-sidebar text-[8px] disabled:bg-[#EDEDED]"
           >
@@ -53,13 +52,16 @@ const ExfilBlobBtn: React.FC<Props> = ({ disabled }) => {
             <p className="mb-[5px] text-[10px]">Exfil Detail</p>
 
             <div className="mb-[9px]">
-              {[...Array(3)].map((_, i) => {
+              {metricDataState.readyForExfil.map((_, i) => {
+                const bgColor = _.assignedColor;
                 return (
                   <div
                     className="mb-[3px] flex h-[25px] w-[177px] justify-between rounded-md"
                     key={`exfil-${i}`}
                   >
-                    <div className="grid w-[25px] place-content-center rounded-l-md bg-blue-400 [&_path]:!fill-white">
+                    <div
+                      className={`grid w-[25px] place-content-center rounded-l-md bg-[${bgColor}] [&_path]:!fill-white`}
+                    >
                       <ExfilIcon />
                     </div>
                     <div className="flex w-full items-center gap-[13px] rounded-r-md border-[0.5px] border-l-0 border-default px-[8px] text-[8px]">
@@ -78,7 +80,10 @@ const ExfilBlobBtn: React.FC<Props> = ({ disabled }) => {
               })}
             </div>
 
-            <button className="h-[32px] w-full rounded-md bg-sidebar text-[8px] uppercase text-white">
+            <button
+              onClick={() => console.log(metricDataState.readyForExfil)}
+              className="h-[32px] w-full rounded-md bg-sidebar text-[8px] uppercase text-white"
+            >
               Confirm Per-Blob Request
             </button>
           </div>

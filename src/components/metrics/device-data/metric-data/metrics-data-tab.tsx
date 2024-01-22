@@ -30,7 +30,7 @@ const MetricsDataTab: React.FC = () => {
 
   const icon = <div className="text-[10px] text-[#8B8B8B]">Device</div>;
 
-  const noDeviceSelected = metricDataState.selectedMetrics.length === 0;
+  const noDeviceSelected = metricDataState.readyForExfil.length === 0;
 
   return (
     <>
