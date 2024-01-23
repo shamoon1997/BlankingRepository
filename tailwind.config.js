@@ -25,10 +25,14 @@ export default {
         dropdown: "2px 2px 3px 0px rgba(0, 0, 0, 0.15)",
         "pole-filter": "0px 0px 5px 0px rgba(0, 0, 0, 0.10)",
         "shadow-accordion": "0px 0px 3px rgba(0, 0, 0, 0.15)",
+        tab: "0px 0px 5px 0px rgba(0, 0, 0, 0.1)",
+        "mini-containers": "2px 2px 4px 0px rgba(0, 0, 0, 0.15)",
       },
       textColor: {
         primary: "rgba(22, 22, 22, 0.6)",
         "primary-hard": "rgba(22, 22, 22, 1.0)",
+        "primary-soft": "rgba(22, 22, 22, 0.50)",
+        "custom-green": "#53B984",
       },
       borderColor: {
         default: "#5B5B5B80",
@@ -75,6 +79,12 @@ export default {
         "heatmap-range-4": "#D92AF6",
         "heatmap-range-5": "#FF238D",
         "heatmap-range-6": "#FF0000",
+
+        // DeviceData
+        "device-data-blue": "#DBE6FF",
+        "device-data-border-blue": "#5283ED",
+
+        "mini-selected-state": "#3B3C4F",
       },
       backgroundColor: {
         "map-zoomed-box": "rgba(22, 22, 22, 0.70)",

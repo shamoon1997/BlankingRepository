@@ -15,11 +15,16 @@ export const ApiResources = {
   getNetworkLayer: "layer/network",
   getHeatMapLayer: "layer/heatmap",
   getEquipmentLayer: "layer/equipment",
+
   getPoleView: "/poleview",
   // photos
   getPhotosGallery: "/device_data/latest_photos",
   getPhotosLatest: "/device_data/list_photos",
   takeNewPhoto: "/mutation/take_photos",
+
+  // Device Data here:
+  getHardwareMetricData: "/device_data/metric_data",
+  getDeploymentMetricData: "/device_data/metric_data_by_deployment",
 };
 
-export const MAX_LAG_BUFFER_LIMIT = 100;
+export const MAX_LAG_BUFFER_LIMIT = 500;

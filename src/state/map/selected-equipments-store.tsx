@@ -1,20 +1,22 @@
 import { create } from "zustand";
 import { DropDownListItemOption } from "@/components/common/multi-select/multi-select-dropdown.tsx";
 
-type SelectedEquipmentsStore = {
+type SelectedEquipmentsStoreType = {
   selectedEquipments: DropDownListItemOption[];
   actions: {
     setSelectedEquipments: (equipments: DropDownListItemOption[]) => void;
   };
 };
 
-const useSelectedEquipmentsStore = create<SelectedEquipmentsStore>((set) => ({
-  selectedEquipments: [],
-  actions: {
-    setSelectedEquipments: (equipments) =>
-      set({ selectedEquipments: equipments }),
-  },
-}));
+const useSelectedEquipmentsStore = create<SelectedEquipmentsStoreType>(
+  (set) => ({
+    selectedEquipments: [],
+    actions: {
+      setSelectedEquipments: (equipments) =>
+        set({ selectedEquipments: equipments }),
+    },
+  }),
+);
 
 // separate hooks for data
 export const useSelectedEquipments = () => {

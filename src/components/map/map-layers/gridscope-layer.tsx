@@ -1,10 +1,13 @@
 import { useLayerControlUrlState, useMapUrlState } from "@/hooks";
-import { Feature, Point, Position } from "geojson";
+import { Feature, Point } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
 import { GridscopeControlLayer } from "../dropdown-layers/gridscope-control-layer.tsx";
 import { Device } from "@/api/types/types.ts";
-import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators.ts";
+import {
+  generateLines,
+  generatePoints,
+} from "@/utils/map/geojson-manipulators.ts";
 import { useMemo } from "react";
 import { MapZoomedBoxContainer } from "@/components/map/map-zoomed-box";
 import {
@@ -19,8 +22,8 @@ import { MapNetworkStatus } from "@/components/map/map-network-status/map-networ
 import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { useSelectedPoles, useSelectedPolesActions } from "@/state";
-import { MapPopup } from "@/components/map/map-pop-up/map-pop-up.tsx";
-import { SelectedPole } from "@/assets";
+import { SelectedPoleIcon } from "@/assets";
+import { SelectedPoleViews } from "@/components/map/selected-poleview-container/selected-pole-views.tsx";
 
 const GridScopeLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -33,8 +36,9 @@ export const GridScopeLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
   const { validatedLayerUrlState } = useLayerControlUrlState();
   const bbox = useMapboxBbox();
-  const selectedPoleIds = useSelectedPoles();
-  const { setSelectedPoleIds } = useSelectedPolesActions();
+  const { toggleAddSelectedPole, checkIfPoleIsSelected } =
+    useSelectedPolesActions();
+  const selectedPoles = useSelectedPoles();
 
   const {
     dataWithFilterApplied: data,
@@ -58,94 +62,20 @@ export const GridScopeLayer = () => {
   });
 
   const points: Feature<Point, Device>[] = useMemo(() => {
-    if (filteredData && filteredData.length > 0) {
-      const modify = filteredData.map((item) => {
-        return {
-          ...item,
-          id: item.hardware_id,
-        };
-      });
-      return mapDataToGeoJsonPoints(modify);
-    }
-
-    return [];
+    return generatePoints(filteredData);
   }, [filteredData]);
 
   const lines: Feature = useMemo(() => {
-    const visitedPairs = new Set();
-    const coordinates: Position[][] = [];
-
-    if (filteredData && filteredData.length > 0) {
-      filteredData.forEach((device) => {
-        return device.neighbors.forEach((neighborId) => {
-          const neighborDevice = filteredData.find(
-            (d) => d.hardware_id === neighborId,
-          );
-
-          // sort is needed to ensure key consistency don't remove
-          const pairKey = [device.hardware_id, neighborId].sort().join("-");
-
-          if (!visitedPairs.has(pairKey) && neighborDevice) {
-            visitedPairs.add(pairKey);
-
-            coordinates.push([
-              [device.longitude, device.latitude],
-              [neighborDevice.longitude, neighborDevice.latitude],
-            ]);
-          }
-        });
-      });
-    }
-
-    return {
-      type: "Feature",
-      geometry: {
-        type: "MultiLineString",
-        coordinates,
-      },
-      properties: {
-        color: "#8A8A8A",
-      },
-    };
+    return generateLines(filteredData);
   }, [filteredData]);
-
-  const checkPoleClicked = (hardwareId: string) => {
-    return selectedPoleIds.find(
-      (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
-    );
-  };
-
-  const handlePoleClicked = (poleId: string) => {
-    if (selectedPoleIds.length < 3) {
-      // allowing only three poles to be clicked
-      if (!checkPoleClicked(poleId)) {
-        setSelectedPoleIds([
-          ...selectedPoleIds,
-          { selectedPoleId: poleId, isMinimized: false },
-        ]);
-      }
-    }
-  };
 
   return (
     <>
-      <div className="absolute z-20 flex overflow-y-auto">
-        {selectedPoleIds
-          .slice()
-          .sort((a, b) =>
-            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
-          )
-          .map((selectedPole) => (
-            <MapPopup
-              selectedPoleId={selectedPole.selectedPoleId}
-              isMinimized={selectedPole.isMinimized}
-              key={selectedPole.selectedPoleId}
-            />
-          ))}
-      </div>
       {points.map((i) => {
         const [lng, lat] = i.geometry.coordinates;
         let color = "bg-unknown";
+
+        const selectedPole = checkIfPoleIsSelected(i.properties.hardware_id);
 
         if (i.properties.online === 0) {
           color = "bg-offline";
@@ -176,42 +106,53 @@ export const GridScopeLayer = () => {
             key={id}
             latitude={lat}
             longitude={lng}
-            onClick={() => handlePoleClicked(i?.properties?.hardware_id)}
+            onClick={() =>
+              toggleAddSelectedPole({
+                hardwareId: i.properties.hardware_id,
+                deviceSerialNumber: i.properties.device_sn,
+              })
+            }
+            style={{ cursor: "pointer", zIndex: selectedPole ? 10 : 0 }}
           >
-            <div className="relative">
-              {checkPoleClicked(i.properties.hardware_id) && (
-                <div className="absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center">
-                  <SelectedPole className="h-[26px] w-[26px] text-blue-400" />
-                </div>
-              )}
-              <div
-                className={`drop-shadow-map-dot ${color} z-0 h-6 w-6 rounded-full border-2 border-solid border-white`}
-              />
-            </div>
+            <div>
+              <div className="relative">
+                {Boolean(selectedPole) && (
+                  <div
+                    className={`absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center [&_path]:fill-[${selectedPole?.assignedColor}]`}
+                  >
+                    <SelectedPoleIcon className="h-[26px] w-[26px]" />
+                  </div>
+                )}
+                <div
+                  className={`drop-shadow-map-dot ${color} z-0 h-6 w-6 rounded-full border-2 border-solid border-white`}
+                />
+              </div>
 
-            {(validatedMapUrlState.zoom > 16 ||
-              checkPoleClicked(i.properties.hardware_id)) && (
-              <MapZoomedBoxContainer>
-                <div className="flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
-                  <div className="flex items-center gap-[7px] font-medium">
-                    <HoverPinIcon className="w-[11px]" />
-                    <p>
-                      {i.properties.pole_id} •{" "}
-                      {stripZeros(i.properties.device_sn ?? "")}
-                    </p>
+              {(validatedMapUrlState.zoom > 16 || Boolean(selectedPole)) && (
+                <MapZoomedBoxContainer>
+                  <div className="z-100 flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
+                    <div className="flex items-center gap-[7px] font-medium">
+                      <HoverPinIcon className="w-[11px]" />
+                      <p>
+                        {i.properties.pole_id} •{" "}
+                        {stripZeros(i.properties.device_sn ?? "")}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-[5px]">
+                      {NetworkStatusIcon}
+                      <p>{networkStatusText}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-[5px]">
-                    {NetworkStatusIcon}
-                    <p>{networkStatusText}</p>
-                  </div>
-                </div>
-              </MapZoomedBoxContainer>
-            )}
+                </MapZoomedBoxContainer>
+              )}
+            </div>
           </Marker>
         );
       })}
 
       <GridscopeControlLayer />
+
+      <SelectedPoleViews selectedPoles={selectedPoles} />
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={GridScopeLayerLineStyles} />

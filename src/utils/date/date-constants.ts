@@ -111,3 +111,48 @@ export const defaultDateDropdownOptions: DateDropDownOptions[] = [
     type: "last-24hrs",
   },
 ];
+
+export const metricDateCalendarOptions: DateDropDownOptions[] = [
+  {
+    title: "Now",
+    type: "now",
+    // function to generate the actual date we will use in the frontend
+    getDates: () => {
+      return {
+        from: sub(Date.now(), { minutes: 0 }).getTime(),
+        to: Date.now(),
+      };
+    },
+  },
+  {
+    title: "Last 12hrs",
+    getDates: () => {
+      return { from: sub(Date.now(), { hours: 12 }).getTime(), to: Date.now() };
+    },
+    type: "last-12hrs",
+  },
+
+  {
+    title: "Last 3hrs",
+    getDates: () => {
+      return { from: sub(Date.now(), { hours: 3 }).getTime(), to: Date.now() };
+    },
+    type: "last-3hrs",
+  },
+
+  {
+    title: "Last 24hrs",
+    getDates: () => {
+      return { from: sub(Date.now(), { hours: 24 }).getTime(), to: Date.now() };
+    },
+    type: "last-24hrs",
+  },
+
+  {
+    title: "Last 6hrs",
+    getDates: () => {
+      return { from: sub(Date.now(), { hours: 6 }).getTime(), to: Date.now() };
+    },
+    type: "last-6hrs",
+  },
+];

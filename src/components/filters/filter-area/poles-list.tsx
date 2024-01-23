@@ -1,7 +1,7 @@
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { BaseLayerResponse, Device } from "@/api/types/types.ts";
 import { PoleItem } from "./pole-item";
-import { useSelectedPoles } from "@/state";
+import { useSelectedPoles, useSelectedPolesActions } from "@/state";
 
 export type SortingOrder = "asc" | "desc";
 
@@ -20,13 +20,8 @@ export const PolesList = ({
   isSuccess,
   sortingOrder,
 }: PoleListProps) => {
-  const poleIds = useSelectedPoles();
-
-  const checkPoleClicked = (hardwareId: string) => {
-    return poleIds.find(
-      (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
-    );
-  };
+  const selectedPoles = useSelectedPoles();
+  const { checkIfPoleIsSelected } = useSelectedPolesActions();
 
   const sortDevices = (devices: Device[] | undefined) => {
     if (!devices) return [];
@@ -71,43 +66,43 @@ export const PolesList = ({
             return b.network_mode - a.network_mode;
           }
         });
-
+      case "unsorted":
+        return devices;
       default:
         return devices;
     }
   };
 
-  const clickedPoles = sortDevices(
-    data?.devices?.filter((device: Device) =>
-      checkPoleClicked(device.hardware_id),
-    ),
-  );
-
-  const nonClickedPoles = sortDevices(
+  const nonSelectedPoles = sortDevices(
     data?.devices?.filter(
-      (device: Device) => !checkPoleClicked(device.hardware_id),
+      (device: Device) => !checkIfPoleIsSelected(device.hardware_id),
     ),
   );
-
-  if (nonClickedPoles.length === 0 && isSuccess) {
-    return (
-      <p className="pl-4 pr-4 text-[12px]">
-        No poles found in this area. Expanding your search may help.
-      </p>
-    );
-  }
 
   // when our fetch is successful we render the list
   if (isSuccess) {
     return (
       <ScrollArea.Root className="h-full w-full overflow-hidden">
         <ScrollArea.Viewport className="h-full w-full pb-3">
-          {clickedPoles.map((device: Device, index: number) => (
-            <PoleItem key={index} device={device} devices={data?.devices} />
+          {selectedPoles.map((selectedPole, index: number) => (
+            <PoleItem
+              key={index}
+              hardwareId={selectedPole.selectedPoleHardwareId}
+              deviceSerialNumber={selectedPole.deviceSerialNumber}
+            />
           ))}
-          {nonClickedPoles.map((device: Device, index: number) => (
-            <PoleItem key={index} device={device} devices={data?.devices} />
+          {nonSelectedPoles.map((device: Device, index: number) => (
+            <PoleItem
+              key={index}
+              hardwareId={device.hardware_id}
+              deviceSerialNumber={device.device_sn}
+            />
           ))}
+          {nonSelectedPoles.length === 0 && isSuccess && (
+            <p className="mt-2 pl-4 pr-4 text-[12px]">
+              No poles found in this area. Expanding your search may help.
+            </p>
+          )}
         </ScrollArea.Viewport>
         <ScrollArea.Scrollbar className="mr-1 w-1 pb-3" orientation="vertical">
           <ScrollArea.Thumb className="rounded bg-[#1616164D]" />

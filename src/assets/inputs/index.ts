@@ -7,6 +7,7 @@ import ThickCalendarIcon from "./thick-calendar.svg";
 import UncheckedIcon from "./unchecked.svg";
 import CheckedIcon from "./checked.svg";
 import CloseIcon from "./close.svg";
+import CalendarNoDaysIcon from "./calendar-no-days.svg";
 
 export {
   CalendarIcon,
@@ -18,4 +19,5 @@ export {
   UncheckedIcon,
   CheckedIcon,
   CloseIcon,
+  CalendarNoDaysIcon,
 };

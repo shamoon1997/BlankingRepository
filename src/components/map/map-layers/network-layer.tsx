@@ -1,9 +1,12 @@
 import { useLayerControlUrlState, useMapUrlState } from "@/hooks";
-import { Feature, Point, Position } from "geojson";
+import { Feature, Point } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
 import { Device } from "@/api/types/types";
-import { mapDataToGeoJsonPoints } from "@/utils/map/geojson-manipulators";
+import {
+  generateLines,
+  generatePoints,
+} from "@/utils/map/geojson-manipulators";
 import { useMemo } from "react";
 import { MapZoomedBoxContainer } from "@/components/map/map-zoomed-box";
 import {
@@ -13,15 +16,16 @@ import {
   SpottyIcon,
 } from "@/assets/pole-hover";
 import { MapStatusContainer } from "@/components";
-import { LegendItem } from "@/components/Legend/legend-item/legend-item";
+
 import { stripZeros } from "@/utils/strings/strip-zeros";
 import { NetworkControlLayer } from "@/components/map/dropdown-layers/network-control-layer";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
 import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
 import { useSelectedPoles, useSelectedPolesActions } from "@/state";
-import { MapPopup } from "@/components/map/map-pop-up/map-pop-up.tsx";
-import { MapsIcon } from "@/assets/pole-view";
+import { LegendItem } from "@/components/legend/legend-item/legend-item.tsx";
+import { SelectedPoleIcon } from "@/assets";
+import { SelectedPoleViews } from "@/components/map/selected-poleview-container/selected-pole-views.tsx";
 
 const NetworkLayerLineStyles: mapboxgl.LinePaint = {
   "line-color": ["get", "color"],
@@ -32,8 +36,8 @@ const NetworkLayerLineStyles: mapboxgl.LinePaint = {
 
 export const NetworkLayer = () => {
   const { validatedMapUrlState } = useMapUrlState();
-  const selectedPoleIds = useSelectedPoles();
-  const { setSelectedPoleIds } = useSelectedPolesActions();
+  const { checkIfPoleIsSelected, toggleAddSelectedPole } =
+    useSelectedPolesActions();
   const bbox = useMapboxBbox();
   const {
     dataWithFilterApplied: data,
@@ -42,6 +46,8 @@ export const NetworkLayer = () => {
     isRefetching,
     isSuccess,
   } = useGetNetworkLayer(bbox);
+
+  const selectedPoles = useSelectedPoles();
 
   const { validatedLayerUrlState } = useLayerControlUrlState();
 
@@ -59,96 +65,21 @@ export const NetworkLayer = () => {
   });
 
   const points: Feature<Point, Device>[] = useMemo(() => {
-    if (filteredData && filteredData.length > 0) {
-      const modify = filteredData.map((item) => {
-        return {
-          ...item,
-          id: item.hardware_id,
-        };
-      });
-      return mapDataToGeoJsonPoints(modify);
-    }
-
-    return [];
+    return generatePoints(filteredData);
   }, [filteredData]);
 
   const lines: Feature = useMemo(() => {
-    const visitedPairs = new Set();
-    const coordinates: Position[][] = [];
-
-    if (filteredData && filteredData.length > 0) {
-      filteredData.forEach((device) => {
-        return device.neighbors.forEach((neighborId) => {
-          const neighborDevice = filteredData.find(
-            (d) => d.hardware_id === neighborId,
-          );
-
-          // sort is needed to ensure key consistency don't remove
-          const pairKey = [device.hardware_id, neighborId].sort().join("-");
-
-          if (!visitedPairs.has(pairKey) && neighborDevice) {
-            visitedPairs.add(pairKey);
-
-            coordinates.push([
-              [device.longitude, device.latitude],
-              [neighborDevice.longitude, neighborDevice.latitude],
-            ]);
-          }
-        });
-      });
-    }
-
-    return {
-      type: "Feature",
-      geometry: {
-        type: "MultiLineString",
-        coordinates,
-      },
-      properties: {
-        color: "#8A8A8A",
-      },
-    };
+    return generateLines(filteredData);
   }, [filteredData]);
-
-  const checkPoleClicked = (hardwareId: string) => {
-    return selectedPoleIds.find(
-      (selectedPoleId) => selectedPoleId.selectedPoleId === hardwareId,
-    );
-  };
-
-  const handlePoleClicked = (poleId: string) => {
-    if (selectedPoleIds.length < 3) {
-      // allowing only three poles to be clicked
-      if (!checkPoleClicked(poleId)) {
-        setSelectedPoleIds([
-          ...selectedPoleIds,
-          { selectedPoleId: poleId, isMinimized: false },
-        ]);
-      }
-    }
-  };
 
   return (
     <>
-      <div className="absolute z-20 flex overflow-y-auto">
-        {selectedPoleIds
-          .slice()
-          .sort((a, b) =>
-            a.isMinimized === b.isMinimized ? 0 : a.isMinimized ? 1 : -1,
-          )
-          .map((selectedPole) => (
-            <MapPopup
-              selectedPoleId={selectedPole.selectedPoleId}
-              isMinimized={selectedPole.isMinimized}
-              key={selectedPole.selectedPoleId}
-            />
-          ))}
-      </div>
-
       {points.map((i) => {
         const id = i.properties.hardware_id;
         const [lng, lat] = i.geometry.coordinates;
         let color = "bg-unknown";
+
+        const selectedPole = checkIfPoleIsSelected(i.properties.hardware_id);
 
         if (i.properties.network_mode === 1) {
           color = "bg-cellular";
@@ -177,12 +108,20 @@ export const NetworkLayer = () => {
             key={id}
             latitude={lat}
             longitude={lng}
-            onClick={() => handlePoleClicked(i?.properties?.hardware_id)}
+            onClick={() =>
+              toggleAddSelectedPole({
+                hardwareId: i.properties.hardware_id,
+                deviceSerialNumber: i.properties.device_sn,
+              })
+            }
+            style={{ cursor: "pointer", zIndex: selectedPole ? 10 : 0 }}
           >
             <div className="relative">
-              {checkPoleClicked(i.properties.hardware_id) && (
-                <div className="absolute z-10">
-                  <MapsIcon className="text-blue-400" />
+              {Boolean(selectedPole) && (
+                <div
+                  className={`absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center [&_path]:fill-[${selectedPole?.assignedColor}]`}
+                >
+                  <SelectedPoleIcon className="h-[26px] w-[26px]" />
                 </div>
               )}
               <div
@@ -190,8 +129,7 @@ export const NetworkLayer = () => {
               />
             </div>
 
-            {(validatedMapUrlState.zoom > 16 ||
-              checkPoleClicked(i.properties.hardware_id)) && (
+            {(validatedMapUrlState.zoom > 16 || Boolean(selectedPole)) && (
               <MapZoomedBoxContainer>
                 <div className="flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
                   <div className="flex items-center gap-[7px] font-medium">
@@ -213,6 +151,8 @@ export const NetworkLayer = () => {
       })}
 
       <NetworkControlLayer />
+
+      <SelectedPoleViews selectedPoles={selectedPoles} />
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={NetworkLayerLineStyles} />

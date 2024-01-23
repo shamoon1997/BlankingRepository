@@ -13,7 +13,7 @@ import {
   useMapboxBboxActions,
 } from "@/state/map/bbox-store.tsx";
 import { HeatMapLayer } from "@/components/map/map-layers/heat-map-layer.tsx";
-import { useReadToFrom } from "@/hooks/calendar";
+import { useReadFromTo } from "@/hooks/calendar";
 import { useGetHeatMapLayer } from "@/api/hooks/maps/user-get-heat-map-layer.ts";
 
 const MapBoxGL = import("mapbox-gl");
@@ -24,7 +24,7 @@ export const BaseMap = () => {
   const { validatedLayerUrlState } = useLayerControlUrlState();
   const ref = useRef<MapRef | null>(null);
 
-  const fromTo = useReadToFrom();
+  const fromTo = useReadFromTo();
 
   const bbox = useMapboxBbox();
   const { setDebouncedBbox } = useMapboxBboxActions();
@@ -57,6 +57,7 @@ export const BaseMap = () => {
     ) {
       return;
     }
+
     ref.current?.flyTo({
       animate: false,
       zoom: validatedMapUrlState.zoom,
@@ -77,7 +78,6 @@ export const BaseMap = () => {
     <Map
       ref={ref}
       onLoad={setDebouncedBbox}
-      reuseMaps
       attributionControl={false}
       maxPitch={0}
       minPitch={0}
@@ -90,7 +90,6 @@ export const BaseMap = () => {
         searchParams.set("zoom", String(e.viewState.zoom.toPrecision(4)));
         setSearchParams(searchParams, {
           replace: true,
-          preventScrollReset: true,
         });
       }}
       initialViewState={{

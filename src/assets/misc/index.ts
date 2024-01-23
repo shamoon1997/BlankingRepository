@@ -10,7 +10,7 @@ import LayerStatusIcon from "./layer-status.svg";
 import HistoryIcon from "./history.svg";
 import EditIcon from "./edit.svg";
 import AddIcon from "./add.svg";
-import SelectedPole from "./selected-pole.svg";
+import SelectedPoleIcon from "./selected-pole.svg";
 import MinimizeIcon from "./minimize.svg";
 import CloseIcon from "./close.svg";
 import MapBlobIcon from "./map-blob.svg";
@@ -24,6 +24,7 @@ import PlayAudioIcon from "./play-audio.svg";
 import PauseAudioIcon from "./pause-audio.svg";
 import LinkOpenerIcon from "./link-opener.svg";
 import ImageMissingIcon from "./image-missing.svg";
+import PointingArrowIcon from "./pointing-arrow.svg";
 
 export {
   ChevronIcon,
@@ -38,9 +39,10 @@ export {
   HistoryIcon,
   EditIcon,
   AddIcon,
-  SelectedPole,
+  SelectedPoleIcon,
   MinimizeIcon,
   CloseIcon,
+  PointingArrowIcon,
   MapBlobIcon,
   AccordionDownIcon,
   RefreshGrayIcon,

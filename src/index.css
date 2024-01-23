@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+/*hack to make position absolute instead of fixed in radix ui select to make z-index work properly*/
+.hack [data-radix-popper-content-wrapper] {
+  position: absolute !important;
+}
+
+
+/*
+ to hide the mapbox logo in the mini map because there wasn't enough space for other
+ components BIG NOTE: this is not allowed on the map box terms of service. But since we already
+ are showing the logo on the main map i think we're good, BUT i'm not a lawyer and don't know US laws!
+*/
+.mini-map-container  .mapboxgl-ctrl-logo {
+        display: none; /* or visibility: hidden; */
+}
