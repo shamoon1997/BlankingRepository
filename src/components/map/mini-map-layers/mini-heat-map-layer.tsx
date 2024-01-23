@@ -1,42 +1,33 @@
-import { useLayerControlUrlState, useMapUrlState } from "@/hooks";
+import { useLayerControlUrlState } from "@/hooks";
 import { Feature, Point } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { Layer, Marker, Source } from "react-map-gl";
-import { MapZoomedBoxContainer } from "../map-zoomed-box";
 import { HeatmapDevice } from "@/api/types/types.ts";
 import {
   generateLines,
   generatePoints,
 } from "@/utils/map/geojson-manipulators.ts";
 import { useMemo } from "react";
-import { HeatMapControlLayer } from "@/components/map/dropdown-layers/heatmap-control-layer";
 import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
-import { MapNetworkStatus } from "@/components/map/map-network-status/map-network-status.tsx";
 import { useGetHeatMapLayer } from "@/api/hooks/maps/user-get-heat-map-layer.ts";
-import { LegendRange, MapStatusContainer } from "@/components";
 import {
   generateIntervals,
   generateLabels,
   getIntervalForValue,
   Interval,
 } from "@/utils/min-max-range-generator/min-max-range-generator.ts";
-import {
-  HoverPinIcon,
-  OfflineIcon,
-  OnlineIcon,
-  SpottyIcon,
-} from "@/assets/pole-hover";
-import { stripZeros } from "@/utils/strings/strip-zeros.ts";
-import { ElectrometerIcon, SelectedPoleIcon, VibrationIcon } from "@/assets";
+import { GridScopeIcon, SelectedPoleIcon } from "@/assets";
 import { useSelectedPoles, useSelectedPolesActions } from "@/state";
 import { useReadFromTo } from "@/hooks/calendar";
-import { SelectedPoleViews } from "@/components/map/selected-poleview-container/selected-pole-views.tsx";
+import MiniMapStatusContainer from "@/components/legend/mini-legend-container/mini-map-status-container.tsx";
+import { MiniMapNetworkStatus } from "@/components/map/mini-map-network-status/mini-map-network-status.tsx";
+import MiniLegendRange from "@/components/legend/mini-legend-range/mini-legend-range.tsx";
+import MiniCurrentLayerContainer from "@/components/legend/mini-legend-container/mini-current-layer-container.tsx";
 
 const EquipmentLayerLineStyles: mapboxgl.LinePaint = {
-  "line-color": ["get", "color"],
+  "line-color": "#B86E00",
   "line-opacity": 1,
-  "line-width": 8,
-  "line-dasharray": [0.22, 0.24],
+  "line-width": 2,
 };
 
 const labelColors = [
@@ -48,15 +39,15 @@ const labelColors = [
   "bg-heatmap-range-6",
 ];
 
-export const HeatMapLayer = () => {
-  const { validatedMapUrlState } = useMapUrlState();
+export const MiniHeatMapLayer = () => {
   const { validatedLayerUrlState } = useLayerControlUrlState();
   const { checkIfPoleIsSelected, toggleAddSelectedPole } =
     useSelectedPolesActions();
 
   const bbox = useMapboxBbox();
   const fromTo = useReadFromTo();
-  const selectedPoles = useSelectedPoles();
+  // don't remove this is to make sure the component re-renders when selected poles change
+  useSelectedPoles();
 
   const {
     dataWithFilterApplied: data,
@@ -132,20 +123,6 @@ export const HeatMapLayer = () => {
           }
         }
 
-        const iconWidth = "w-[13px]";
-        let networkStatusText = "Offline";
-        let NetworkStatusIcon = <OfflineIcon className={iconWidth} />;
-        if (i.properties.online === 0) {
-          networkStatusText = "Offline";
-          NetworkStatusIcon = <OfflineIcon className={iconWidth} />;
-        } else if (i.properties.online === 1) {
-          networkStatusText = "Online";
-          NetworkStatusIcon = <OnlineIcon className={iconWidth} />;
-        } else if (i.properties.online === 2) {
-          networkStatusText = "Spotty";
-          NetworkStatusIcon = <SpottyIcon className={iconWidth} />;
-        }
-
         return (
           <Marker
             key={id}
@@ -162,74 +139,65 @@ export const HeatMapLayer = () => {
             <div className="relative">
               {Boolean(selectedPole) && (
                 <div
-                  className={`absolute top-[-9px] z-10 flex h-6 w-6 items-center justify-center [&_path]:fill-[${selectedPole?.assignedColor}]`}
+                  className={`absolute top-[-10px] z-10 flex h-[18px] w-[18px] items-center justify-center [&_path]:fill-[${selectedPole?.assignedColor}]`}
                 >
                   <SelectedPoleIcon className="h-[26px] w-[26px]" />
                 </div>
               )}
               <div
-                className={`drop-shadow-map-dot ${color} z-0 h-6 w-6 rounded-full border-2 border-solid border-white`}
+                className={`drop-shadow-map-dot ${color} z-0 h-[18px] w-[18px] rounded-full border-2 border-solid border-white`}
               />
             </div>
-
-            {(validatedMapUrlState.zoom > 16 || Boolean(selectedPole)) && (
-              <MapZoomedBoxContainer>
-                <div className="flex flex-col gap-[3px] whitespace-nowrap px-[2px] text-[11px] text-white">
-                  <div className="flex items-center gap-[7px] font-medium">
-                    <HoverPinIcon className="w-[11px]" />
-                    <p>
-                      {i.properties.pole_id} •{" "}
-                      {stripZeros(i.properties.device_sn ?? "")}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-[5px]">
-                    {NetworkStatusIcon}
-                    <p>{networkStatusText}</p>
-                  </div>
-                  <div className="flex items-center gap-[5px]">
-                    <ElectrometerIcon className="h-3 w-3 text-white" />
-                    <p>{i.properties.heatmap_metrics.vibrometer}</p>
-                  </div>
-
-                  <div className="flex items-center gap-[5px]">
-                    <VibrationIcon className="h-3 w-3 text-white" />
-                    <p>{i.properties.heatmap_metrics.electrometer}</p>
-                  </div>
-                </div>
-              </MapZoomedBoxContainer>
-            )}
           </Marker>
         );
       })}
 
-      <HeatMapControlLayer />
+      <div
+        className={
+          "absolute left-0 right-1 top-1 flex justify-end gap-1 bg-red-500"
+        }
+      >
+        <div id={"1"} className={"hidden w-[80px]  [&:has(div)]:block"}></div>
+        <div id={"2"} className={"hidden w-[80px]  [&:has(div)]:block"}></div>
+      </div>
 
-      <SelectedPoleViews selectedPoles={selectedPoles} />
+      <MiniCurrentLayerContainer>
+        <div
+          className={
+            "flex items-center gap-1 p-1 px-1.5 font-mont text-[9px] font-medium"
+          }
+        >
+          <GridScopeIcon className="h-3 w-3 shrink-0" />
+          <span>Heat Map</span>
+        </div>
+      </MiniCurrentLayerContainer>
 
-      <MapStatusContainer>
+      <MiniMapStatusContainer>
         {(isLoading || isRefetching) && (
-          <MapNetworkStatus>Loading...</MapNetworkStatus>
+          <MiniMapNetworkStatus>Loading...</MiniMapNetworkStatus>
         )}
         {!isLoading &&
           !isRefetching &&
           isSuccess &&
           data?.devices.length === 0 && (
-            <MapNetworkStatus>No poles found in this area</MapNetworkStatus>
+            <MiniMapNetworkStatus>
+              No poles found in this area
+            </MiniMapNetworkStatus>
           )}
         {isError && (
-          <MapNetworkStatus>
+          <MiniMapNetworkStatus>
             An Error Occurred. Please share logs with the developer team.
-          </MapNetworkStatus>
+          </MiniMapNetworkStatus>
         )}
 
         {!isLoading && (
-          <LegendRange
+          <MiniLegendRange
+            width={120}
             key={legendLabels.join(",")}
             colors={labelColors}
-            labels={legendLabels}
           />
         )}
-      </MapStatusContainer>
+      </MiniMapStatusContainer>
 
       <Source id="line-source" type="geojson" data={lines}>
         <Layer id="line-layer" type="line" paint={EquipmentLayerLineStyles} />

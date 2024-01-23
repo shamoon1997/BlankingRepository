@@ -1,10 +1,8 @@
 import { useLayerControlUrlState, useMapUrlState } from "@/hooks";
-import Map, { MapRef, NavigationControl } from "react-map-gl";
+import Map, { MapRef } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef } from "react";
 import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
-import { GridScopeLayer } from "@/components";
-import { NetworkLayer } from "@/components/map/map-layers/network-layer.tsx";
 import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
 import { EquipmentLayer } from "@/components/map/map-layers/equipment-layer.tsx";
 import { useGetEquipmentLayer } from "@/api/hooks/maps/use-get-equipment-layer.ts";
@@ -12,13 +10,16 @@ import {
   useMapboxBbox,
   useMapboxBboxActions,
 } from "@/state/map/bbox-store.tsx";
-import { HeatMapLayer } from "@/components/map/map-layers/heat-map-layer.tsx";
 import { useReadFromTo } from "@/hooks/calendar";
 import { useGetHeatMapLayer } from "@/api/hooks/maps/user-get-heat-map-layer.ts";
 
+import { MiniNetworkLayer } from "@/components/map/mini-map-layers/mini-network-layer.tsx";
+import { MiniHeatMapLayer } from "@/components/map/mini-map-layers/mini-heat-map-layer.tsx";
+import { MiniGridScopeLayer } from "./mini-map-layers/mini-gridscope-layer";
+
 const MapBoxGL = import("mapbox-gl");
 
-export const BaseMap = () => {
+export const MiniBaseMap = () => {
   const { searchParams, setSearchParams, validatedMapUrlState } =
     useMapUrlState();
   const { validatedLayerUrlState } = useLayerControlUrlState();
@@ -103,11 +104,10 @@ export const BaseMap = () => {
       style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
       mapStyle="mapbox://styles/mapbox/light-v11"
     >
-      <NavigationControl position="bottom-left" showCompass />
-      {validatedLayerUrlState.layer === "gridscope" && <GridScopeLayer />}
-      {validatedLayerUrlState.layer === "heatmap" && <HeatMapLayer />}
+      {validatedLayerUrlState.layer === "gridscope" && <MiniGridScopeLayer />}
+      {validatedLayerUrlState.layer === "heatmap" && <MiniHeatMapLayer />}
       {validatedLayerUrlState.layer === "equipment" && <EquipmentLayer />}
-      {validatedLayerUrlState.layer === "network" && <NetworkLayer />}
+      {validatedLayerUrlState.layer === "network" && <MiniNetworkLayer />}
     </Map>
   );
 };

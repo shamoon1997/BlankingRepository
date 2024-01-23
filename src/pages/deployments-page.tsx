@@ -9,7 +9,6 @@ export const DeploymentPage = withAuthenticationRequired(
   () => {
     return (
       <div className="flex h-screen w-full flex-1 flex-col">
-        {/* NAVBAR */}
         <Header heading="Deployment" />
 
         <ErrorBoundary FallbackComponent={FallBackPage}>

@@ -11,7 +11,11 @@ import {
   useSelectedPolesActions,
 } from "@/state/map/selected-poles-store.tsx";
 
-export * from "./map-filter.store";
+import {
+  useFilterActions,
+  useActiveFilter,
+  AppliedFilterType,
+} from "@/state/map/map-filter.store";
 
 export {
   useMapboxBboxActions,
@@ -20,4 +24,8 @@ export {
   useSelectedEquipmentActions,
   useSelectedPolesActions,
   useSelectedPoles,
+  useFilterActions,
+  useActiveFilter,
 };
+
+export type { AppliedFilterType };

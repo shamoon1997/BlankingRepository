@@ -38,6 +38,8 @@ export const ListSorter = ({
         return "Connectivity";
       case "lifecycle":
         return "Lifecycle";
+      case "unsorted":
+        return "Unsorted";
     }
   };
 
@@ -88,6 +90,7 @@ export const ListSorter = ({
           <PoleSorterItem value="connectivity" label="Connectivity" />
           <PoleSorterItem value="last-seen" label="Last Seen" />
           <PoleSorterItem value="lifecycle" label="Lifecycle" />
+          <PoleSorterItem value="unsorted" label="Unsorted" />
           {/*TODO Maybe uncomment in future*/}
           {/* <PoleSorterItem value="circuit" label="Circuit" /> */}
         </RadioGroup.Root>

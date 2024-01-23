@@ -37,7 +37,7 @@ const RouteMappings = [
 ];
 
 function App() {
-  const { isLoading } = useAuth0();
+  const { isLoading, user } = useAuth0();
   const location = useLocation();
   const showSideBar = useShowSideBar(RouteMappings);
 
@@ -50,8 +50,8 @@ function App() {
   }
 
   return (
-    <div className={`${showSideBar ? "flex" : null}`}>
-      {showSideBar && <SideNavigation />}
+    <div className={`${showSideBar && user ? "flex" : null}`}>
+      {showSideBar && user && <SideNavigation />}
       <ErrorBoundary FallbackComponent={FallBackPage}>
         <Routes>
           {RouteMappings.map((mapping) => {
