@@ -16,6 +16,10 @@ export const ApiResources = {
   getHeatMapLayer: "layer/heatmap",
   getEquipmentLayer: "layer/equipment",
   getPoleView: "/poleview",
+  // photos
+  getPhotosGallery: "/device_data/latest_photos",
+  getPhotosLatest: "/device_data/list_photos",
+  takeNewPhoto: "/mutation/take_photos",
 };
 
 export const MAX_LAG_BUFFER_LIMIT = 100;

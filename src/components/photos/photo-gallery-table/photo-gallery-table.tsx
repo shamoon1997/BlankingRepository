@@ -7,48 +7,53 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
-type TableData = {
-  thumbNail: string;
-  Serial: string;
-  Pole: string;
-  Deployment: string;
-  Network: string;
-  HardwareId: string;
-  actions: string;
-};
-
-const defaultData: TableData[] = [
-  {
-    thumbNail: "https://i.postimg.cc/kMvpxHYX/20230629-T234418-Z-188875-2.png",
-    Serial: "GS1243",
-    Pole: "4021",
-    Deployment: "Birmingham City",
-    Network: "Lora",
-    HardwareId: "1f0010000c...",
-    actions: "View Gallery",
-  },
-  {
-    thumbNail: "https://i.postimg.cc/kMvpxHYX/20230629-T234418-Z-188875-2.png",
-    Serial: "GS1243",
-    Pole: "4021",
-    Deployment: "Birmingham City",
-    Network: "Lora",
-    HardwareId: "1f0010000c...",
-    actions: "View Gallery",
-  },
-  {
-    thumbNail: "https://i.postimg.cc/kMvpxHYX/20230629-T234418-Z-188875-2.png",
-    Serial: "GS1243",
-    Pole: "4021",
-    Deployment: "Birmingham City",
-    Network: "Lora",
-    HardwareId: "1f0010000c...",
-    actions: "View Gallery",
-  },
-];
+import { useGetPhotoGallery } from "@/api/hooks/photos/use-photo-gallery";
 
 export const PhotoGalleryTable = () => {
+  const { data, error, isLoading } = useGetPhotoGallery([
+    "0d0026000e5030475837322000000001",
+    "0d0028000e5030475837322000000001",
+    "0d002b000e5030475837322000000001",
+    "0d002c000e5030475837322000000001",
+    "0d002d000e5030475837322000000001",
+    "0d002e000e5030475837322000000001",
+    "0d0033000e5030475837322000000001",
+    "0d0036000e5030475837322000000001",
+    "0d003e000e5030475837322000000001",
+    "0e001e000e5030475837322000000001",
+    "0e0021000e5030475837322000000001",
+    "0e0024000e5030475837322000000001",
+    "0f002a000e5030475837322000000001",
+    "0f002d000e5030475837322000000001",
+    "0f002f000e5030475837322000000001",
+    "0f0032000e5030475837322000000001",
+    "0f0035000e5030475837322000000001",
+    "160021000c5030415738382000000001",
+    "160025000e5030475837322000000001",
+    "160027000e5030475837322000000001",
+    "160028000e5030475837322000000001",
+    "160029000e5030475837322000000001",
+    "16002b000e5030475837322000000001",
+    "16002c000e5030475837322000000001",
+    "16002e000e5030475837322000000001",
+    "16002f000e5030475837322000000001",
+    "160032000e5030475837322000000001",
+    "160033000e5030475837322000000001",
+    "160037000e5030475837322000000001",
+    "16003a000e5030475837322000000001",
+    "1c0010000e5030475837322000000001",
+    "29000f000e5030475837322000000001",
+    "290011000e5030475837322000000001",
+    "290012000e5030475837322000000001",
+    "2a0011000e5030475837322000000001",
+    "2a0012000e5030475837322000000001",
+    "2a0015000e5030475837322000000001",
+    "2a0018000e5030475837322000000001",
+    "2a001b000e5030475837322000000001",
+    "2a001c000e5030475837322000000001",
+    "2a001f000e5030475837322000000001",
+  ]);
+
   const columns = [
     {
       header: () => {
@@ -64,7 +69,7 @@ export const PhotoGalleryTable = () => {
           </>
         );
       },
-      accessorKey: "thumbNail",
+      accessorKey: "photo_url",
       cell: (info: { getValue: () => string }) => {
         return (
           <>
@@ -96,8 +101,9 @@ export const PhotoGalleryTable = () => {
               <div className="text-[8px]">
                 <MapBlobIcon />
               </div>
+              {/*This value would be dynamic*/}
               <div className="font-mont text-[10px] font-semibold text-[#161616]">
-                {info.getValue()}
+                GS123
               </div>
             </div>
           </>
@@ -121,8 +127,9 @@ export const PhotoGalleryTable = () => {
       cell: (info: { getValue: () => string }) => {
         return (
           <>
+            {/*This value would be dynamic*/}
             <div className="ml-[10px] font-mont text-[10px] font-normal text-[#161616]">
-              {info.getValue()}
+              12312312
             </div>
           </>
         );
@@ -145,8 +152,9 @@ export const PhotoGalleryTable = () => {
       cell: (info: { getValue: () => string }) => {
         return (
           <>
+            {/*This value would be dynamic*/}
             <div className="ml-[10px] font-mont text-[10px] font-normal text-[#161616]">
-              {info.getValue()}
+              Birmingham
             </div>
           </>
         );
@@ -169,8 +177,9 @@ export const PhotoGalleryTable = () => {
       cell: (info: { getValue: () => string }) => {
         return (
           <>
+            {/*This value would be dynamic*/}
             <div className="ml-[10px] font-mont text-[10px] font-normal text-[#161616]">
-              {info.getValue()}
+              Lora
             </div>
           </>
         );
@@ -189,7 +198,7 @@ export const PhotoGalleryTable = () => {
           </>
         );
       },
-      accessorKey: "HardwareId",
+      accessorKey: "hardware_id",
       cell: (info: { getValue: () => string }) => {
         return (
           <>
@@ -217,6 +226,9 @@ export const PhotoGalleryTable = () => {
       cell: (item: {
         row: {
           id: string;
+          original: {
+            hardware_id: string;
+          };
         };
       }) => {
         return (
@@ -227,7 +239,9 @@ export const PhotoGalleryTable = () => {
                   ? "bg-white text-black"
                   : "bg-[#3B3C4F] text-white"
               }`}
-              onClick={() => handleRowToggle(item.row.id)}
+              onClick={() =>
+                handleRowToggle(item.row.id, item.row.original.hardware_id)
+              }
             >
               <div className="font-mont text-[8px] font-semibold uppercase leading-[9px]">
                 {expandedRows.includes(item.row.id as never)
@@ -241,21 +255,38 @@ export const PhotoGalleryTable = () => {
     },
   ];
 
-  const [data, setData] = React.useState(() => [...defaultData]);
-  const [expandedRows, setExpandedRows] = React.useState([]);
+  const [expandedRows, setExpandedRows] = React.useState<string[]>([]);
+  const [expandedHardwareIds, setExpandedHardwareIds] = React.useState<
+    string[]
+  >([]);
 
   const table = useReactTable({
-    data,
+    data: data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const handleRowToggle = (id: string) => {
-    setExpandedRows((prevExpandedRows: any) => {
+  if (isLoading) {
+    return <>Loading....</>;
+  }
+
+  if (error) {
+    return <>Something went wrong!</>;
+  }
+  const handleRowToggle = (id: string, hardware_id: string) => {
+    setExpandedRows((prevExpandedRows: string[]) => {
       if (prevExpandedRows.includes(id)) {
-        return prevExpandedRows.filter((rowId: string) => rowId !== id);
+        return []; // Close all rows
       } else {
-        return [...prevExpandedRows, id];
+        return [id]; // Open the clicked row
+      }
+    });
+
+    setExpandedHardwareIds((prevExpandedHardwareIds: string[]) => {
+      if (prevExpandedHardwareIds.includes(hardware_id)) {
+        return []; // Close all galleries
+      } else {
+        return [hardware_id]; // Open the gallery of the clicked row
       }
     });
   };
@@ -264,64 +295,76 @@ export const PhotoGalleryTable = () => {
     <div className="w-[100%] p-2">
       <table className="w-[100%] border-separate border-spacing-y-[8px]">
         <thead>
-          {table
-            .getHeaderGroups()
-            .map(
-              (headerGroup: {
-                id: React.Key | null | undefined;
-                headers: any[];
-              }) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      className="mb-2 px-2 font-mont  text-[10px] text-[#8B8B8B] "
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </th>
-                  ))}
-                </tr>
-              ),
-            )}
+          {table &&
+            table
+              .getHeaderGroups()
+              .map(
+                (headerGroup: {
+                  id: React.Key | null | undefined;
+                  headers: any[];
+                }) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className="mb-2 px-2 font-mont  text-[10px] text-[#8B8B8B] "
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ),
+              )}
         </thead>
 
         <tbody>
-          {table.getRowModel().rows.map((row: any) => (
-            <React.Fragment key={row.id}>
-              <tr
-                key={row.id}
-                className={`rounded-5 h-[44px] bg-[#F5F5F5] ${
-                  expandedRows.includes(row.id as never) ? "expanded" : ""
-                }`}
-              >
-                {row.getVisibleCells().map((cell: any) => (
-                  <td key={cell.id}>
-                    <div>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </div>
-                  </td>
-                ))}
-              </tr>
-              {expandedRows.includes(row.id as never) && (
-                <tr>
-                  <td colSpan={columns.length + 1}>
-                    <div className="rounded-[3px] bg-[#F5F5F5] p-2">
-                      {/* Content to be displayed when row is expanded */}
-                      <PhotoAccordion />
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </React.Fragment>
-          ))}
+          {table &&
+            table.getRowModel().rows.map((row: any) => {
+              const expandedIndex = expandedRows.indexOf(row.id as never);
+              return (
+                <React.Fragment key={row.id}>
+                  <tr
+                    key={row.id}
+                    className={`rounded-5 h-[44px] bg-[#F5F5F5] ${
+                      expandedRows.includes(row.id as never) ? "expanded" : ""
+                    }`}
+                  >
+                    {row.getVisibleCells().map((cell: any) => (
+                      <td key={cell.id}>
+                        <div>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
+                  {expandedIndex !== -1 && (
+                    <tr>
+                      <td colSpan={columns.length + 1}>
+                        <div
+                          className="rounded-[3px] bg-[#F5F5F5] p-2"
+                          key={expandedIndex}
+                        >
+                          {/* Content to be displayed when row is expanded */}
+                          <PhotoAccordion
+                            hardware_id={
+                              expandedHardwareIds[expandedIndex] as string
+                            }
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              );
+            })}
         </tbody>
       </table>
       <div className="h-4" />

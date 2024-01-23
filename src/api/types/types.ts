@@ -110,3 +110,25 @@ export interface DeploymentResponse {
   longitude: number;
   latitude: number;
 }
+
+export interface PhotoGallery {
+  hardware_id: string;
+  photo_url: string;
+  recorded_at: string;
+}
+
+export type PhotoGalleryResponse = PhotoGallery[];
+
+export interface PhotoLatest {
+  hardware_id: string;
+  photo_url: string;
+  recorded_at: string;
+}
+export type PhotoLatestResponse = PhotoLatest[];
+
+export type takeNewPhotoBody = {
+  up: string[];
+  front: string[];
+};
+
+export type takeNewPhotoResponse = {};
