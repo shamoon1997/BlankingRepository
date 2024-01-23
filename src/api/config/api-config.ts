@@ -23,4 +23,4 @@ export const ApiResources = {
   getDeploymentMetricData: "/device_data/metric_data_by_deployment",
 };
 
-export const MAX_LAG_BUFFER_LIMIT = 100;
+export const MAX_LAG_BUFFER_LIMIT = 500;

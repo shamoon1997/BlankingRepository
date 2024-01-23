@@ -19,6 +19,7 @@ export const mapDataToGeoJsonPoints = <T extends MapLikeDataPoint>(
 
 export const generateLines = (
   devices?: Device[],
+  color = "#8A8A8A",
 ): Feature<Geometry, GeoJsonProperties> => {
   if (!devices) {
     return {
@@ -28,7 +29,7 @@ export const generateLines = (
         coordinates: [],
       },
       properties: {
-        color: "#8A8A8A",
+        color,
       },
     };
   }

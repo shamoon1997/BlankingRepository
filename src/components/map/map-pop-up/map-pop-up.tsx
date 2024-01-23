@@ -278,6 +278,7 @@ export const MapPopup = ({
                               "M/dd/yyyy h:mm:ss a zzz",
                               {
                                 locale: enUS,
+                                timeZone,
                               },
                             )
                           : "N/A"}

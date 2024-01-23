@@ -40,7 +40,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         .search<DeploymentResponse>(text)
         .map((item) => item.item);
       setSearchSuggestions(filteredDeployments);
-      console.log(filteredDeployments);
     }
   };
 

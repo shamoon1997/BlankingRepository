@@ -181,127 +181,124 @@ export const heatMapOptions: SelectDropdownType<HeatmapOptionsType>[] = [
   },
 ];
 
-// TODO: add back when alerts layer is more defined
-// export const heatMapOptions: SelectDropdownType<HeatmapOptionsType>[] = [
-//     {
-//         value: "vibration",
-//         child: (
-//             <Select.ItemText>
-//                 <div className="flex min-w-0 items-center gap-2 [&_path]:stroke-black">
-//                     <AlertsIcon className="h-[15px] w-[15px] shrink-0" />
-//                     <TextLimiter>All</TextLimiter>
-//                 </div>
-//             </Select.ItemText>
-//         ),
-//     },
-//     {
-//         value: "electrometer",
-//         child: (
-//             <Select.ItemText>
-//                 <div className="flex min-w-0 items-center gap-2 [&_path]:stroke-black">
-//                     <VibrationIcon className="shrink-0" />
-//                     <TextLimiter>Vibration</TextLimiter>
-//                 </div>
-//             </Select.ItemText>
-//         ),
-//     },
-//     {
-//         value: "electrometer-drop",
-//         child: (
-//             <Select.ItemText>
-//                 <div className="flex  min-w-0 items-center gap-2 [&_path]:stroke-black">
-//                     <ElectrometerDropIcon className="shrink-0" />
-//                     <TextLimiter>Electrometer Drop</TextLimiter>
-//                 </div>
-//             </Select.ItemText>
-//         ),
-//     },
-//     {
-//         value: "pole-tilt",
-//         child: (
-//             <Select.ItemText>
-//                 <div className="flex min-w-0 items-center gap-2 [&_path]:stroke-black">
-//                     <PoleTiltIcon className="shrink-0" />
-//                     <TextLimiter> Pole Tilt</TextLimiter>
-//                 </div>
-//             </Select.ItemText>
-//         ),
-//     },
-//     {
-//         value: "collision",
-//         child: (
-//             <Select.ItemText>
-//                 <div className="flex min-w-0 items-center gap-2 [&_path]:stroke-black">
-//                     <CollisionsIcon className="shrink-0" />
-//                     <TextLimiter> Collision</TextLimiter>
-//                 </div>
-//             </Select.ItemText>
-//         ),
-//     },
-// ];
+// MINI options
 
-//
-// import {
-//     AlertsIcon,
-//     CollisionsIcon,
-//     ElectrometerDropIcon,
-//     PoleTiltIcon,
-//     VibrationIcon,
-// } from "@/assets";
-//
-// type SelectDropdownType = {
-//     value: string;
-//     text: string | JSX.Element;
-//     icon?: JSX.Element;
-// };
-//
+export const MiniGridScopeOptions: SelectDropdownType<GridscopeOptionsType>[] =
+  [
+    {
+      value: "all",
+      child: (
+        <div className="flex items-center justify-center gap-1">
+          <div className="inline-flex h-[6px] w-[6px] rounded-full border border-slate-400 text-[9px]" />
+          <TextLimiter>All</TextLimiter>
+        </div>
+      ),
+    },
+    {
+      value: "online",
+      child: (
+        <div className="flex items-center justify-center gap-1">
+          <div className="inline-flex h-[6px] w-[6px] rounded-full bg-online text-[9px]" />
+          <TextLimiter>Online</TextLimiter>
+        </div>
+      ),
+    },
+    {
+      value: "spotty",
+      child: (
+        <div className="flex items-center justify-center gap-1">
+          <div className="inline-flex h-[6px] w-[6px] rounded-full bg-spotty text-[9px]" />
+          <TextLimiter>Spotty</TextLimiter>
+        </div>
+      ),
+    },
+    {
+      value: "offline",
+      child: (
+        <div className="flex items-center justify-center gap-1">
+          <div className="inline-flex h-[6px] w-[6px] shrink-0 rounded-full bg-offline text-[9px]" />
+          <TextLimiter>Offline</TextLimiter>
+        </div>
+      ),
+    },
+  ];
 
-//
-// export const polePropertyOptions: SelectDropdownType[] = [
-//     {
-//         value: "all",
-//         text: (
-//             <div className="flex items-center gap-2 [&_path]:stroke-black">
-//                 <AlertsIcon />
-//                 All
-//             </div>
-//         ),
-//     },
-//     {
-//         value: "vibration",
-//         text: (
-//             <div className="flex items-center gap-2 [&_path]:stroke-black">
-//                 <VibrationIcon />
-//                 Vibration
-//             </div>
-//         ),
-//     },
-//     {
-//         value: "electrometer-drop",
-//         text: (
-//             <div className="flex items-center gap-2 [&_path]:stroke-black">
-//                 <ElectrometerDropIcon />
-//                 Electrometer Drop
-//             </div>
-//         ),
-//     },
-//     {
-//         value: "pole-tilt",
-//         text: (
-//             <div className="flex items-center gap-2 [&_path]:stroke-black">
-//                 <PoleTiltIcon />
-//                 Pole Tilt
-//             </div>
-//         ),
-//     },
-//     {
-//         value: "collision",
-//         text: (
-//             <div className="flex items-center gap-2 [&_path]:stroke-black">
-//                 <CollisionsIcon />
-//                 Collision
-//             </div>
-//         ),
-//     },
-// ];
-//
+export const MiniHeatMapOptions: SelectDropdownType<HeatmapOptionsType>[] = [
+  {
+    value: "vibration",
+    child: (
+      <div className="flex min-w-0 items-center justify-center gap-1 text-[9px] [&_path]:stroke-black">
+        <VibrationIcon className="h-[10px] w-[10px] shrink-0" />
+        <TextLimiter>Vibration</TextLimiter>
+      </div>
+    ),
+  },
+  {
+    value: "electrometer",
+    child: (
+      <div className="flex min-w-0 items-center justify-center gap-1 text-[9px]  [&_path]:stroke-black">
+        <ElectrometerIcon className="h-[10px] w-[10px] shrink-0" />
+        <TextLimiter>Electrometer</TextLimiter>
+      </div>
+    ),
+  },
+];
+
+export const MiniNetworkOptions: SelectDropdownType<NetworkOptionsType>[] = [
+  {
+    value: "all",
+    child: (
+      <div className="flex items-center justify-center gap-1">
+        <div className="inline-flex h-[6px] w-[6px] rounded-full border border-slate-400 text-[9px]" />
+        <TextLimiter>All</TextLimiter>
+      </div>
+    ),
+  },
+  {
+    value: "lora",
+    child: (
+      <div className="flex items-center justify-center gap-1">
+        <div className="inline-flex  h-[6px] w-[6px]  rounded-full bg-lora" />
+        <TextLimiter>Lora</TextLimiter>
+      </div>
+    ),
+  },
+  {
+    value: "cellular",
+    child: (
+      <div className="flex items-center justify-center gap-1">
+        <div className=" inline-flex  h-[6px] w-[6px] rounded-full bg-cellular" />
+        <TextLimiter>Cellular</TextLimiter>
+      </div>
+    ),
+  },
+  {
+    value: "unknown",
+    child: (
+      <div className="flex items-center justify-center gap-1">
+        <div className=" inline-flex  h-[6px] w-[6px]  rounded-full bg-unknown" />
+        <TextLimiter>Unknown</TextLimiter>
+      </div>
+    ),
+  },
+];
+
+export const MiniLayerOptions: SelectDropdownType<LayerPickerOptionsType>[] = [
+  {
+    value: "gridscope",
+    child: <TextLimiter>Gridscope</TextLimiter>,
+  },
+
+  {
+    value: "network",
+    child: <TextLimiter>Network</TextLimiter>,
+  },
+  {
+    value: "heatmap",
+    child: <TextLimiter>Heat Map</TextLimiter>,
+  },
+  {
+    value: "equipment",
+    child: <TextLimiter>Equipment</TextLimiter>,
+  },
+];
