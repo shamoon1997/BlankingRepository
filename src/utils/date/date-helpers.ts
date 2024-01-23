@@ -15,4 +15,7 @@ export const DateFormatOptions = {
   dateTimeFormatForSever: "yyyy-MM-dd HH:mm:ss",
   fullMonthAndYear: "MMMM-yyyy",
   standardYearMonthDay: "yyyy-MM-dd",
+  standardDateNoTime: "yyyy-MM-dd",
+  standardTime24Hr: "yyyy-MM-dd HH:mm",
+  ddMMyyyy24Hr: "dd/MM/yyyy HH:mm",
 };

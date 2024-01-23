@@ -2,9 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
 /*hack to make position absolute instead of fixed in radix ui select to make z-index work properly*/
 .hack [data-radix-popper-content-wrapper] {
-        position: absolute !important;
+  position: absolute !important;
 }
 
 
