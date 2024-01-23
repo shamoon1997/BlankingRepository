@@ -17,6 +17,10 @@ export const ApiResources = {
   getEquipmentLayer: "layer/equipment",
 
   getPoleView: "/poleview",
+  // photos
+  getPhotosGallery: "/device_data/latest_photos",
+  getPhotosLatest: "/device_data/list_photos",
+  takeNewPhoto: "/mutation/take_photos",
 
   // Device Data here:
   getHardwareMetricData: "/device_data/metric_data",
