@@ -18,4 +18,4 @@ export const ApiResources = {
   getPoleView: "/poleview",
 };
 
-export const MAX_LAG_BUFFER_LIMIT = 100;
+export const MAX_LAG_BUFFER_LIMIT = 500;

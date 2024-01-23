@@ -5,13 +5,18 @@ import {
 } from "@/utils/date";
 import { useCalendarUrlState } from "@/hooks/calendar/use-calendar-url-state.tsx";
 import { useMemo } from "react";
+import { useCalendarTimeZone } from "@/state";
+import { fromAbsolute } from "@internationalized/date";
 
-export const useReadToFrom = () => {
+export const useReadFromTo = () => {
   const { validatedCalendarUrlState } = useCalendarUrlState();
+  const timeZone = useCalendarTimeZone();
 
   return useMemo(() => {
     let from;
     let to;
+    let fromInAriaFormat;
+    let toInAriaFormat;
 
     if (
       typeof validatedCalendarUrlState.from === "string" &&
@@ -31,6 +36,9 @@ export const useReadToFrom = () => {
           fromToDate.to,
           DateFormatOptions.dateTimeFormatForSever,
         );
+
+        fromInAriaFormat = fromAbsolute(fromToDate.from as number, timeZone);
+        toInAriaFormat = fromAbsolute(fromToDate.to as number, timeZone);
       }
     } else if (
       typeof validatedCalendarUrlState.from === "number" &&
@@ -45,11 +53,22 @@ export const useReadToFrom = () => {
         validatedCalendarUrlState.to * 1000,
         DateFormatOptions.dateTimeFormatForSever,
       );
+
+      fromInAriaFormat = fromAbsolute(
+        validatedCalendarUrlState.from * 1000,
+        timeZone,
+      );
+      toInAriaFormat = fromAbsolute(
+        validatedCalendarUrlState.to * 1000,
+        timeZone,
+      );
     }
 
     return {
       from,
+      fromInAriaFormat,
+      toInAriaFormat,
       to,
     };
-  }, [validatedCalendarUrlState.from, validatedCalendarUrlState.to]);
+  }, [timeZone, validatedCalendarUrlState.from, validatedCalendarUrlState.to]);
 };

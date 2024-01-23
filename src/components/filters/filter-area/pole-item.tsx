@@ -1,7 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { PoleViewButton } from "./pole-view-button";
-import { useSelectedPolesActions } from "@/state";
-// import { useNavigate } from "react-router-dom";
-// import { useSelectedPoles, useSelectedPolesActions } from "@/state";
+import { useSelectedPoles, useSelectedPolesActions } from "@/state";
+import { AppRoutes } from "@/utils/routes";
 
 type poleItemProps = {
   hardwareId: string;
@@ -9,10 +9,10 @@ type poleItemProps = {
 };
 
 export const PoleItem = ({ hardwareId, deviceSerialNumber }: poleItemProps) => {
-  // const selectedPoles = useSelectedPoles();
+  const selectedPoles = useSelectedPoles();
   const { checkIfPoleIsSelected, toggleAddSelectedPole } =
     useSelectedPolesActions();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <div
@@ -33,17 +33,17 @@ export const PoleItem = ({ hardwareId, deviceSerialNumber }: poleItemProps) => {
         onClick={(e) => {
           e.stopPropagation();
           alert("This feature is in development and will be enabled soon!");
-          // if (checkIfPoleIsSelected(hardwareId)) {
-          //   if (selectedPoles.length > 0) {
-          //     const queryParams = selectedPoles
-          //       .map(
-          //         (selectedPoleId) =>
-          //           `deviceId=${selectedPoleId.selectedPoleHardwareId}`,
-          //       )
-          //       .join("&");
-          //     navigate(`/dashboard/poleView?${queryParams}`);
-          //   }
-          // }
+          if (checkIfPoleIsSelected(hardwareId)) {
+            if (selectedPoles.length > 0) {
+              const queryParams = selectedPoles
+                .map(
+                  (selectedPoleId) =>
+                    `deviceId=${selectedPoleId.selectedPoleHardwareId}`,
+                )
+                .join("&");
+              navigate(`${AppRoutes.poleView}?${queryParams}`);
+            }
+          }
         }}
       />
     </div>

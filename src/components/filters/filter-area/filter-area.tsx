@@ -1,93 +1,25 @@
-import { useState } from "react";
-import { useLayerControlUrlState } from "@/hooks";
-import { useGetNetworkLayer } from "@/api/hooks/maps/use-get-network-layer.ts";
-import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer.ts";
 import { AreaSummary } from "./area-summary";
 import { FilterControls } from "./filter-controls";
 import { ListSorter } from "./list-sorter";
-import { PolesList, SortingOrder } from "./poles-list";
-import { useMapboxBbox } from "@/state/map/bbox-store.tsx";
-import { useActiveFilter, useFilterActions } from "@/state/map";
+import { PolesList } from "./poles-list";
 import { getFilterBadgeText } from "@/utils/map";
-
-import { useGetEquipmentLayer } from "@/api/hooks/maps/use-get-equipment-layer.ts";
-import { useGetHeatMapLayer } from "@/api/hooks/maps/user-get-heat-map-layer.ts";
-import { useReadToFrom } from "@/hooks/calendar";
 import { CloseIcon } from "@/assets/misc";
+import { useFilter } from "@/hooks/side-filter";
 
 export const FilterArea = () => {
-  const bbox = useMapboxBbox();
-  const { validatedLayerUrlState } = useLayerControlUrlState();
-  const [sortBy, setSortBy] = useState<string>("sr-no");
-  const [sortOrder, setSortOrder] = useState<SortingOrder>("asc");
-  let data; // will contain all the layers data
-
-  const searchFilter = useActiveFilter();
-  const { removeFilter } = useFilterActions();
-  const fromTo = useReadToFrom();
-
   const {
-    dataWithFilterApplied: networkData,
-    isSuccess: isNetworkSuccess,
-    isError: isNetworkError,
-  } = useGetNetworkLayer(bbox);
-  const {
-    dataWithFilterApplied: gridScopeData,
-
-    isSuccess: isGridScopeSuccess,
-    isError: isGridScopeError,
-  } = useGetGridScopeLayer(bbox);
-  const {
-    dataWithFilterApplied: equipmentData,
-
-    isSuccess: isEquipmentSuccess,
-    isError: isEquipmentError,
-  } = useGetEquipmentLayer(bbox);
-  const {
-    dataWithFilterApplied: heatMapData,
-
-    isSuccess: isHeatmapSuccess,
-    isError: isHeatmapError,
-  } = useGetHeatMapLayer(
-    bbox
-      ? {
-          ...bbox,
-          t1: fromTo.from,
-          t2: fromTo.to,
-        }
-      : null,
-  );
-
-  // default is loading is true
-  let isSuccess = false;
-  let isError = false;
-  switch (validatedLayerUrlState.layer) {
-    case "gridscope":
-      data = gridScopeData;
-      isSuccess = isGridScopeSuccess;
-      isError = isGridScopeError;
-      break;
-    case "network":
-      data = networkData;
-      isSuccess = isNetworkSuccess;
-      isError = isNetworkError;
-      break;
-    case "heatmap":
-      data = heatMapData;
-      isSuccess = isHeatmapSuccess;
-      isError = isHeatmapError;
-      break;
-    case "equipment":
-      data = equipmentData;
-      isSuccess = isEquipmentSuccess;
-      isError = isEquipmentError;
-      break;
-    default:
-      break;
-  }
-
+    sortBy,
+    setSortOrder,
+    setSortBy,
+    sortOrder,
+    isError,
+    isSuccess,
+    removeFilter,
+    searchFilter,
+    data,
+  } = useFilter();
   return (
-    <div className="z-10 box-border flex w-[300px] shrink-0 flex-col border-r-[0.5px]  border-solid border-r-[rgba(91,91,91,0.5)]  pt-3 shadow-filter-area ">
+    <div className="z-10 box-border flex w-[300px] shrink-0 flex-col border-r-[0.5px] border-solid border-r-[rgba(91,91,91,0.5)] pt-3 shadow-filter-area ">
       <FilterControls />
       <div className="mb-[8px] flex flex-wrap gap-2 px-[16px]">
         {searchFilter.map((item, i) => {

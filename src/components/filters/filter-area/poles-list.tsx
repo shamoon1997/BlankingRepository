@@ -66,7 +66,8 @@ export const PolesList = ({
             return b.network_mode - a.network_mode;
           }
         });
-
+      case "unsorted":
+        return devices;
       default:
         return devices;
     }
@@ -77,14 +78,6 @@ export const PolesList = ({
       (device: Device) => !checkIfPoleIsSelected(device.hardware_id),
     ),
   );
-
-  if (nonSelectedPoles.length === 0 && isSuccess) {
-    return (
-      <p className="pl-4 pr-4 text-[12px]">
-        No poles found in this area. Expanding your search may help.
-      </p>
-    );
-  }
 
   // when our fetch is successful we render the list
   if (isSuccess) {
@@ -105,6 +98,11 @@ export const PolesList = ({
               deviceSerialNumber={device.device_sn}
             />
           ))}
+          {nonSelectedPoles.length === 0 && isSuccess && (
+            <p className="mt-2 pl-4 pr-4 text-[12px]">
+              No poles found in this area. Expanding your search may help.
+            </p>
+          )}
         </ScrollArea.Viewport>
         <ScrollArea.Scrollbar className="mr-1 w-1 pb-3" orientation="vertical">
           <ScrollArea.Thumb className="rounded bg-[#1616164D]" />

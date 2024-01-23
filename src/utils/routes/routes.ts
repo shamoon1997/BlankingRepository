@@ -2,7 +2,7 @@ export const AppRoutes = {
   notFound: "*",
   root: "/",
   deployments: "/dashboard/deployments",
-  poleView: "/dashboard/poleView",
+  poleView: "/dashboard/pole-view",
   alerts: "/dashboard/alerts",
   tickets: "/dashboard/tickets",
   devices: "/dashboard/devices",
