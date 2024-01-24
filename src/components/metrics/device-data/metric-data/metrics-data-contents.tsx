@@ -51,7 +51,7 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
     <>
       <div className="mt-[12px] h-[0.5px] w-full bg-[#D9D9D9]" />
 
-      <div className="flex justify-between gap-[10px] pb-[10px]">
+      <div className="flex justify-between gap-[10px] px-[8px] pb-[10px]">
         <div className=" w-3/4">
           <img
             className="max-h-[320px] w-full bg-cover"

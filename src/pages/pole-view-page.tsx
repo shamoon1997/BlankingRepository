@@ -14,6 +14,7 @@ import { useState } from "react";
 import { TimeField } from "@/components/filters/calendar/time-field";
 import { useReadFromTo } from "@/hooks/calendar";
 import { DateField } from "@/components/filters/calendar/date-field";
+import { DeviceData } from "@/components/metrics/device-data/device-data";
 
 export const PoleViewPage = withAuthenticationRequired(
   () => {
@@ -123,8 +124,9 @@ export const PoleViewPage = withAuthenticationRequired(
               />
             </div>
 
-            <div className="flex-1">
-              <PoleViewTabGroup />
+            <div className="mb-5 flex-1 overflow-scroll rounded-md bg-white">
+              <DeviceData />
+              {/* <PoleViewTabGroup /> */}
             </div>
           </div>
         </ErrorBoundary>

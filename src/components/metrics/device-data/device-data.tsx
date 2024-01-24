@@ -48,7 +48,7 @@ export const DeviceData = () => {
 
           <div className="mt-[6px] h-[0.5px] w-full bg-[#D9D9D9]" />
 
-          <Tabs.Content className="w-full " value="metric">
+          <Tabs.Content className="w-full pb-5" value="metric">
             <MetricsDataTab />
           </Tabs.Content>
 
