@@ -1,9 +1,6 @@
 import { ChevronIcon } from "@/assets";
 import { useGetHardwareMetrics } from "@/hooks/metrics";
-import {
-  useMetricDataActions,
-  useMetricDataState,
-} from "@/state/device-data/metric-data-controls.store";
+import { useMetricDataState } from "@/state/device-data/metric-data-controls.store";
 import { deviceMetricsKeys } from "@/utils/device-data";
 import * as Accordion from "@radix-ui/react-accordion";
 import React from "react";
@@ -14,10 +11,11 @@ import {
 } from "../../controls";
 import ExfilBlobBtn from "./exfil-btn";
 import MetricsDataContents from "./metrics-data-contents";
+import { useDeviceDataControlActions } from "@/state/device-data";
 
 const MetricsDataTab: React.FC = () => {
   const metricDataState = useMetricDataState();
-  const { applyMetricDeviceFilterType } = useMetricDataActions();
+  const { setDeviceFilter } = useDeviceDataControlActions();
 
   const { data, isLoading, isError, isFetched } = useGetHardwareMetrics({
     hardware_ids: [
@@ -40,7 +38,7 @@ const MetricsDataTab: React.FC = () => {
             <DeviceDataDropdown
               triggerIcon={icon}
               placeholder="Devices"
-              valChangeFunc={(val) => applyMetricDeviceFilterType(val)}
+              valChangeFunc={(val) => setDeviceFilter(val)}
             />
           </div>
           <DeviceDataDateControls />

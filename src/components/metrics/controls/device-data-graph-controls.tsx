@@ -7,9 +7,9 @@ import {
   ZoomSectionIcon,
 } from "@/assets";
 import {
-  useMetricDataActions,
-  useMetricDataState,
-} from "@/state/device-data/metric-data-controls.store";
+  useDeviceDataControlActions,
+  useDeviceDataControlState,
+} from "@/state/device-data";
 
 const graphControlsBtns = [
   { value: "zoomIn", icon: <ZoomInIcon /> },
@@ -19,8 +19,8 @@ const graphControlsBtns = [
 ];
 
 const DeviceDataGraphControls: React.FC = () => {
-  const { graphControl } = useMetricDataState();
-  const { setGraphControl } = useMetricDataActions();
+  const { graphControl } = useDeviceDataControlState();
+  const { setGraphControl } = useDeviceDataControlActions();
 
   return (
     <ToggleGroup.Root

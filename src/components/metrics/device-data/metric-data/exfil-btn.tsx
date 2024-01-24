@@ -13,24 +13,22 @@ const ExfilBlobBtn: React.FC<Props> = ({ disabled }) => {
   return (
     <>
       <DropdownMenu.Root modal={false}>
-        <DropdownMenu.Trigger disabled={disabled}>
-          <button
-            disabled={disabled}
-            className="place-content-centerz grid h-[32px] w-[130px] rounded-sm bg-sidebar text-[8px] disabled:bg-[#EDEDED]"
-          >
-            <div className="flex h-full w-full items-center justify-center gap-[5px]">
-              <span
-                className={
-                  disabled ? "[&_path]:!fill-sidebar" : "[&_path]:!fill-white"
-                }
-              >
-                <ExfilIcon />
-              </span>
-              <p className={disabled ? "text-sidebar" : "text-white"}>
-                Exfil Per-Blob
-              </p>
-            </div>
-          </button>
+        <DropdownMenu.Trigger
+          disabled={disabled}
+          className="place-content-centerz grid h-[32px] w-[130px] rounded-sm bg-sidebar text-[8px] disabled:bg-[#EDEDED]"
+        >
+          <div className="flex h-full w-full items-center justify-center gap-[5px]">
+            <span
+              className={
+                disabled ? "[&_path]:!fill-sidebar" : "[&_path]:!fill-white"
+              }
+            >
+              <ExfilIcon />
+            </span>
+            <p className={disabled ? "text-sidebar" : "text-white"}>
+              Exfil Per-Blob
+            </p>
+          </div>
         </DropdownMenu.Trigger>
 
         <DropdownMenu.Content

@@ -4,16 +4,12 @@ import { create } from "zustand";
 type SelectedMetricType = { name: string; id: string; assignedColor?: string };
 
 type FilterStoreType = {
-  metricDeviceFilter: string;
   colorsList: string[];
-  graphControl: string;
   readyForExfil: SelectedMetricType[]; // Since we're not sure what to store in the selected yet
   selectedMetrics: SelectedMetricType[]; // Since we're not sure what to store in the selected yet
   actions: {
-    applyMetricDeviceFilterType: (val: string) => void;
     removeFromSelected: (id: string) => void;
     addToSelected: (metric: SelectedMetricType) => void;
-    setGraphControl: (val: string) => void;
     toggleReadyForExfil: (item: SelectedMetricType) => void;
   };
 };
@@ -36,11 +32,7 @@ const spliceAndUnshift = (arr: string[], colorToSplice?: string): string[] => {
 
 const MAX_DEVICES = 3;
 const useMetricDataStore = create<FilterStoreType>((set, get) => ({
-  metricDeviceFilter: "",
-
   colorsList: [...mapIconColors],
-
-  graphControl: "",
 
   selectedMetrics: [
     { id: "1", name: "GS234• 4024 • Lora", assignedColor: mapIconColors[0] },
@@ -57,10 +49,6 @@ const useMetricDataStore = create<FilterStoreType>((set, get) => ({
   ],
 
   actions: {
-    applyMetricDeviceFilterType: (val) => {
-      set((state) => ({ ...state, metricDeviceFilter: val }));
-    },
-
     removeFromSelected: (id) => {
       //
       const itemToRemove = get().selectedMetrics.find(
@@ -97,10 +85,6 @@ const useMetricDataStore = create<FilterStoreType>((set, get) => ({
       const colorArrayShift = shiftLeft([...get().colorsList]);
       set((state) => ({ ...state, colorsList: colorArrayShift }));
       // ==============================================
-    },
-
-    setGraphControl: (val) => {
-      set({ graphControl: val });
     },
 
     toggleReadyForExfil: (item) => {
