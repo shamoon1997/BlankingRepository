@@ -42,7 +42,7 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
     });
 
     return finalObj;
-  }, [data]);
+  }, [data, metricKey]);
 
   dataForGraphs;
   // TO BE USED LATER FOR GRAPH PLOTTING
@@ -131,7 +131,7 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
                       <LocationIcon />
                     </div>
 
-                    <p className="ml-[6px] text-[6px] font-medium">{_?.name}</p>
+                    <p className="ml-[6px] text-[6px] font-medium">{_?.id}</p>
                   </div>
                   <button
                     className="grid h-[25px] w-[25px] place-content-center rounded-md border-[0.8px] border-device-data-border-blue bg-device-data-blue  hover:bg-slate-100"
@@ -145,8 +145,14 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
               );
             })}
 
-            {/* PLACEHOLDER */}
             {data?.map((item) => {
+              if (
+                metricDataState.selectedMetrics
+                  .map((device) => device.id)
+                  .includes(item.hardware_id)
+              )
+                return;
+
               return (
                 <div
                   className="mb-[8px] flex items-center gap-[5px]"

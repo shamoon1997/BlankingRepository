@@ -30,15 +30,13 @@ const spliceAndUnshift = (arr: string[], colorToSplice?: string): string[] => {
   return arr;
 };
 
-const MAX_DEVICES = 3;
+const MAX_DEVICES = 20;
 const useMetricDataStore = create<FilterStoreType>((set, get) => ({
   colorsList: [...mapIconColors],
 
   selectedMetrics: [],
 
-  readyForExfil: [
-    { id: "3", name: "GS456• 4024 • Network", assignedColor: mapIconColors[3] },
-  ],
+  readyForExfil: [],
 
   actions: {
     removeFromSelected: (id) => {
