@@ -12,18 +12,34 @@ import {
 import ExfilBlobBtn from "./exfil-btn";
 import MetricsDataContents from "./metrics-data-contents";
 import { useDeviceDataControlActions } from "@/state/device-data";
+import { useCalendarTimeZone, useMapboxBbox } from "@/state";
+import { useGetGridScopeLayer } from "@/api/hooks/maps/use-get-gridscope-layer";
+import { useMetricReadToFrom } from "@/hooks/calendar";
+import { DateFormatOptions } from "@/utils/date";
+import { formatInTimeZone } from "date-fns-tz";
 
 const MetricsDataTab: React.FC = () => {
+  const timezone = useCalendarTimeZone();
   const metricDataState = useMetricDataState();
+  const { to, from } = useMetricReadToFrom();
   const { setDeviceFilter } = useDeviceDataControlActions();
+  const bbox = useMapboxBbox();
+
+  const { dataWithFilterApplied: polesList } = useGetGridScopeLayer(bbox);
+  const hwIdLists = polesList?.devices?.map((d) => d.hardware_id);
 
   const { data, isLoading, isError, isFetched } = useGetHardwareMetrics({
-    hardware_ids: [
-      "3f0017000c5030415738382000000001",
-      "0f003c000e5030475837322000000001",
-    ],
-    t1: "2023-11-24 21:00:00",
-    t2: "2023-11-24 21:30:00",
+    hardware_ids: hwIdLists,
+    t1: formatInTimeZone(
+      from * 1000,
+      timezone,
+      DateFormatOptions.standardTime24Hr,
+    ),
+    t2: formatInTimeZone(
+      to * 1000,
+      timezone,
+      DateFormatOptions.standardTime24Hr,
+    ),
   });
 
   const icon = <div className="text-[10px] text-[#8B8B8B]">Device</div>;

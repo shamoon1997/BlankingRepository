@@ -4,6 +4,7 @@ import React, { ReactNode } from "react";
 import SelectItem from "../../common/select/select-item";
 import { TextLimiter } from "../../common";
 import { useSelectedPoles } from "@/state";
+import { useMetricDataState } from "@/state/device-data";
 
 type Props = {
   placeholder?: string;
@@ -15,14 +16,25 @@ const DeviceDataDropdown: React.FC<Props> = ({
   placeholder = "placeholder...",
   triggerIcon,
 }) => {
-  const selectedPoles = useSelectedPoles();
+  const selectedMapViewPoles = useSelectedPoles();
+  const selectedGraphViewPoles = useMetricDataState();
 
   const metricsDataDevicesOptions = [
     {
       value: "map-view",
       child: (
         <Select.ItemText>
-          <div>Map View ({selectedPoles.length})</div>
+          <div>Map View ({selectedMapViewPoles.length})</div>
+        </Select.ItemText>
+      ),
+    },
+    {
+      value: "graph-view",
+      child: (
+        <Select.ItemText>
+          <div>
+            Graph View ({selectedGraphViewPoles.selectedMetrics.length})
+          </div>
         </Select.ItemText>
       ),
     },

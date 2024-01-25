@@ -131,7 +131,7 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
                       <LocationIcon />
                     </div>
 
-                    <p className="ml-[6px] font-medium">{_?.name}</p>
+                    <p className="ml-[6px] text-[6px] font-medium">{_?.name}</p>
                   </div>
                   <button
                     className="grid h-[25px] w-[25px] place-content-center rounded-md border-[0.8px] border-device-data-border-blue bg-device-data-blue  hover:bg-slate-100"
@@ -146,15 +146,15 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
             })}
 
             {/* PLACEHOLDER */}
-            {[...Array(16)]?.map((_, i) => {
+            {data?.map((item) => {
               return (
                 <div
                   className="mb-[8px] flex items-center gap-[5px]"
-                  key={`mock-metrics-${i}`}
+                  key={item?.hardware_id}
                   onClick={() => {
                     addToSelected({
-                      id: `mock-metrics-${Math.random()}`,
-                      name: "GS124• 4024 • Lora",
+                      id: item?.hardware_id,
+                      name: item?.hardware_id,
                     });
                   }}
                 >
@@ -163,8 +163,8 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
                       <LocationIcon />
                     </div>
 
-                    <p className="ml-[6px] font-medium">
-                      {Math.floor(1000 + Math.random() * 9000)} • Lora
+                    <p className="ml-[6px] text-[6px] font-medium">
+                      {item.hardware_id}
                     </p>
                   </div>
                   <button className="grid h-[25px] w-[25px] place-content-center rounded-md border-[0.8px] border-[#CCCCCC] bg-white hover:bg-slate-100">

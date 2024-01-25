@@ -34,15 +34,7 @@ const MAX_DEVICES = 3;
 const useMetricDataStore = create<FilterStoreType>((set, get) => ({
   colorsList: [...mapIconColors],
 
-  selectedMetrics: [
-    { id: "1", name: "GS234• 4024 • Lora", assignedColor: mapIconColors[0] },
-    {
-      id: "2",
-      name: "GS345• 4024 • Cellular",
-      assignedColor: mapIconColors[2],
-    },
-    { id: "3", name: "GS456• 4024 • Network", assignedColor: mapIconColors[3] },
-  ],
+  selectedMetrics: [],
 
   readyForExfil: [
     { id: "3", name: "GS456• 4024 • Network", assignedColor: mapIconColors[3] },
