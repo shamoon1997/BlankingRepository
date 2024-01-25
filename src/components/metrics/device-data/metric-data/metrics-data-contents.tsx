@@ -5,7 +5,7 @@ import {
   useMetricDataActions,
   useMetricDataState,
 } from "@/state/device-data/metric-data-controls.store";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 
 type Props = {
   metricKey: string;
@@ -19,6 +19,7 @@ type GraphData = {
 };
 
 const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const metricDataState = useMetricDataState();
   const { removeFromSelected, addToSelected, toggleReadyForExfil } =
     useMetricDataActions();
@@ -68,6 +69,7 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
               className="h-[25px] w-[180px] rounded-md border-[0.8px] border-[#CCCCCC] px-[10px] py-[6px] text-[8px]"
               type="text"
               placeholder="Search to add device"
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button className="grid h-[25px] w-[25px] place-content-center rounded-md bg-[#3B3C4F]">
               <div className="h-[12px] w-[12px] [&_circle]:stroke-white [&_path]:fill-white">
@@ -152,6 +154,8 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
                   .includes(item.hardware_id)
               )
                 return;
+
+              if (!item.hardware_id.includes(searchTerm)) return;
 
               return (
                 <div

@@ -111,7 +111,19 @@ const MetricsDataTab: React.FC = () => {
               </Accordion.Trigger>
               <Accordion.Content>
                 {/* Will be different for other keys */}
-                <MetricsDataContents metricKey={item.key} data={data} />
+                {isLoading && (
+                  <div className="w-full pb-2 text-center">
+                    <p>Loading...</p>
+                  </div>
+                )}
+                {isError && (
+                  <div className="w-full pb-2 text-center text-red-400">
+                    <p>An error has ocurred</p>
+                  </div>
+                )}
+                {isFetched && !isError && (
+                  <MetricsDataContents metricKey={item.key} data={data} />
+                )}
                 {/* ================================ */}
               </Accordion.Content>
             </Accordion.Item>
