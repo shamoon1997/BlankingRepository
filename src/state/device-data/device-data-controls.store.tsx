@@ -1,26 +1,24 @@
 import { create } from "zustand";
 
-/*
-const [startTime, setStartTime] = useState("00:00");
-const [endTime, setEndTime] = useState("23:59");
-*/
-
 type StoreType = {
   dates: number[];
   deviceFilter: string;
   graphControl: string;
   startTime: string;
   endTime: string;
+  currentTab: string;
 
   actions: {
     setDates: (val: number[]) => void;
     setDeviceFilter: (val: string) => void;
     setGraphControl: (val: string) => void;
     setTime: (val: string, type: "start" | "end") => void;
+    setCurrentTab: (val: string) => void;
   };
 };
 
 const useDeviceDataControlsStore = create<StoreType>((set /* get */) => ({
+  currentTab: "metric",
   dates: [],
   deviceFilter: "",
   graphControl: "",
@@ -31,6 +29,7 @@ const useDeviceDataControlsStore = create<StoreType>((set /* get */) => ({
     setDates: (val) => set({ dates: val }),
     setDeviceFilter: (val) => set({ deviceFilter: val }),
     setGraphControl: (val) => set({ graphControl: val }),
+    setCurrentTab: (val) => set({ currentTab: val }),
     setTime: (val, type) => {
       if (type === "start") set({ startTime: val });
       if (type === "end") set({ endTime: val });
