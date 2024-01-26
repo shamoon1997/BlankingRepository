@@ -2,6 +2,10 @@ import { ChevronIcon } from "@/assets";
 import { useCalendarUrlState, useMetricReadToFrom } from "@/hooks/calendar";
 import { useGetDeploymentMetrics } from "@/hooks/metrics";
 import { useCalendarTimeZone } from "@/state";
+import {
+  useDeviceDataControlActions,
+  useDeviceDataControlState,
+} from "@/state/device-data";
 import { DateFormatOptions } from "@/utils/date";
 import {
   add,
@@ -43,8 +47,8 @@ export const MetricDataCalendar: React.FC<Props> = () => {
   const { to, from } = useMetricReadToFrom();
   const timezone = useCalendarTimeZone();
 
-  const [startTime, setStartTime] = useState("00:00");
-  const [endTime, setEndTime] = useState("23:59");
+  const { startTime, endTime } = useDeviceDataControlState();
+  const { setTime } = useDeviceDataControlActions();
 
   const [selectedDay, setSelectedDay] = useState<number[]>([from, to]);
 
@@ -214,13 +218,13 @@ export const MetricDataCalendar: React.FC<Props> = () => {
           <p>Starts</p>
           <input
             value={startTime}
-            onChange={(e) => setStartTime(maskDate(e.target.value))}
+            onChange={(e) => setTime(maskDate(e.target.value), "start")}
             className="w-[40px] rounded-md border-[1px] px-[5px] py-[2.5px] outline-none focus:border-device-data-border-blue focus:text-device-data-border-blue"
             type="text"
             onBlur={(e) => {
               const { value } = e.target;
               if (timeRegex.test(value)) {
-                setStartTime(value);
+                setTime(value, "start");
                 setTimeInURL(value, "from");
               }
             }}
@@ -235,14 +239,14 @@ export const MetricDataCalendar: React.FC<Props> = () => {
           <input
             value={endTime}
             onChange={(e) => {
-              setEndTime(maskDate(e.target.value));
+              setTime(maskDate(e.target.value), "end");
             }}
             className="w-[40px] rounded-md border-[1px] px-[5px] py-[2.5px] outline-none focus:border-device-data-border-blue focus:text-device-data-border-blue"
             type="text"
             onBlur={(e) => {
               const { value } = e.target;
               if (timeRegex.test(value)) {
-                setEndTime(value);
+                setTime(value, "end");
                 setTimeInURL(value, "to");
               }
             }}
