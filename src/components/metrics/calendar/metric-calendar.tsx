@@ -1,6 +1,5 @@
 import { ChevronIcon } from "@/assets";
 import { useCalendarUrlState, useMetricReadToFrom } from "@/hooks/calendar";
-import { useGetDeploymentMetrics } from "@/hooks/metrics";
 import { useCalendarTimeZone } from "@/state";
 import {
   useDeviceDataControlActions,
@@ -140,10 +139,10 @@ export const MetricDataCalendar: React.FC<Props> = () => {
 
   datesToQuery;
 
-  const { data } = useGetDeploymentMetrics({
-    t1: datesToQuery.start,
-    t2: datesToQuery.end,
-  });
+  // const { data } = useGetDeploymentMetrics({
+  //   t1: datesToQuery.start,
+  //   t2: datesToQuery.end,
+  // });
 
   return (
     <>
