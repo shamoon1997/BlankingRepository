@@ -5,7 +5,8 @@ import {
   useMetricDataActions,
   useMetricDataState,
 } from "@/state/device-data/metric-data-controls.store";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import MetricDataPlot from "./metric-data-plot";
 
 type Props = {
   metricKey: string;
@@ -48,17 +49,17 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
   dataForGraphs;
   // TO BE USED LATER FOR GRAPH PLOTTING
 
+  useEffect(() => {
+    console.log(dataForGraphs);
+  }, [dataForGraphs]);
+
   return (
     <>
       <div className="mt-[12px] h-[0.5px] w-full bg-[#D9D9D9]" />
 
       <div className="flex justify-between gap-[10px] px-[8px] pb-[10px]">
-        <div className=" w-3/4">
-          <img
-            className="max-h-[320px] w-full bg-cover"
-            src="/images/mock-metric-data-img.png"
-            alt=""
-          />
+        <div className="w-3/4">
+          <MetricDataPlot />
         </div>
 
         <div className="mt-[9px] flex w-1/4 flex-col">
