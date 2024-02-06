@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import uPlot from "uplot";
 import UplotReact from "uplot-react";
 import "uplot/dist/uPlot.min.css";
-import { clickZoomPlugin, resizePlugin } from "./plotPlugins";
+import { clickZoomPlugin, customPlugin, resizePlugin } from "./plotPlugins";
 
 const data: uPlot.AlignedData = [
   [1546300800, 1546387200, 1556387300, 1566397400, 1576387500], // x-values (timestamps)
@@ -28,7 +28,7 @@ const MetricDataPlot: React.FC = () => {
       focus: { prox: 5 },
       bind: { dblclick: () => null },
     },
-    plugins: [resizePlugin(parentDivRef), clickZoomPlugin()],
+    plugins: [resizePlugin(parentDivRef), clickZoomPlugin(), customPlugin()],
     axes: [{}],
   });
 
