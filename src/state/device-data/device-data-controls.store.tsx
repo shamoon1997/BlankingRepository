@@ -17,25 +17,27 @@ type StoreType = {
   };
 };
 
-const useDeviceDataControlsStore = create<StoreType>((set /* get */) => ({
-  currentTab: "metric",
-  dates: [],
-  deviceFilter: "",
-  graphControl: "",
-  startTime: "00:00",
-  endTime: "23:59",
+export const useDeviceDataControlsStore = create<StoreType>(
+  (set /* get */) => ({
+    currentTab: "metric",
+    dates: [],
+    deviceFilter: "",
+    graphControl: "",
+    startTime: "00:00",
+    endTime: "23:59",
 
-  actions: {
-    setDates: (val) => set({ dates: val }),
-    setDeviceFilter: (val) => set({ deviceFilter: val }),
-    setGraphControl: (val) => set({ graphControl: val }),
-    setCurrentTab: (val) => set({ currentTab: val }),
-    setTime: (val, type) => {
-      if (type === "start") set({ startTime: val });
-      if (type === "end") set({ endTime: val });
+    actions: {
+      setDates: (val) => set({ dates: val }),
+      setDeviceFilter: (val) => set({ deviceFilter: val }),
+      setGraphControl: (val) => set({ graphControl: val }),
+      setCurrentTab: (val) => set({ currentTab: val }),
+      setTime: (val, type) => {
+        if (type === "start") set({ startTime: val });
+        if (type === "end") set({ endTime: val });
+      },
     },
-  },
-}));
+  }),
+);
 
 export const useDeviceDataControlState = () =>
   useDeviceDataControlsStore((state) => state);
