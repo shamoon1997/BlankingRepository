@@ -163,6 +163,13 @@ const MetricsDataContents: React.FC<Props> = ({ metricKey, data }) => {
                   className="mb-[8px] flex items-center gap-[5px]"
                   key={item?.hardware_id}
                   onClick={() => {
+                    // TODO: GET DATA WALEED
+                    // console.log(item);
+                    // console.log(
+                    //   item.metric_channels.find(
+                    //     (i) => i.channel_name === metricKey,
+                    //   )?.channel_values,
+                    // );
                     addToSelected({
                       id: item?.hardware_id,
                       name: item?.hardware_id,
