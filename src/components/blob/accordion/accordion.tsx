@@ -2,6 +2,7 @@ import React from "react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { AccordionSelectDropDown } from "../accordion-select/accordion-select";
 import { AccordionDownIcon, BlobToolTipIcon } from "@/assets";
+import BlobDataPlot from "@/components/metrics/device-data/blob-data/blob-data-plot";
 
 type AccordionItemProps = {
   children: React.ReactNode;
@@ -78,7 +79,8 @@ export const AccordionDemo: React.FC = () => (
       <AccordionContent>
         <div className="flex flex-col">
           <div>
-            <img src="/images/graph.png" alt="" />
+            <BlobDataPlot />
+            {/* <img src="/images/graph.png" alt="" /> */}
           </div>
           <div>
             <AccordionSelectDropDown />

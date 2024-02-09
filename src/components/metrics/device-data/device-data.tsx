@@ -1,5 +1,6 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import MetricsDataTab from "./metric-data/metrics-data-tab";
+import { BlobTable } from "@/components/blob/blob-table/blob-table";
 import {
   useDeviceDataControlActions,
   useDeviceDataControlState,
@@ -57,7 +58,7 @@ export const DeviceData = () => {
           </Tabs.Content>
 
           <Tabs.Content className="w-full px-4" value="per-blob-data">
-            <div>per blob data</div>
+            <BlobTable />
           </Tabs.Content>
 
           <Tabs.Content className="w-full px-4" value="high-res-data">
