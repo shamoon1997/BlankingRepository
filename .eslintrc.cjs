@@ -19,11 +19,19 @@ module.exports = {
   },
   plugins: ["react-refresh"],
   rules: {
+    "@typescript-eslint/consistent-type-definitions": "off",
     "react-refresh/only-export-components": [
       "warn",
       { allowConstantExport: true },
     ],
     // Disabling below because it forces us to use interfaces instead
     "@typescript-eslint/consistent-type-definitions": "off",
+    // some of these rules apply on libraries and we cannot change those
+    // most of these are too restrictive so turning them off for now
+    "@typescript-eslint/no-redundant-type-constituents": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
   },
 };

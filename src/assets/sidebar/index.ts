@@ -6,7 +6,7 @@ import PolesIcon from "./poles.svg";
 import JobsIcon from "./jobs.svg";
 import PhotosIcon from "./photos.svg";
 import SensorBlobsIcon from "./sensor-blobs.svg";
-import CustomerReportsIcon from "./customer-reports.svg";
+import CustomerReportsIcon from "./customer-report.svg";
 import OrganizationsIcon from "./organizations.svg";
 import UsersIcon from "./users.svg";
 
